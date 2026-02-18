@@ -1,0 +1,190 @@
+[gd_scene load_steps=18 format=3 uid="uid://ck3m0gcxmo7op"]
+
+[ext_resource type="Texture2D" uid="uid://65j7o6p1n6hu" path="res://assets/towers/BaseTower.png" id="1_o56gu"]
+[ext_resource type="Texture2D" uid="uid://ibnmuv7j0fur" path="res://assets/towers/Tower3.png" id="2_idmp4"]
+[ext_resource type="Texture2D" uid="uid://dsot2vfnyni5j" path="res://assets/towers/Tower4.png" id="3_7p2vb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_idmp4"]
+atlas = ExtResource("1_o56gu")
+region = Rect2(0, 0, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7p2vb"]
+atlas = ExtResource("1_o56gu")
+region = Rect2(14, 0, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_le4k7"]
+atlas = ExtResource("1_o56gu")
+region = Rect2(28, 0, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8exsc"]
+atlas = ExtResource("1_o56gu")
+region = Rect2(42, 0, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_adp5t"]
+atlas = ExtResource("1_o56gu")
+region = Rect2(56, 0, 14, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l4yx8"]
+atlas = ExtResource("2_idmp4")
+region = Rect2(0, 0, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lr11t"]
+atlas = ExtResource("2_idmp4")
+region = Rect2(16, 0, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ianfi"]
+atlas = ExtResource("2_idmp4")
+region = Rect2(32, 0, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fpfee"]
+atlas = ExtResource("3_7p2vb")
+region = Rect2(0, 0, 19, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oqm8g"]
+atlas = ExtResource("3_7p2vb")
+region = Rect2(19, 0, 19, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xjk6s"]
+atlas = ExtResource("3_7p2vb")
+region = Rect2(38, 0, 19, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dikq8"]
+atlas = ExtResource("3_7p2vb")
+region = Rect2(57, 0, 19, 17)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fkwwx"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_idmp4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7p2vb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_le4k7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8exsc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_adp5t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l4yx8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_lr11t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ianfi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fpfee")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oqm8g")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xjk6s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dikq8")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CSharpScript" id="CSharpScript_o56gu"]
+script/source = "using Godot;
+
+public partial class Tower : AnimatedSprite2D
+{
+	[Export] public float Range { get; set; } = 180f;
+	[Export] public float RotationSpeed { get; set; } = 8f;          // degrees per second (higher = snappier)
+	[Export] public float FireRate { get; set; } = 1.5f;             // seconds between shots
+	[Export] public PackedScene ProjectileScene { get; set; }        // assign your bullet scene
+
+	private Node2D _target;
+	private float _fireTimer;
+
+	public override void _Ready()
+	{
+		if (SpriteFrames != null && SpriteFrames.HasAnimation(\"idle\"))
+		{
+			Play(\"idle\");  // or your default animation
+		}
+
+		AddToGroup(\"towers\");  // optional - useful for later management
+	}
+
+	public override void _Process(double delta)
+	{
+		_fireTimer -= (float)delta;
+
+		FindNearestTarget();
+
+		if (_target != null)
+		{
+			// Smooth rotation toward target
+			Vector2 direction = (_target.GlobalPosition - GlobalPosition).Normalized();
+			float targetAngle = Mathf.Atan2(direction.Y, direction.X);
+
+			Rotation = Mathf.LerpAngle(Rotation, targetAngle, RotationSpeed * (float)delta);
+
+			// Fire when ready and in range
+			if (_fireTimer <= 0 && GlobalPosition.DistanceTo(_target.GlobalPosition) <= Range)
+			{
+				Fire();
+				_fireTimer = FireRate;
+			}
+		}
+	}
+
+	private void FindNearestTarget()
+	{
+		_target = null;
+		float closestDistance = Range + 1;
+
+		var enemies = GetTree().GetNodesInGroup(\"enemies\");
+
+		foreach (Node2D enemy in enemies)
+		{
+			float distance = GlobalPosition.DistanceTo(enemy.GlobalPosition);
+			if (distance < closestDistance)
+			{
+				closestDistance = distance;
+				_target = enemy;
+			}
+		}
+	}
+
+	private void Fire()
+	{
+		if (ProjectileScene == null)
+		{
+			GD.Print(\"No projectile scene assigned!\");
+			return;
+		}
+
+		var projectile = ProjectileScene.Instantiate<Node2D>();
+		projectile.GlobalPosition = GlobalPosition;
+		projectile.Rotation = Rotation;  // aim in the direction we're facing
+
+		// Add to root or dedicated projectiles folder
+		GetTree().Root.GetNode<Node2D>(\"/root/MainLevel/Projectiles\").AddChild(projectile);
+		// OR: GetParent().AddChild(projectile);
+
+		GD.Print(\"Tower fired!\");
+	}
+}
+"
+
+[node name="MainTower" type="Node"]
+
+[node name="Tower" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_fkwwx")
+script = SubResource("CSharpScript_o56gu")
+RotationSpeed = null
+Range = null

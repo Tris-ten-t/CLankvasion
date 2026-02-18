@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbsmm2170dfpw"]
+
+[ext_resource type="PackedScene" uid="uid://ck3m0gcxmo7op" path="res://scenes/MainTower.tscn" id="1_u55m2"]
+
+[node name="Area" type="Node"]
+
+[node name="MainTower" parent="." instance=ExtResource("1_u55m2")]
+
+[node name="Camera2D" type="Camera2D" parent="."]
