@@ -1,0 +1,57 @@
+[gd_scene load_steps=9 format=3 uid="uid://dpled4ujbgqu"]
+
+[ext_resource type="Texture2D" uid="uid://dstayombraycq" path="res://assets/Enemies/Bull Anim.png" id="1_o3ct1"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ndjfh"]
+atlas = ExtResource("1_o3ct1")
+region = Rect2(0, 0, 23, 23)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bjrxw"]
+atlas = ExtResource("1_o3ct1")
+region = Rect2(23, 0, 23, 23)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a7a4j"]
+atlas = ExtResource("1_o3ct1")
+region = Rect2(23, 23, 23, 23)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ml245"]
+atlas = ExtResource("1_o3ct1")
+region = Rect2(46, 0, 23, 23)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8gl03"]
+atlas = ExtResource("1_o3ct1")
+region = Rect2(69, 0, 23, 23)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rhgqv"]
+atlas = ExtResource("1_o3ct1")
+region = Rect2(69, 23, 23, 23)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0kix7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ndjfh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bjrxw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a7a4j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ml245")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8gl03")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rhgqv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Bull" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_0kix7")
+frame_progress = 0.0385095

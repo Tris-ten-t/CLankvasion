@@ -1,0 +1,127 @@
+[gd_scene load_steps=19 format=3 uid="uid://c7huempgi1551"]
+
+[ext_resource type="Texture2D" uid="uid://brtuieg7ynj0b" path="res://assets/Enemies/Roller Anim.png" id="1_hl635"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f52uy"]
+atlas = ExtResource("1_hl635")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_15vqc"]
+atlas = ExtResource("1_hl635")
+region = Rect2(16, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_miy4y"]
+atlas = ExtResource("1_hl635")
+region = Rect2(32, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voap7"]
+atlas = ExtResource("1_hl635")
+region = Rect2(48, 0, 12, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_inib0"]
+atlas = ExtResource("1_hl635")
+region = Rect2(0, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vk0ne"]
+atlas = ExtResource("1_hl635")
+region = Rect2(16, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_82avq"]
+atlas = ExtResource("1_hl635")
+region = Rect2(32, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ggftm"]
+atlas = ExtResource("1_hl635")
+region = Rect2(48, 16, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3bqkl"]
+atlas = ExtResource("1_hl635")
+region = Rect2(0, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a3j6e"]
+atlas = ExtResource("1_hl635")
+region = Rect2(16, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8d20"]
+atlas = ExtResource("1_hl635")
+region = Rect2(32, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vlj38"]
+atlas = ExtResource("1_hl635")
+region = Rect2(48, 32, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nv77i"]
+atlas = ExtResource("1_hl635")
+region = Rect2(0, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0mmpc"]
+atlas = ExtResource("1_hl635")
+region = Rect2(16, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dec2p"]
+atlas = ExtResource("1_hl635")
+region = Rect2(32, 48, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c2v3v"]
+atlas = ExtResource("1_hl635")
+region = Rect2(48, 48, 16, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vr8cf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f52uy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_15vqc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_miy4y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voap7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_inib0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vk0ne")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_82avq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ggftm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3bqkl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a3j6e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8d20")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vlj38")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nv77i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0mmpc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dec2p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c2v3v")
+}],
+"loop": true,
+"name": &"default",
+"speed": 15.0
+}]
+
+[node name="Roller" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_vr8cf")
+frame_progress = 0.0193641
