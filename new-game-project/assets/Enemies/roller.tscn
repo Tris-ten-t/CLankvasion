@@ -183,8 +183,10 @@ radius = 6.0
 
 [node name="Roller" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_vr8cf")
-frame_progress = 0.24103
+frame_progress = 0.89498
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 position = Vector2(2, 2)
 shape = SubResource("CircleShape2D_hl635")

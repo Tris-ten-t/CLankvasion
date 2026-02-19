@@ -23,6 +23,8 @@ radius = 11.0
 [node name="Clunk" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_1f4xi")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 position = Vector2(2, -1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("CapsuleShape2D_ywoas")

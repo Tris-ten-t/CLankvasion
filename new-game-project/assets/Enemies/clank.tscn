@@ -43,8 +43,10 @@ size = Vector2(24, 19)
 
 [node name="Clank" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_hbqr6")
-frame_progress = 0.392338
+frame_progress = 0.901417
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 position = Vector2(2, -0.5)
 shape = SubResource("RectangleShape2D_atla5")

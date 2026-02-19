@@ -56,8 +56,10 @@ animations = [{
 
 [node name="Bull" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_0kix7")
-frame_progress = 0.910069
+frame_progress = 0.473287
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
 position = Vector2(2, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
 shape = SubResource("RectangleShape2D_o3ct1")
