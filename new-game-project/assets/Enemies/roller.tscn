@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c7huempgi1551"]
+[gd_scene load_steps=20 format=3 uid="uid://c7huempgi1551"]
 
 [ext_resource type="Texture2D" uid="uid://brtuieg7ynj0b" path="res://assets/Enemies/Roller Anim.png" id="1_hl635"]
 
@@ -122,6 +122,12 @@ animations = [{
 "speed": 15.0
 }]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_hl635"]
+radius = 7.0
+
 [node name="Roller" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_vr8cf")
-frame_progress = 0.0193641
+frame_progress = 0.664439
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hl635")

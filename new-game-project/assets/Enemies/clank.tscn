@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b4i5e0tapu7lm"]
+[gd_scene load_steps=8 format=3 uid="uid://b4i5e0tapu7lm"]
 
 [ext_resource type="Texture2D" uid="uid://dcx40vcwh3lsr" path="res://assets/Enemies/Clank Anim.png" id="1_atla5"]
 
@@ -38,6 +38,13 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_atla5"]
+size = Vector2(24, 19)
+
 [node name="Clank" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_hbqr6")
-frame_progress = 0.80835
+frame_progress = 0.392338
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, -0.5)
+shape = SubResource("RectangleShape2D_atla5")
