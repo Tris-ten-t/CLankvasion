@@ -1,9 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="PackedScene" uid="uid://ck3m0gcxmo7op" path="res://scenes/MainTower.tscn" id="1_u55m2"]
 
-[node name="Area" type="Node"]
+[node name="Area" type="Node" unique_id=248113554]
 
-[node name="MainTower" parent="." instance=ExtResource("1_u55m2")]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1569872497]
+position = Vector2(576, 325)
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="MainTower" parent="." unique_id=279912277 instance=ExtResource("1_u55m2")]
