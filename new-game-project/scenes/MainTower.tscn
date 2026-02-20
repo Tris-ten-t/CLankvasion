@@ -1,0 +1,44 @@
+[gd_scene load_steps=6 format=3 uid="uid://cm84pu335w870"]
+
+[ext_resource type="Texture2D" uid="uid://cl122exihovd0" path="res://assets/towers/updatedBaseTower.png" id="1_t32sk"]
+[ext_resource type="Script" uid="uid://bklbyd84xfg5g" path="res://scripts/MainTower.cs" id="2_o56gu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t32sk"]
+atlas = ExtResource("1_t32sk")
+region = Rect2(0, 0, 10, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o56gu"]
+atlas = ExtResource("1_t32sk")
+region = Rect2(10, 0, 10, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_idmp4"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t32sk")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o56gu")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 10.0
+}]
+
+[node name="MainTower" type="AnimatedSprite2D"]
+position = Vector2(111, 48)
+scale = Vector2(5, 4.96)
+sprite_frames = SubResource("SpriteFrames_idmp4")
+animation = &"shoot"
+flip_v = true
+script = ExtResource("2_o56gu")
