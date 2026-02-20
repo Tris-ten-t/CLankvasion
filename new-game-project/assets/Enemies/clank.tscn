@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://b4i5e0tapu7lm"]
+
+[ext_resource type="Texture2D" uid="uid://dcx40vcwh3lsr" path="res://assets/Enemies/Clank Anim.png" id="1_atla5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jvlu8"]
+atlas = ExtResource("1_atla5")
+region = Rect2(0, 0, 27, 27)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ier7j"]
+atlas = ExtResource("1_atla5")
+region = Rect2(27, 0, 27, 27)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hrlax"]
+atlas = ExtResource("1_atla5")
+region = Rect2(54, 0, 27, 27)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v2s41"]
+atlas = ExtResource("1_atla5")
+region = Rect2(0, 24, 27, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hbqr6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jvlu8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ier7j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hrlax")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v2s41")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_atla5"]
+size = Vector2(24, 19)
+
+[node name="Clank" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_hbqr6")
+frame_progress = 0.901417
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(2, -0.5)
+shape = SubResource("RectangleShape2D_atla5")

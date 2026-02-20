@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0rkxhdv2kkdu"]
+
+[ext_resource type="Texture2D" uid="uid://cpe1r71gu2i1g" path="res://assets/Enemies/Clunk Sprite.png" id="1_ywoas"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5daa"]
+atlas = ExtResource("1_ywoas")
+region = Rect2(0, 0, 26, 39)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1f4xi"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q5daa")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ywoas"]
+radius = 11.0
+
+[node name="Clunk" type="AnimatedSprite2D"]
+sprite_frames = SubResource("SpriteFrames_1f4xi")
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(2, -1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CapsuleShape2D_ywoas")

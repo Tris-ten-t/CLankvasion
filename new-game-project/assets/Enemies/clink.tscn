@@ -1,0 +1,53 @@
+[gd_scene load_steps=8 format=3 uid="uid://chnra4p4agvlf"]
+
+[ext_resource type="Texture2D" uid="uid://cxnkqik5nik7l" path="res://assets/Enemies/Clink Anim.png" id="1_gjue2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0m6ei"]
+atlas = ExtResource("1_gjue2")
+region = Rect2(0, 0, 32, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sy543"]
+atlas = ExtResource("1_gjue2")
+region = Rect2(32, 0, 32, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sili1"]
+atlas = ExtResource("1_gjue2")
+region = Rect2(64, 0, 32, 26)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_omhnb"]
+atlas = ExtResource("1_gjue2")
+region = Rect2(0, 26, 32, 26)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_vuh11"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0m6ei")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sy543")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sili1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_omhnb")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_gjue2"]
+points = PackedVector2Array(0, -16, 16, 9, -16, 9)
+
+[node name="Clink" type="AnimatedSprite2D"]
+position = Vector2(-2, -3)
+sprite_frames = SubResource("SpriteFrames_vuh11")
+frame_progress = 0.860839
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+position = Vector2(2, 3)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("ConvexPolygonShape2D_gjue2")
