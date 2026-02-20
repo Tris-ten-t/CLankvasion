@@ -2,54 +2,44 @@ using Godot;
 
 public partial class MainTower : AnimatedSprite2D
 {
-	// Exported variables – adjustable in the Inspector
 	[Export] public PackedScene BulletScene;
-	[Export] public float FireRate = 0.5f;          // seconds between shots
-	[Export] public float BulletSpeed = 800f;       // pixels/second
+	[Export] public float FireRate = 0.5f;
+	[Export] public float BulletSpeed = 800f;
 
-	// Animation names – change these if your SpriteFrames use different names
 	[Export] public string IdleAnimation = "idle";
 	[Export] public string ShootAnimation = "shoot";
-	[Export] public float ShootFlashDuration = 0.15f;  // how long the smoke frame shows
+	[Export] public float ShootFlashDuration = 0.15f;
 
-	// Internal state
 	private double lastFireTime = 0.0;
 	private Marker2D muzzle;
 	private Timer shootFlashTimer;
 
 	public override void _Ready()
 	{
-		// Setup muzzle (barrel tip) – create if missing
 		muzzle = GetNodeOrNull<Marker2D>("Muzzle");
 		if (muzzle == null)
 		{
 			GD.Print("Creating automatic Muzzle node");
 			muzzle = new Marker2D();
 			muzzle.Name = "Muzzle";
-			muzzle.Position = new Vector2(30, 0);   // ← adjust this value to match your sprite's barrel length
+			muzzle.Position = new Vector2(30, 0);   // adjust to your barrel tip
 			AddChild(muzzle);
 		}
 
-		// Setup timer for shoot flash (smoke → idle)
 		shootFlashTimer = new Timer();
 		shootFlashTimer.OneShot = true;
 		shootFlashTimer.Timeout += () => Play(IdleAnimation);
 		AddChild(shootFlashTimer);
 
-		// Start in idle state
 		Play(IdleAnimation);
 	}
 
 	public override void _Process(double delta)
 	{
-		// Aim at mouse cursor
 		Vector2 mousePos = GetGlobalMousePosition();
 		LookAt(mousePos);
+		Rotation -= Mathf.Pi / 2;   // -90° offset for upward-facing sprite
 
-		// Offset because your sprite is drawn facing up (most common top-down case)
-		Rotation -= Mathf.Pi / 2;   // -90 degrees
-
-		// Fire while holding left mouse button
 		if (Input.IsMouseButtonPressed(MouseButton.Left))
 		{
 			TryFire(mousePos);
@@ -66,15 +56,14 @@ public partial class MainTower : AnimatedSprite2D
 
 		if (BulletScene == null)
 		{
-			GD.PrintErr("BulletScene export is not set! Drag your Bullet.tscn into the Inspector.");
+			GD.PrintErr("BulletScene export is not set!");
 			return;
 		}
 
-		// Spawn bullet
 		var bullet = BulletScene.Instantiate<RigidBody2D>();
 		if (bullet == null)
 		{
-			GD.PrintErr("Failed to instantiate bullet scene");
+			GD.PrintErr("Failed to instantiate bullet");
 			return;
 		}
 
@@ -84,11 +73,7 @@ public partial class MainTower : AnimatedSprite2D
 		Vector2 direction = (targetPos - muzzle.GlobalPosition).Normalized();
 		bullet.LinearVelocity = direction * BulletSpeed;
 
-		// Play shoot animation (smoke puff)
 		Play(ShootAnimation);
 		shootFlashTimer.Start(ShootFlashDuration);
-
-		// Optional debug output
-		// GD.Print($"Shot fired at {now:F2}s from {muzzle.GlobalPosition}");
 	}
 }
