@@ -1,0 +1,90 @@
+[gd_scene format=3 uid="uid://cea1sc4qofuos"]
+
+[ext_resource type="Script" uid="uid://bobiojdrbskk3" path="res://scenes/MainMenu.cs" id="1_yqorp"]
+[ext_resource type="Texture2D" uid="uid://cbii6cfpsmse8" path="res://assets/Misc/clank-pixilart.png" id="2_0ykhv"]
+
+[node name="Control" type="Control" unique_id=1974016197]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_yqorp")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=686520304]
+position = Vector2(571, 328)
+
+[node name="BackgroundBase" type="TextureRect" parent="." unique_id=1804335185]
+layout_mode = 0
+offset_top = -5.0
+offset_right = 1141.0
+offset_bottom = 643.0
+
+[node name="AnimatedSpriteBG" type="TextureRect" parent="." unique_id=1274283422]
+custom_minimum_size = Vector2(3000, 2000)
+layout_mode = 0
+offset_left = 0.9999981
+offset_top = -109.99999
+offset_right = 3001.0
+offset_bottom = 1890.0
+scale = Vector2(0.38, 0.38)
+texture = ExtResource("2_0ykhv")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1029276344]
+layout_mode = 0
+offset_left = -408.0
+offset_top = -203.0
+offset_right = 1522.0
+offset_bottom = 899.0
+
+[node name="MainButtons" type="VBoxContainer" parent="CenterContainer" unique_id=254442894]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="CenterContainer/MainButtons" unique_id=351005515]
+layout_mode = 2
+text = "Start"
+
+[node name="SettingsButton" type="Button" parent="CenterContainer/MainButtons" unique_id=1855701145]
+layout_mode = 2
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="CenterContainer/MainButtons" unique_id=1385837421]
+layout_mode = 2
+text = "Quit"
+
+[node name="SettingsPanel" type="VBoxContainer" parent="CenterContainer" unique_id=1716621668]
+visible = false
+layout_mode = 2
+
+[node name="VolumeLabel" type="Label" parent="CenterContainer/SettingsPanel" unique_id=1194121786]
+layout_mode = 2
+text = "Volume"
+
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsPanel" unique_id=542931745]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="ResolutionLabel" type="Label" parent="CenterContainer/SettingsPanel" unique_id=402483063]
+layout_mode = 2
+
+[node name="ResolutionOption" type="OptionButton" parent="CenterContainer/SettingsPanel" unique_id=1477444455]
+layout_mode = 2
+item_count = 3
+popup/item_0/text = "1280x720"
+popup/item_0/id = 0
+popup/item_1/text = "1920x1080"
+popup/item_1/id = 1
+popup/item_2/text = "2560x1440"
+popup/item_2/id = 2
+
+[node name="FullscreenToggle" type="CheckButton" parent="CenterContainer/SettingsPanel" unique_id=919525008]
+layout_mode = 2
+text = "Fullscreen"
+
+[node name="BackButton" type="Button" parent="CenterContainer/SettingsPanel" unique_id=936981208]
+layout_mode = 2
+text = "Back"
