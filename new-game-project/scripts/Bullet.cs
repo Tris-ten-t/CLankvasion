@@ -2,38 +2,60 @@ using Godot;
 
 public partial class Bullet : RigidBody2D
 {
-	[Export] public float Lifetime = 5.0f;     // auto-destroy after X seconds
-	[Export] public float Speed = 800f;         // should match tower's BulletSpeed
+	[Export] public float Lifetime = 5.0f;
+	[Export] public float Speed = 800f;
+
+	private bool _hasSetRotation = false;
 
 	public override void _Ready()
 	{
-		// Make bullet face its travel direction (optional – visual only)
-		if (LinearVelocity.LengthSquared() > 0.1f)
-		{
-			LookAt(GlobalPosition + LinearVelocity);
-			// If your bullet sprite faces UP in editor, uncomment:
-			// Rotation -= Mathf.Pi / 2;
-		}
+		// Enable contact monitoring for better signal reliability
+		ContactMonitor = true;
+		MaxContactsReported = 4;
 
-		// Auto-destroy timer
+		BodyEntered += OnBodyEntered;
+
 		var timer = new Timer();
 		timer.WaitTime = Lifetime;
 		timer.OneShot = true;
 		timer.Timeout += QueueFree;
 		AddChild(timer);
 		timer.Start();
+
+		GD.Print("Bullet spawned");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		// Keep constant speed (useful if there's friction or collisions)
 		if (LinearVelocity.LengthSquared() > 0.1f)
 		{
 			LinearVelocity = LinearVelocity.Normalized() * Speed;
 		}
 
-		// Optional: destroy if way off-screen
+		if (!_hasSetRotation && LinearVelocity.LengthSquared() > 0.1f)
+		{
+			LookAt(GlobalPosition + LinearVelocity);
+			_hasSetRotation = true;
+		}
+
 		if (GlobalPosition.Length() > 3000)
 			QueueFree();
+	}
+
+	private void OnBodyEntered(Node body)
+	{
+		GD.Print($"[Bullet] BodyEntered fired - hit: {body.Name} (type: {body.GetType().Name})");
+
+		if (body is Enemy enemy)
+		{
+			GD.Print("[Bullet] → Confirmed Enemy - calling TakeDamage(1)");
+			enemy.TakeDamage(1);
+		}
+		else
+		{
+			GD.Print("[Bullet] Hit something, but not an Enemy");
+		}
+
+		QueueFree();
 	}
 }
