@@ -1,0 +1,220 @@
+[gd_scene format=3 uid="uid://l10cqcjw4o6l"]
+
+[ext_resource type="Script" uid="uid://bnydq60pb2adb" path="res://scripts/Enemy.cs" id="1_3gvst"]
+[ext_resource type="Texture2D" uid="uid://brtuieg7ynj0b" path="res://assets/Enemies/Roller Anim.png" id="2_55jtl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mpr68"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(4, 4, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ft8do"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(19, 4, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5wwv6"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(34, 4, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1vja8"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(49, 4, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iwav8"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(64, 4, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1i2q2"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(79, 4, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ly5gv"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(4, 19, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_82o86"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(19, 19, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1gqeq"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(34, 19, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_isvm2"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(49, 19, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gr8dl"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(64, 19, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_axa8o"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(79, 19, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4iqch"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(4, 34, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x3f71"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(19, 34, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ksmwx"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(34, 34, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oq86d"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(49, 34, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_joqoj"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(64, 34, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_govun"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(79, 34, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hwoi6"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(4, 49, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g512e"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(19, 49, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pl6g4"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(34, 49, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1yns"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(49, 49, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8fyuy"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(64, 49, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q5i3e"]
+atlas = ExtResource("2_55jtl")
+region = Rect2(79, 49, 11, 11)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_16wof"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mpr68")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ft8do")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5wwv6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1vja8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iwav8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1i2q2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ly5gv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_82o86")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1gqeq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_isvm2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gr8dl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_axa8o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4iqch")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x3f71")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ksmwx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oq86d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_joqoj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_govun")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hwoi6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g512e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pl6g4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u1yns")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8fyuy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q5i3e")
+}],
+"loop": false,
+"name": &"walk",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hkgyc"]
+radius = 17.0294
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_55jtl"]
+bg_color = Color(0.150716, 0.713147, 0.359355, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+
+[node name="Enemy" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 4
+script = ExtResource("1_3gvst")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+scale = Vector2(3, 3)
+sprite_frames = SubResource("SpriteFrames_16wof")
+animation = &"walk"
+frame = 23
+frame_progress = 1.0
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hkgyc")
+
+[node name="HealthBar" type="ProgressBar" parent="."]
+offset_left = -15.0
+offset_top = -30.0
+offset_right = 15.0
+offset_bottom = -24.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_styles/fill = SubResource("StyleBoxFlat_55jtl")
+value = 100.0
+show_percentage = false

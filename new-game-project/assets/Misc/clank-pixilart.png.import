@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ibnmuv7j0fur"
-path="res://.godot/imported/Tower3.png-74ed50af192fbcf989bae5d94ec4851f.ctex"
+uid="uid://cbii6cfpsmse8"
+path="res://.godot/imported/clank-pixilart.png-0b54b2eaf293293e5e2845473106fe1c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/towers/Tower3.png"
-dest_files=["res://.godot/imported/Tower3.png-74ed50af192fbcf989bae5d94ec4851f.ctex"]
+source_file="res://assets/Misc/clank-pixilart.png"
+dest_files=["res://.godot/imported/clank-pixilart.png-0b54b2eaf293293e5e2845473106fe1c.ctex"]
 
 [params]
 
