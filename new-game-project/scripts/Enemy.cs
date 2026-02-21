@@ -46,14 +46,15 @@ public partial class Enemy : CharacterBody2D
 		{
 			LookAt(GlobalPosition + direction);
 			
-			// If animation points wrong, uncomment/adjust offset:
-			// Rotation -= Mathf.Pi / 2;  // -90° for upward-facing sprites
+			// FIXED: If your walk sprite faces UP in editor (common), uncomment this:
+			Rotation -= Mathf.Pi / 2;  // -90° offset → front points to player
 		}
 
-		// FIXED: Counter-rotate health bar to stay HORIZONTAL
+		// FIXED: Force health bar to stay HORIZONTAL (counter-rotate every frame)
 		if (_healthBar != null)
 		{
-			_healthBar.Rotation = -Rotation;  // Cancels parent's rotation
+			_healthBar.Rotation = -Rotation;  // Cancels enemy rotation
+			_healthBar.RotationDegrees = 0;   // Extra lock to 0° (horizontal)
 		}
 	}
 
