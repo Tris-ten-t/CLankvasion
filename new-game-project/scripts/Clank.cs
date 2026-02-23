@@ -1,9 +1,9 @@
 using Godot;
 
-public partial class Enemy : CharacterBody2D
+public partial class Clank : CharacterBody2D
 {
-	[Export] public float Speed = 60f;
-	[Export] public int MaxHealth = 3;
+	[Export] public float Speed = 45f;
+	[Export] public int MaxHealth = 10;
 	[Export] public string WalkAnimation = "walk";
 
 	private int _currentHealth;
@@ -54,17 +54,18 @@ public partial class Enemy : CharacterBody2D
 		Velocity = direction * Speed;
 		MoveAndSlide();
 
+		// Rotate enemy + animation toward player/tower
 		if (direction.LengthSquared() > 0.1f)
 		{
 			LookAt(GlobalPosition + direction);
-			Rotation += Mathf.Pi / 2; // your working animation offset
+			Rotation += Mathf.Pi / 2; // +90 degrees (your working offset)
 		}
 
 		// Health bar: always above head + forced horizontal
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 		{
 			_healthBarInstance.Rotation = Mathf.Pi / 2;  // +90° = horizontal
-			// If bar is upside-down after this, change to: -Mathf.Pi / 2
+			// If bar is upside-down, change to: -Mathf.Pi / 2
 
 			Vector2 worldOffset = new Vector2(0, -50); // tune Y for height
 			_healthBarInstance.GlobalPosition = GlobalPosition + worldOffset;
