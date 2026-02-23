@@ -35,9 +35,9 @@ ClankScene = ExtResource("5_t8tu6")
 [node name="HealthBarTemplate" type="ProgressBar" parent="." unique_id=1926644170]
 visible = false
 custom_minimum_size = Vector2(0, -25)
-offset_left = 7.0
+offset_left = 100.0
 offset_top = 3.0
-offset_right = 11.0
+offset_right = 104.0
 offset_bottom = 30.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_2hywi")
 show_percentage = false
