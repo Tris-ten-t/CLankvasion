@@ -1,9 +1,9 @@
 using Godot;
 
-public partial class Enemy : CharacterBody2D
+public partial class Clank : CharacterBody2D
 {
-	[Export] public float Speed = 60f;
-	[Export] public int MaxHealth = 3;
+	[Export] public float Speed = 45f;          // Slower than roller
+	[Export] public int MaxHealth = 10;         // Tankier
 	[Export] public string WalkAnimation = "walk";
 
 	private int _currentHealth;
@@ -18,7 +18,7 @@ public partial class Enemy : CharacterBody2D
 		_healthBar = GetNode<ProgressBar>("HealthBar");
 		_animatedSprite = GetNode<AnimatedSprite2D>("Sprite");
 
-		// Animation setup
+		// Animation setup (same as roller)
 		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null &&
 			_animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
 		{
@@ -41,15 +41,11 @@ public partial class Enemy : CharacterBody2D
 		Velocity = direction * Speed;
 		MoveAndSlide();
 
-		// Rotate enemy + animation toward player/tower
+		// Rotate enemy + animation toward player/tower (your working version)
 		if (direction.LengthSquared() > 0.1f)
 		{
 			LookAt(GlobalPosition + direction);
-
-			// 90° offset (since they were 90° off - this should fix it)
-			Rotation += Mathf.Pi / 2;   // +90 degrees
-			// If still wrong direction, try instead:
-			// Rotation -= Mathf.Pi / 2;   // -90 degrees
+			Rotation += Mathf.Pi / 2; // +90 degrees (this fixed facing)
 		}
 
 		// Health bar stays horizontal

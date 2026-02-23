@@ -1,23 +1,25 @@
-[gd_scene format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene load_steps=6 format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/MainTower.tscn" id="1_u55m2"]
 [ext_resource type="PackedScene" uid="uid://crbfak2hna7a3" path="res://scenes/bullet.tscn" id="2_8qhwf"]
 [ext_resource type="Script" uid="uid://bmsu2c03wmaf0" path="res://scripts/EnemySpawner.cs" id="3_5jt5u"]
 [ext_resource type="PackedScene" uid="uid://l10cqcjw4o6l" path="res://scenes/Enemy.tscn" id="4_t8tu6"]
+[ext_resource type="PackedScene" uid="uid://bctmja5grypfx" path="res://scenes/Clank.tscn" id="5_t8tu6"]
 
-[node name="Area" type="Node" unique_id=1296137731]
+[node name="Area" type="Node"]
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1833380984]
+[node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(576, 325)
 
-[node name="MainTower" parent="." unique_id=474604522 groups=["towers"] instance=ExtResource("1_u55m2")]
+[node name="MainTower" parent="." groups=["towers"] instance=ExtResource("1_u55m2")]
 position = Vector2(576, 325)
 scale = Vector2(3, 2.976)
 BulletScene = ExtResource("2_8qhwf")
 
-[node name="Muzzle" type="Marker2D" parent="MainTower" unique_id=210811148]
+[node name="Muzzle" type="Marker2D" parent="MainTower"]
 position = Vector2(0, 7.86291)
 
-[node name="EnemySpawner" type="Node2D" parent="." unique_id=1099572749]
+[node name="EnemySpawner" type="Node2D" parent="."]
 script = ExtResource("3_5jt5u")
-EnemyScene = ExtResource("4_t8tu6")
+RollerScene = ExtResource("4_t8tu6")
+ClankScene = ExtResource("5_t8tu6")
