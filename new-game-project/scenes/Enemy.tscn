@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://l10cqcjw4o6l"]
+[gd_scene load_steps=30 format=3 uid="uid://l10cqcjw4o6l"]
 
 [ext_resource type="Script" uid="uid://bnydq60pb2adb" path="res://scripts/Enemy.cs" id="1_3gvst"]
 [ext_resource type="Texture2D" uid="uid://brtuieg7ynj0b" path="res://assets/Enemies/Roller Anim.png" id="2_55jtl"]
@@ -181,7 +181,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"walk",
-"speed": 10.0
+"speed": 20.0
 }]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hkgyc"]

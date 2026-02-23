@@ -19,11 +19,11 @@ public partial class Enemy : CharacterBody2D
 		_animatedSprite = GetNode<AnimatedSprite2D>("Sprite");
 
 		// Animation setup
-		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null && 
+		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null &&
 			_animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
 		{
 			_animatedSprite.Play(WalkAnimation);
-			_animatedSprite.AnimationFinished += () => _animatedSprite.Play(WalkAnimation);  // Loop
+			_animatedSprite.AnimationFinished += () => _animatedSprite.Play(WalkAnimation); // Loop
 		}
 
 		_tower = GetTree().GetFirstNodeInGroup("towers") as Node2D;
@@ -45,16 +45,18 @@ public partial class Enemy : CharacterBody2D
 		if (direction.LengthSquared() > 0.1f)
 		{
 			LookAt(GlobalPosition + direction);
-			
-			// FIXED: If your walk sprite faces UP in editor (common), uncomment this:
-			Rotation -= Mathf.Pi / 2;  // -90° offset → front points to player
+
+			// 90° offset (since they were 90° off - this should fix it)
+			Rotation += Mathf.Pi / 2;   // +90 degrees
+			// If still wrong direction, try instead:
+			// Rotation -= Mathf.Pi / 2;   // -90 degrees
 		}
 
-		// FIXED: Force health bar to stay HORIZONTAL (counter-rotate every frame)
+		// Health bar stays horizontal
 		if (_healthBar != null)
 		{
-			_healthBar.Rotation = -Rotation;  // Cancels enemy rotation
-			_healthBar.RotationDegrees = 0;   // Extra lock to 0° (horizontal)
+			_healthBar.Rotation = -Rotation;
+			_healthBar.RotationDegrees = 0; // extra lock
 		}
 	}
 
