@@ -2,44 +2,44 @@ using Godot;
 
 public partial class MainTower : AnimatedSprite2D
 {
-	// Exported variables – visible & editable in the Inspector
 	[Export] public PackedScene BulletScene;
-	[Export] public float FireRate = 0.5f;      // seconds between shots
-	[Export] public float BulletSpeed = 800f;   // pixels per second
+	[Export] public float FireRate = 0.5f;
+	[Export] public float BulletSpeed = 800f;
 
-	// Class-level variables
+	[Export] public string IdleAnimation = "idle";
+	[Export] public string ShootAnimation = "shoot";
+	[Export] public float ShootFlashDuration = 0.15f;
+
 	private double lastFireTime = 0.0;
 	private Marker2D muzzle;
+	private Timer shootFlashTimer;
 
 	public override void _Ready()
 	{
-		// Get or create the Muzzle marker (where bullets spawn from)
 		muzzle = GetNodeOrNull<Marker2D>("Muzzle");
 		if (muzzle == null)
 		{
-			GD.Print("Muzzle node not found – creating one automatically");
+			GD.Print("Creating automatic Muzzle node");
 			muzzle = new Marker2D();
 			muzzle.Name = "Muzzle";
-			muzzle.Position = new Vector2(30, 0);   // ← change this to match your barrel/tip length
+			muzzle.Position = new Vector2(30, 0);   // adjust to your barrel tip
 			AddChild(muzzle);
 		}
+
+		shootFlashTimer = new Timer();
+		shootFlashTimer.OneShot = true;
+		shootFlashTimer.Timeout += () => Play(IdleAnimation);
+		AddChild(shootFlashTimer);
+
+		Play(IdleAnimation);
 	}
 
 	public override void _Process(double delta)
 	{
-		// Get mouse position in world coordinates
 		Vector2 mousePos = GetGlobalMousePosition();
-
-		// Make the sprite look at the mouse (makes +X axis point toward mouse)
 		LookAt(mousePos);
+		Rotation -= Mathf.Pi / 2;   // -90° offset for upward-facing sprite
 
-		// IMPORTANT FIX: your sprite was -90° off → most top-down tower sprites face UP by default
-		Rotation -= Mathf.Pi / 2;   // -90 degrees → front now points correctly at mouse
-
-		// Optional: if you ever want the opposite direction, use +90° instead
-		// Rotation += Mathf.Pi / 2;
-
-		// Fire while holding left mouse button
 		if (Input.IsMouseButtonPressed(MouseButton.Left))
 		{
 			TryFire(mousePos);
@@ -56,29 +56,24 @@ public partial class MainTower : AnimatedSprite2D
 
 		if (BulletScene == null)
 		{
-			GD.PrintErr("BulletScene is not assigned in the Inspector!");
+			GD.PrintErr("BulletScene export is not set!");
 			return;
 		}
 
-		// Spawn the bullet instance
 		var bullet = BulletScene.Instantiate<RigidBody2D>();
 		if (bullet == null)
 		{
-			GD.PrintErr("Failed to instantiate bullet – check that Bullet.tscn is valid");
+			GD.PrintErr("Failed to instantiate bullet");
 			return;
 		}
 
-		// Add it to the current scene (so it moves in world space)
 		GetTree().CurrentScene.AddChild(bullet);
-
-		// Set starting position to the muzzle (barrel tip)
 		bullet.GlobalPosition = muzzle.GlobalPosition;
 
-		// Calculate direction toward where the mouse was when fired
 		Vector2 direction = (targetPos - muzzle.GlobalPosition).Normalized();
 		bullet.LinearVelocity = direction * BulletSpeed;
 
-		// Debug print (visible in Output panel) – remove later if you want
-		GD.Print($"Bullet fired from {muzzle.GlobalPosition} toward {targetPos}");
+		Play(ShootAnimation);
+		shootFlashTimer.Start(ShootFlashDuration);
 	}
 }
