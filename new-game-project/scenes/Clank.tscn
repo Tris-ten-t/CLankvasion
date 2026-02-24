@@ -95,11 +95,6 @@ region = Rect2(4, 27, 24, 19)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_16wof"]
 animations = [{
-"frames": [],
-"loop": true,
-"name": &"default",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_d8eoo")
@@ -155,9 +150,14 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_xd5h0")
 }],
-"loop": true,
-"name": &"new_animation",
+"loop": false,
+"name": &"death",
 "speed": 15.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"default",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -188,8 +188,9 @@ script = ExtResource("1_074mf")
 [node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1949486731]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
-animation = &"new_animation"
-frame_progress = 0.90881807
+animation = &"death"
+frame = 17
+frame_progress = 1.0
 
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=310856190]
 position = Vector2(0, -3)
