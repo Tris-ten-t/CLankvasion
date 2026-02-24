@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://cea1sc4qofuos"]
+[gd_scene load_steps=0 format=3 uid="uid://cea1sc4qofuos"]
 
-[ext_resource type="Script" uid="uid://bobiojdrbskk3" path="res://scenes/MainMenu.cs" id="1_yqorp"]
+[ext_resource type="Script" uid="uid://bobiojdrbskk3" path="res://scripts/MainMenu.cs" id="1_yqorp"]
 [ext_resource type="Texture2D" uid="uid://cbii6cfpsmse8" path="res://assets/Misc/clank-pixilart.png" id="2_0ykhv"]
 
 [node name="Control" type="Control" unique_id=1974016197]

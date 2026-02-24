@@ -4,20 +4,40 @@
 [ext_resource type="PackedScene" uid="uid://crbfak2hna7a3" path="res://scenes/bullet.tscn" id="2_8qhwf"]
 [ext_resource type="Script" uid="uid://bmsu2c03wmaf0" path="res://scripts/EnemySpawner.cs" id="3_5jt5u"]
 [ext_resource type="PackedScene" uid="uid://l10cqcjw4o6l" path="res://scenes/Enemy.tscn" id="4_t8tu6"]
+[ext_resource type="PackedScene" uid="uid://bctmja5grypfx" path="res://scenes/Clank.tscn" id="5_t8tu6"]
 
-[node name="Area" type="Node" unique_id=1296137731]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hywi"]
+bg_color = Color(2.3584068e-06, 0.7232804, 0.26335976, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0, 0, 1)
 
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1833380984]
+[node name="Area" type="Node" unique_id=107091928]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=964434698]
 position = Vector2(576, 325)
 
-[node name="MainTower" parent="." unique_id=474604522 groups=["towers"] instance=ExtResource("1_u55m2")]
+[node name="MainTower" parent="." unique_id=893642892 groups=["towers"] instance=ExtResource("1_u55m2")]
 position = Vector2(576, 325)
 scale = Vector2(3, 2.976)
 BulletScene = ExtResource("2_8qhwf")
 
-[node name="Muzzle" type="Marker2D" parent="MainTower" unique_id=210811148]
+[node name="Muzzle" type="Marker2D" parent="MainTower" unique_id=1886675755]
 position = Vector2(0, 7.86291)
 
-[node name="EnemySpawner" type="Node2D" parent="." unique_id=1099572749]
+[node name="EnemySpawner" type="Node2D" parent="." unique_id=595606249]
 script = ExtResource("3_5jt5u")
-EnemyScene = ExtResource("4_t8tu6")
+RollerScene = ExtResource("4_t8tu6")
+ClankScene = ExtResource("5_t8tu6")
+
+[node name="HealthBarTemplate" type="ProgressBar" parent="." unique_id=1926644170]
+visible = false
+custom_minimum_size = Vector2(0, -25)
+offset_left = 100.0
+offset_top = 3.0
+offset_right = 104.0
+offset_bottom = 30.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_2hywi")
+show_percentage = false
