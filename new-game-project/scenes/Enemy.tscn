@@ -1,7 +1,36 @@
-[gd_scene load_steps=29 format=3 uid="uid://l10cqcjw4o6l"]
+[gd_scene load_steps=37 format=3 uid="uid://l10cqcjw4o6l"]
 
 [ext_resource type="Script" uid="uid://bnydq60pb2adb" path="res://scripts/Enemy.cs" id="1_3gvst"]
 [ext_resource type="Texture2D" uid="uid://brtuieg7ynj0b" path="res://assets/Enemies/Walking/Roller Anim.png" id="2_55jtl"]
+[ext_resource type="Texture2D" uid="uid://dletku8o3vxis" path="res://assets/Enemies/Death/Roller Death Anim.png" id="2_mpr68"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_16wof"]
+atlas = ExtResource("2_mpr68")
+region = Rect2(6, 13, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hkgyc"]
+atlas = ExtResource("2_mpr68")
+region = Rect2(21, 13, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i63jh"]
+atlas = ExtResource("2_mpr68")
+region = Rect2(36, 13, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fqv8b"]
+atlas = ExtResource("2_mpr68")
+region = Rect2(51, 13, 11, 11)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_li06d"]
+atlas = ExtResource("2_mpr68")
+region = Rect2(66, 7, 18, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_voue8"]
+atlas = ExtResource("2_mpr68")
+region = Rect2(3, 29, 23, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_obj4n"]
+atlas = ExtResource("2_mpr68")
+region = Rect2(29, 28, 25, 27)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mpr68"]
 atlas = ExtResource("2_55jtl")
@@ -108,6 +137,32 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_16wof")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hkgyc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i63jh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fqv8b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_li06d")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_voue8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_obj4n")
+}],
+"loop": true,
+"name": &"new_animation",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_mpr68")
 }, {
 "duration": 1.0,
@@ -195,9 +250,8 @@ script = ExtResource("1_3gvst")
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
-animation = &"walk"
-frame = 23
-frame_progress = 1.0
+animation = &"new_animation"
+frame_progress = 0.383573
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_hkgyc")
