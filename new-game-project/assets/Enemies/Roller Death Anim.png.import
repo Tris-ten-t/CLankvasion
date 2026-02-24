@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl122exihovd0"
-path="res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"
+uid="uid://dletku8o3vxis"
+path="res://.godot/imported/Roller Death Anim.png-c29df971717d55fabd9682806d4b773b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/towers/updatedBaseTower.png"
-dest_files=["res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"]
+source_file="res://assets/Enemies/Roller Death Anim.png"
+dest_files=["res://.godot/imported/Roller Death Anim.png-c29df971717d55fabd9682806d4b773b.ctex"]
 
 [params]
 
