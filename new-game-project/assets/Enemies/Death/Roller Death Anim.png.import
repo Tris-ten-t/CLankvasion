@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brtuieg7ynj0b"
-path="res://.godot/imported/Roller Anim.png-00bdd47d42cb5e4c2beaab158d381e3d.ctex"
+uid="uid://dletku8o3vxis"
+path="res://.godot/imported/Roller Death Anim.png-87f2d35551c87b91a07fa40fca8b8d15.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/Roller Anim.png"
-dest_files=["res://.godot/imported/Roller Anim.png-00bdd47d42cb5e4c2beaab158d381e3d.ctex"]
+source_file="res://assets/Enemies/Death/Roller Death Anim.png"
+dest_files=["res://.godot/imported/Roller Death Anim.png-87f2d35551c87b91a07fa40fca8b8d15.ctex"]
 
 [params]
 

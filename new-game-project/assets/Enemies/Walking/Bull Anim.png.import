@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcx40vcwh3lsr"
-path="res://.godot/imported/Clank Anim.png-9d3790d021892892c759fd2dd7630ac2.ctex"
+uid="uid://dstayombraycq"
+path="res://.godot/imported/Bull Anim.png-3b0a5dd7f351b785bf7f814abea1bbdf.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/Clank Anim.png"
-dest_files=["res://.godot/imported/Clank Anim.png-9d3790d021892892c759fd2dd7630ac2.ctex"]
+source_file="res://assets/Enemies/Walking/Bull Anim.png"
+dest_files=["res://.godot/imported/Bull Anim.png-3b0a5dd7f351b785bf7f814abea1bbdf.ctex"]
 
 [params]
 

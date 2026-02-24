@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cxnkqik5nik7l"
-path="res://.godot/imported/Clink Anim.png-9bd879fa7e001c9142b49306f4f1ef1d.ctex"
+path="res://.godot/imported/Clink Anim.png-fd77e380cfebc1488b8d5aaddeed455f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/Clink Anim.png"
-dest_files=["res://.godot/imported/Clink Anim.png-9bd879fa7e001c9142b49306f4f1ef1d.ctex"]
+source_file="res://assets/Enemies/Walking/Clink Anim.png"
+dest_files=["res://.godot/imported/Clink Anim.png-fd77e380cfebc1488b8d5aaddeed455f.ctex"]
 
 [params]
 

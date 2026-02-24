@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl122exihovd0"
-path="res://.godot/imported/updatedBaseTower.png-105ab4a7aa95e83acd64f36cc783c418.ctex"
+uid="uid://cpe1r71gu2i1g"
+path="res://.godot/imported/Clunk Sprite.png-bb6ee5d76a792774aff618bce0d9cfb8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/updatedBaseTower.png"
-dest_files=["res://.godot/imported/updatedBaseTower.png-105ab4a7aa95e83acd64f36cc783c418.ctex"]
+source_file="res://assets/Enemies/Walking/Clunk Sprite.png"
+dest_files=["res://.godot/imported/Clunk Sprite.png-bb6ee5d76a792774aff618bce0d9cfb8.ctex"]
 
 [params]
 

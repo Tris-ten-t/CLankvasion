@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://cm84pu335w870"]
 
-[ext_resource type="Texture2D" uid="uid://cl122exihovd0" path="res://assets/updatedBaseTower.png" id="1_t32sk"]
+[ext_resource type="Texture2D" uid="uid://cl122exihovd0" path="res://assets/towers/updatedBaseTower.png" id="1_t32sk"]
 [ext_resource type="Script" uid="uid://bklbyd84xfg5g" path="res://scripts/MainTower.cs" id="2_o56gu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_t32sk"]
