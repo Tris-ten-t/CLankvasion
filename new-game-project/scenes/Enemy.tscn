@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://l10cqcjw4o6l"]
+[gd_scene load_steps=37 format=3 uid="uid://l10cqcjw4o6l"]
 
 [ext_resource type="Script" uid="uid://bnydq60pb2adb" path="res://scripts/Enemy.cs" id="1_3gvst"]
 [ext_resource type="Texture2D" uid="uid://brtuieg7ynj0b" path="res://assets/Enemies/Walking/Roller Anim.png" id="2_55jtl"]
@@ -152,7 +152,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_obj4n")
 }],
-"loop": true,
+"loop": false,
 "name": &"death",
 "speed": 10.0
 }, {
@@ -242,14 +242,15 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_hkgyc"]
 radius = 17.0294
 
-[node name="Enemy" type="CharacterBody2D" unique_id=74737356]
+[node name="Enemy" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_3gvst")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1706251097]
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
+animation = &"death"
 
-[node name="Collision" type="CollisionShape2D" parent="." unique_id=1661582948]
+[node name="Collision" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_hkgyc")

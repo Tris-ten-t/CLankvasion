@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bctmja5grypfx"]
+[gd_scene load_steps=29 format=3 uid="uid://bctmja5grypfx"]
 
 [ext_resource type="Script" uid="uid://jt7ll8na6vg8" path="res://scripts/Clank.cs" id="1_074mf"]
 [ext_resource type="Texture2D" uid="uid://dcx40vcwh3lsr" path="res://assets/Enemies/Walking/Clank Anim.png" id="2_40mx7"]
@@ -180,18 +180,18 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8eoo"]
 size = Vector2(69, 39)
 
-[node name="Enemy" type="CharacterBody2D" unique_id=1411700141]
+[node name="Enemy" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_074mf")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1949486731]
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
 animation = &"death"
 frame = 17
 frame_progress = 1.0
 
-[node name="Collision" type="CollisionShape2D" parent="." unique_id=310856190]
+[node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_d8eoo")
