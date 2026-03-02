@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl122exihovd0"
-path="res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"
+uid="uid://cpl8ao4rywpab"
+path="res://.godot/imported/EMP Tower Anim.png-543626ef2af0ad1081e2bbbbb35b68b2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/towers/updatedBaseTower.png"
-dest_files=["res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"]
+source_file="res://assets/towers/EMP Tower Anim.png"
+dest_files=["res://.godot/imported/EMP Tower Anim.png-543626ef2af0ad1081e2bbbbb35b68b2.ctex"]
 
 [params]
 
