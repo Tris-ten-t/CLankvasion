@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cpe1r71gu2i1g"
-path="res://.godot/imported/Clunk Sprite.png-bb6ee5d76a792774aff618bce0d9cfb8.ctex"
+uid="uid://b31mdeypvt77e"
+path="res://.godot/imported/Clunk Anim.png-4f1ddbdfe4c456099fd322423a0cb604.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/Walking/Clunk Sprite.png"
-dest_files=["res://.godot/imported/Clunk Sprite.png-bb6ee5d76a792774aff618bce0d9cfb8.ctex"]
+source_file="res://assets/Enemies/Walking/Clunk Anim.png"
+dest_files=["res://.godot/imported/Clunk Anim.png-4f1ddbdfe4c456099fd322423a0cb604.ctex"]
 
 [params]
 
