@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cxnkqik5nik7l"
-path="res://.godot/imported/Clink Anim.png-9bd879fa7e001c9142b49306f4f1ef1d.ctex"
+uid="uid://bx2rsqus40u4p"
+path="res://.godot/imported/ClankDeath.png-8641eb241bbef96102510cf6f9057d66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/Clink Anim.png"
-dest_files=["res://.godot/imported/Clink Anim.png-9bd879fa7e001c9142b49306f4f1ef1d.ctex"]
+source_file="res://assets/Enemies/Death/ClankDeath.png"
+dest_files=["res://.godot/imported/ClankDeath.png-8641eb241bbef96102510cf6f9057d66.ctex"]
 
 [params]
 

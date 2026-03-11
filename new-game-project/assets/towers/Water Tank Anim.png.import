@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcx40vcwh3lsr"
-path="res://.godot/imported/Clank Anim.png-9d3790d021892892c759fd2dd7630ac2.ctex"
+uid="uid://c8wjw1qh6jdn6"
+path="res://.godot/imported/Water Tank Anim.png-d1021b747cb3d8882aed69373b0ba00b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/Clank Anim.png"
-dest_files=["res://.godot/imported/Clank Anim.png-9d3790d021892892c759fd2dd7630ac2.ctex"]
+source_file="res://assets/towers/Water Tank Anim.png"
+dest_files=["res://.godot/imported/Water Tank Anim.png-d1021b747cb3d8882aed69373b0ba00b.ctex"]
 
 [params]
 

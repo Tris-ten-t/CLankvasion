@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl122exihovd0"
-path="res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"
+uid="uid://cdoy25vehl4p2"
+path="res://.godot/imported/Shield_Health Anim.png-4856752485312bd4503f8390c614123c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/towers/updatedBaseTower.png"
-dest_files=["res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"]
+source_file="res://assets/Misc/Shield_Health Anim.png"
+dest_files=["res://.godot/imported/Shield_Health Anim.png-4856752485312bd4503f8390c614123c.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl122exihovd0"
-path="res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"
+uid="uid://dm0yfvmxls54"
+path="res://.godot/imported/Clink Death Anim.png-2271df7053e7b73cfc02c37d88a7a894.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/towers/updatedBaseTower.png"
-dest_files=["res://.godot/imported/updatedBaseTower.png-ede44d3045d6464c522611838f529f6b.ctex"]
+source_file="res://assets/Enemies/Death/Clink Death Anim.png"
+dest_files=["res://.godot/imported/Clink Death Anim.png-2271df7053e7b73cfc02c37d88a7a894.ctex"]
 
 [params]
 

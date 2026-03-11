@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dstayombraycq"
-path="res://.godot/imported/Bull Anim.png-2fbbcc29138e443d1942b871670cc59c.ctex"
+uid="uid://b31mdeypvt77e"
+path="res://.godot/imported/Clunk Anim.png-4f1ddbdfe4c456099fd322423a0cb604.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Enemies/Bull Anim.png"
-dest_files=["res://.godot/imported/Bull Anim.png-2fbbcc29138e443d1942b871670cc59c.ctex"]
+source_file="res://assets/Enemies/Walking/Clunk Anim.png"
+dest_files=["res://.godot/imported/Clunk Anim.png-4f1ddbdfe4c456099fd322423a0cb604.ctex"]
 
 [params]
 
