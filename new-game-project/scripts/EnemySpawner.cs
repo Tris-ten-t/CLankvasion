@@ -2,14 +2,21 @@ using Godot;
 
 public partial class EnemySpawner : Node2D
 {
-	[Export] public PackedScene RollerScene;     // Drag your original Enemy.tscn here
-	[Export] public PackedScene ClankScene;      // Drag your Clank.tscn here
-	[Export] public PackedScene ClinkScene;      // ← NEW: Drag your Clink.tscn here
+	[Export] public PackedScene RollerScene;     // Fast, low HP
+	[Export] public PackedScene ClankScene;      // Slow, medium HP
+	[Export] public PackedScene BullScene;       // Medium speed, high HP
+	[Export] public PackedScene ClinkScene;      // Fast, high HP
+	[Export] public PackedScene ClunkScene;      // ← Your new one
 	[Export] public float SpawnInterval = 2.0f;  // Seconds between spawns
-	[Export] public int MaxEnemies = 10;         // Total enemies before stopping
-	[Export] public float SpawnRadius = 600f;    // Distance from tower (adjust for map size)
-	[Export] public float ClankSpawnChance = 0.4f;  // 40% chance to spawn Clank
-	[Export] public float ClinkSpawnChance = 0.3f;  // ← NEW: 30% chance to spawn Clink (30% Roller)
+	[Export] public int MaxEnemies = 20;         // Total enemies before stopping
+	[Export] public float SpawnRadius = 600f;    // Distance from tower
+
+	// Spawn chances (adjust these in the inspector as needed)
+	[Export] public float ClankSpawnChance = 0.25f;
+	[Export] public float BullSpawnChance = 0.25f;
+	[Export] public float ClinkSpawnChance = 0.2f;
+	[Export] public float ClunkSpawnChance = 0.2f;
+	// Roller gets the remaining percentage
 
 	private Timer _spawnTimer;
 	private int _spawnedCount = 0;
@@ -31,17 +38,24 @@ public partial class EnemySpawner : Node2D
 		if (_spawnedCount >= MaxEnemies) return;
 		if (_tower == null) return;
 
-		// Randomly choose which enemy to spawn
 		PackedScene selectedScene;
 		float rand = GD.Randf();
 
 		if (rand < ClankSpawnChance)
 		{
-			selectedScene = ClankScene ?? RollerScene; // Fallback to Roller if Clank not set
+			selectedScene = ClankScene ?? RollerScene;
 		}
-		else if (rand < ClankSpawnChance + ClinkSpawnChance)
+		else if (rand < ClankSpawnChance + BullSpawnChance)
 		{
-			selectedScene = ClinkScene ?? RollerScene; // Fallback to Roller if Clink not set
+			selectedScene = BullScene ?? RollerScene;
+		}
+		else if (rand < ClankSpawnChance + BullSpawnChance + ClinkSpawnChance)
+		{
+			selectedScene = ClinkScene ?? RollerScene;
+		}
+		else if (rand < ClankSpawnChance + BullSpawnChance + ClinkSpawnChance + ClunkSpawnChance)
+		{
+			selectedScene = ClunkScene ?? RollerScene;
 		}
 		else
 		{
@@ -54,7 +68,7 @@ public partial class EnemySpawner : Node2D
 		GetTree().CurrentScene.AddChild(enemy);
 
 		// Spawn in random direction around tower (full 360°)
-		float randomAngle = GD.Randf() * Mathf.Tau; // Tau = 2*Pi = full circle
+		float randomAngle = GD.Randf() * Mathf.Tau;
 		Vector2 spawnOffset = new Vector2(
 			Mathf.Cos(randomAngle),
 			Mathf.Sin(randomAngle)
