@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://bctmja5grypfx"]
+[gd_scene load_steps=30 format=3 uid="uid://bctmja5grypfx"]
 
 [ext_resource type="Script" uid="uid://jt7ll8na6vg8" path="res://scripts/Clank.cs" id="1_074mf"]
 [ext_resource type="Texture2D" uid="uid://dcx40vcwh3lsr" path="res://assets/Enemies/Walking/Clank Anim.png" id="2_40mx7"]
@@ -180,12 +180,16 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8eoo"]
 size = Vector2(69, 39)
 
-[node name="Enemy" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3nqdv"]
+size = Vector2(68, 38)
+
+[node name="Clank" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_074mf")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
 animation = &"death"
@@ -195,3 +199,11 @@ frame_progress = 1.0
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_d8eoo")
+
+[node name="TowerDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerDetector"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_3nqdv")
+
+[connection signal="body_entered" from="TowerDetector" to="." method="_on_tower_detector_body_entered"]

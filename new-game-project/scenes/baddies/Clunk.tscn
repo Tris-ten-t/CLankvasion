@@ -1,6 +1,6 @@
-[gd_scene load_steps=18 format=3 uid="uid://crh83etprgl4q"]
+[gd_scene load_steps=19 format=3 uid="uid://crh83etprgl4q"]
 
-[ext_resource type="Script" uid="uid://3ar3kb7a82hp" path="res://scenes/baddies/Clunk.cs" id="1_12fln"]
+[ext_resource type="Script" uid="uid://3ar3kb7a82hp" path="res://scripts/Clunk.cs" id="1_12fln"]
 [ext_resource type="Texture2D" uid="uid://b060df37wlo3r" path="res://assets/Enemies/Death/Clunk Death Anim.png" id="2_yiq33"]
 [ext_resource type="Texture2D" uid="uid://b31mdeypvt77e" path="res://assets/Enemies/Walking/Clunk Anim.png" id="3_se31x"]
 
@@ -109,7 +109,10 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8eoo"]
 size = Vector2(56, 57)
 
-[node name="Enemy" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_12fln"]
+size = Vector2(64, 87)
+
+[node name="Clunk" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_12fln")
@@ -118,9 +121,15 @@ script = ExtResource("1_12fln")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
 animation = &"death"
-frame = 5
-frame_progress = 1.0
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_d8eoo")
+
+[node name="TowerDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerDetector"]
+position = Vector2(0, -9.5)
+shape = SubResource("RectangleShape2D_12fln")
+
+[connection signal="body_entered" from="TowerDetector" to="." method="_on_body_entered"]

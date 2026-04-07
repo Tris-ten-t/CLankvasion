@@ -6,11 +6,11 @@ public partial class Clank : CharacterBody2D, IDamageable
 	[Export] public int MaxHealth = 10;
 	[Export] public string WalkAnimation = "walk";
 	[Export] public string DeathAnimation = "death";
+	[Export] public int DamageToTower = 8;
 
 	private int _currentHealth;
 	private ProgressBar _healthBarInstance;
 	private AnimatedSprite2D _animatedSprite;
-	private Vector2 _targetPos;
 	private Node2D _tower;
 	private bool _isDying = false;
 
@@ -19,23 +19,18 @@ public partial class Clank : CharacterBody2D, IDamageable
 		_currentHealth = MaxHealth;
 		_animatedSprite = GetNode<AnimatedSprite2D>("Sprite");
 
-		// Force upright
 		if (_animatedSprite != null)
 		{
 			_animatedSprite.Rotation = 0f;
 			_animatedSprite.FlipV = false;
 		}
 
-		// Setup animations
 		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null)
 		{
-			// Start walking immediately if the animation exists
 			if (_animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
 			{
 				_animatedSprite.Play(WalkAnimation);
 			}
-
-			// Connect finished signal once — we'll handle both walk (loop) and death (one-shot) here
 			_animatedSprite.AnimationFinished += OnAnimationFinished;
 		}
 
@@ -47,29 +42,27 @@ public partial class Clank : CharacterBody2D, IDamageable
 			GetTree().CurrentScene.AddChild(_healthBarInstance);
 			_healthBarInstance.Visible = true;
 			_healthBarInstance.ZIndex = 10;
-			_healthBarInstance.Rotation = Mathf.Pi / 2;  // horizontal
-		}
-		else
-		{
-			GD.Print("ERROR: HealthBarTemplate not found");
+			_healthBarInstance.Rotation = Mathf.Pi / 2;
 		}
 
 		_tower = GetTree().GetFirstNodeInGroup("towers") as Node2D;
-		if (_tower != null)
-			_targetPos = _tower.GlobalPosition;
 
 		UpdateHealthBar();
+		GD.Print("[Clank] Spawned and monitoring distance to tower...");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_isDying || _tower == null) return;
+		if (_isDying || _tower == null)
+		{
+			Velocity = Vector2.Zero;
+			return;
+		}
 
-		Vector2 direction = (_targetPos - GlobalPosition).Normalized();
+		Vector2 direction = (_tower.GlobalPosition - GlobalPosition).Normalized();
 		Velocity = direction * Speed;
 		MoveAndSlide();
 
-		// Upright sprite + horizontal flip only
 		if (_animatedSprite != null && direction.LengthSquared() > 0.1f)
 		{
 			_animatedSprite.FlipH = direction.X < 0;
@@ -77,12 +70,24 @@ public partial class Clank : CharacterBody2D, IDamageable
 			_animatedSprite.Rotation = 0f;
 		}
 
-		// Health bar
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 		{
 			_healthBarInstance.Rotation = Mathf.Pi / 2;
-			Vector2 offset = new Vector2(-50, -40);  // tune this
+			Vector2 offset = new Vector2(-50, -40);
 			_healthBarInstance.GlobalPosition = GlobalPosition + offset;
+		}
+
+		// Distance-based contact detection (more reliable than signals)
+		float distanceToTower = GlobalPosition.DistanceTo(_tower.GlobalPosition);
+		if (distanceToTower < 40f)   // Adjust this value if needed
+		{
+			GD.Print("[Clank] Close enough to tower! Dealing damage...");
+			if (_tower is MainTower tower)
+			{
+				tower.TakeDamage(DamageToTower);
+			}
+			_isDying = true;
+			Die();
 		}
 	}
 
@@ -103,43 +108,40 @@ public partial class Clank : CharacterBody2D, IDamageable
 
 	private void Die()
 	{
+		GD.Print("[Clank] Starting death animation");
 		Velocity = Vector2.Zero;
+		SetPhysicsProcess(false);
 
-		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
-		{
-			_healthBarInstance.QueueFree();
-			_healthBarInstance = null;
-		}
-
-		// Switch to death animation
 		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null &&
 			_animatedSprite.SpriteFrames.HasAnimation(DeathAnimation))
 		{
 			_animatedSprite.Play(DeathAnimation);
-			// No need to stop walk here — Play() automatically switches
 		}
 		else
 		{
-			QueueFree();  // fallback
+			CleanupAndDie();
 		}
 	}
 
 	private void OnAnimationFinished()
 	{
-		// Called when ANY animation finishes
 		if (_animatedSprite.Animation == DeathAnimation)
 		{
-			// Death finished → remove enemy
-			QueueFree();
+			CleanupAndDie();
 		}
-		else if (_animatedSprite.Animation == WalkAnimation)
+		else if (_animatedSprite.Animation == WalkAnimation && !_isDying)
 		{
-			// Walk finished → loop it again (in case loop is off in editor)
-			if (!_isDying && _animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
-			{
-				_animatedSprite.Play(WalkAnimation);
-			}
+			_animatedSprite.Play(WalkAnimation);
 		}
+	}
+
+	private void CleanupAndDie()
+	{
+		GD.Print("[Clank] Enemy removed");
+		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
+			_healthBarInstance.QueueFree();
+
+		QueueFree();
 	}
 
 	private void UpdateHealthBar()
@@ -149,8 +151,7 @@ public partial class Clank : CharacterBody2D, IDamageable
 		float healthPct = (float)_currentHealth / MaxHealth;
 		_healthBarInstance.Value = Mathf.Lerp(0, 100, healthPct);
 
-		Color barColor = healthPct > 0.6f ? Colors.Green :
-						 healthPct > 0.3f ? Colors.Yellow : Colors.Red;
+		Color barColor = healthPct > 0.6f ? Colors.Green : healthPct > 0.3f ? Colors.Yellow : Colors.Red;
 
 		var currentStyle = _healthBarInstance.GetThemeStylebox("fill") as StyleBoxFlat;
 		var newStyle = currentStyle != null ? (StyleBoxFlat)currentStyle.Duplicate() : new StyleBoxFlat();
