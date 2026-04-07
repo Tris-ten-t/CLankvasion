@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b0j7d8aeohou"
-path="res://.godot/imported/TOWER SELECTOR(MOUSE HOVERING).png-ed94f711c404efd6f05bd8451468cb55.ctex"
+uid="uid://dx0j4qtmyy7l4"
+path="res://.godot/imported/Emp Tower Select.png-f1b0b6db28cad9456cad4049f2b812a8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/TOWER SELECTOR(MOUSE HOVERING).png"
-dest_files=["res://.godot/imported/TOWER SELECTOR(MOUSE HOVERING).png-ed94f711c404efd6f05bd8451468cb55.ctex"]
+source_file="res://assets/towers/Tower Selection/Emp Tower Select.png"
+dest_files=["res://.godot/imported/Emp Tower Select.png-f1b0b6db28cad9456cad4049f2b812a8.ctex"]
 
 [params]
 

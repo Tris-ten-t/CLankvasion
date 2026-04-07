@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cl7hnagfx42q6"
-path="res://.godot/imported/Water Tank Select.png-b6fb34f5eb7e1d588a7836e629637b95.ctex"
+uid="uid://c4dyrr3inldo3"
+path="res://.godot/imported/Trash Compactor Select.png-4bf6311e53f4c3ca8f76dc1a10274cb3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/towers/Water Tank Select.png"
-dest_files=["res://.godot/imported/Water Tank Select.png-b6fb34f5eb7e1d588a7836e629637b95.ctex"]
+source_file="res://assets/towers/Tower Selection/Trash Compactor Select.png"
+dest_files=["res://.godot/imported/Trash Compactor Select.png-4bf6311e53f4c3ca8f76dc1a10274cb3.ctex"]
 
 [params]
 

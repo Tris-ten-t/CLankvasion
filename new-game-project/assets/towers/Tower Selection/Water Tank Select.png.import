@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dx0j4qtmyy7l4"
-path="res://.godot/imported/Emp Tower Select.png-9a8baac580fa5d7eb4bc1dab8214e32e.ctex"
+uid="uid://cl7hnagfx42q6"
+path="res://.godot/imported/Water Tank Select.png-42fd54fe3e68ef184196f884e5b086b8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/towers/Emp Tower Select.png"
-dest_files=["res://.godot/imported/Emp Tower Select.png-9a8baac580fa5d7eb4bc1dab8214e32e.ctex"]
+source_file="res://assets/towers/Tower Selection/Water Tank Select.png"
+dest_files=["res://.godot/imported/Water Tank Select.png-42fd54fe3e68ef184196f884e5b086b8.ctex"]
 
 [params]
 
