@@ -6,45 +6,35 @@ public partial class Bull : CharacterBody2D, IDamageable
 	[Export] public int MaxHealth = 20;
 	[Export] public string WalkAnimation = "walk";
 	[Export] public string DeathAnimation = "death";
+	[Export] public int DamageToTower = 12;     // Bull is tankier, so does more damage
 
 	private int _currentHealth;
 	private ProgressBar _healthBarInstance;
 	private AnimatedSprite2D _animatedSprite;
-	private Vector2 _targetPos;
 	private Node2D _tower;
-	private bool _isDead = false;
+	private bool _isDying = false;
 
 	public override void _Ready()
 	{
 		_currentHealth = MaxHealth;
-		_animatedSprite = GetNodeOrNull<AnimatedSprite2D>("Sprite");
+		_animatedSprite = GetNode<AnimatedSprite2D>("Sprite");
 
-		if (_animatedSprite == null)
+		if (_animatedSprite != null)
 		{
-			GD.Print("[Bull] ERROR: No AnimatedSprite2D named 'Sprite' found!");
-			return;
+			_animatedSprite.Rotation = 0f;
+			_animatedSprite.FlipV = false;
 		}
 
-		GD.Print("[Bull] Sprite found. Available animations: ", string.Join(", ", _animatedSprite.SpriteFrames?.GetAnimationNames() ?? new string[0]));
-
-		// Force upright
-		_animatedSprite.Rotation = 0f;
-		_animatedSprite.FlipV = false;
-
-		// Force play walk animation
-		if (_animatedSprite.SpriteFrames != null && _animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
+		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null)
 		{
-			_animatedSprite.Play(WalkAnimation);
-			GD.Print("[Bull] Successfully started playing walk animation: " + WalkAnimation);
-		}
-		else
-		{
-			GD.Print("[Bull] ERROR: Animation '" + WalkAnimation + "' not found in SpriteFrames!");
+			if (_animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
+			{
+				_animatedSprite.Play(WalkAnimation);
+			}
+			_animatedSprite.AnimationFinished += OnAnimationFinished;
 		}
 
-		_animatedSprite.AnimationFinished += OnAnimationFinished;
-
-		// Health bar setup
+		// Health bar
 		var template = GetTree().Root.GetNodeOrNull<ProgressBar>("Area/HealthBarTemplate");
 		if (template != null)
 		{
@@ -54,23 +44,22 @@ public partial class Bull : CharacterBody2D, IDamageable
 			_healthBarInstance.ZIndex = 10;
 			_healthBarInstance.Rotation = Mathf.Pi / 2;
 		}
-		else
-		{
-			GD.Print("ERROR: HealthBarTemplate not found at 'Area/HealthBarTemplate'");
-		}
 
 		_tower = GetTree().GetFirstNodeInGroup("towers") as Node2D;
-		if (_tower != null)
-			_targetPos = _tower.GlobalPosition;
 
 		UpdateHealthBar();
+		GD.Print("[Bull] Spawned and monitoring distance to tower...");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_tower == null || _isDead) return;
+		if (_isDying || _tower == null)
+		{
+			Velocity = Vector2.Zero;
+			return;
+		}
 
-		Vector2 direction = (_targetPos - GlobalPosition).Normalized();
+		Vector2 direction = (_tower.GlobalPosition - GlobalPosition).Normalized();
 		Velocity = direction * Speed;
 		MoveAndSlide();
 
@@ -87,11 +76,24 @@ public partial class Bull : CharacterBody2D, IDamageable
 			Vector2 offset = new Vector2(-50, -40);
 			_healthBarInstance.GlobalPosition = GlobalPosition + offset;
 		}
+
+		// Distance-based tower contact
+		float distanceToTower = GlobalPosition.DistanceTo(_tower.GlobalPosition);
+		if (distanceToTower < 40f)
+		{
+			GD.Print("[Bull] Close enough to tower! Dealing damage...");
+			if (_tower is MainTower tower)
+			{
+				tower.TakeDamage(DamageToTower);
+			}
+			_isDying = true;
+			Die();
+		}
 	}
 
 	public void TakeDamage(int damage)
 	{
-		if (_isDead) return;
+		if (_isDying) return;
 
 		_currentHealth -= damage;
 		if (_currentHealth < 0) _currentHealth = 0;
@@ -99,14 +101,16 @@ public partial class Bull : CharacterBody2D, IDamageable
 
 		if (_currentHealth <= 0)
 		{
-			_isDead = true;
+			_isDying = true;
 			Die();
 		}
 	}
 
 	private void Die()
 	{
+		GD.Print("[Bull] Starting death animation");
 		Velocity = Vector2.Zero;
+		SetPhysicsProcess(false);
 
 		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null &&
 			_animatedSprite.SpriteFrames.HasAnimation(DeathAnimation))
@@ -125,14 +129,15 @@ public partial class Bull : CharacterBody2D, IDamageable
 		{
 			CleanupAndDie();
 		}
-		else if (_animatedSprite.Animation == WalkAnimation)
+		else if (_animatedSprite.Animation == WalkAnimation && !_isDying)
 		{
-			_animatedSprite.Play(WalkAnimation); // Force loop
+			_animatedSprite.Play(WalkAnimation);
 		}
 	}
 
 	private void CleanupAndDie()
 	{
+		GD.Print("[Bull] Enemy removed");
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 			_healthBarInstance.QueueFree();
 
@@ -148,8 +153,8 @@ public partial class Bull : CharacterBody2D, IDamageable
 
 		Color barColor = healthPct > 0.6f ? Colors.Green : healthPct > 0.3f ? Colors.Yellow : Colors.Red;
 
-		StyleBoxFlat currentStyle = _healthBarInstance.GetThemeStylebox("fill") as StyleBoxFlat;
-		StyleBoxFlat newStyle = currentStyle != null ? (StyleBoxFlat)currentStyle.Duplicate() : new StyleBoxFlat();
+		var currentStyle = _healthBarInstance.GetThemeStylebox("fill") as StyleBoxFlat;
+		var newStyle = currentStyle != null ? (StyleBoxFlat)currentStyle.Duplicate() : new StyleBoxFlat();
 		newStyle.BgColor = barColor;
 		_healthBarInstance.AddThemeStyleboxOverride("fill", newStyle);
 	}
