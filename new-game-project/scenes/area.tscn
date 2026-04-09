@@ -289,11 +289,10 @@ offset_bottom = 61.0
 [node name="ShieldContainer" type="HBoxContainer" parent="UI/TowerStatus/StatusContainer"]
 layout_mode = 2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
+[node name="ShieldIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
 position = Vector2(-19, 18)
 scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_0wc2m")
-animation = &"shield_full"
 
 [node name="ShieldBar" type="ProgressBar" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
 custom_minimum_size = Vector2(220, 28)
@@ -314,7 +313,7 @@ size_flags_vertical = 1
 theme_override_styles/background = SubResource("StyleBoxFlat_hwuss")
 show_percentage = false
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/HealthContainer"]
+[node name="HeartIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/HealthContainer"]
 position = Vector2(-19, 17)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_tb56k")

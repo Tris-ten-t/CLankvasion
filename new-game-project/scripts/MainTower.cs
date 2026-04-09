@@ -46,32 +46,28 @@ public partial class MainTower : AnimatedSprite2D
 		currentShield = MaxShield;
 		currentHealth = MaxHealth;
 
-		// Find UI
+		// Find UI nodes
 		shieldBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldBar");
 		healthBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/HealthContainer/HealthBar");
 		shieldIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldIcon");
 		heartIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/HealthContainer/HeartIcon");
 
-		// Force completely separate styles
 		ForceSeparateStyles();
-
 		UpdateUI();
 	}
 
 	private void ForceSeparateStyles()
 	{
-		// Shield Bar - Force new style
 		if (shieldBar != null)
 		{
-			var style = new StyleBoxFlat();
-			shieldBar.AddThemeStyleboxOverride("fill", style);
+			shieldBar.AddThemeStyleboxOverride("fill", new StyleBoxFlat());
+			shieldBar.AddThemeStyleboxOverride("background", new StyleBoxFlat());
 		}
 
-		// Health Bar - Force new style
 		if (healthBar != null)
 		{
-			var style = new StyleBoxFlat();
-			healthBar.AddThemeStyleboxOverride("fill", style);
+			healthBar.AddThemeStyleboxOverride("fill", new StyleBoxFlat());
+			healthBar.AddThemeStyleboxOverride("background", new StyleBoxFlat());
 		}
 	}
 
@@ -131,87 +127,85 @@ public partial class MainTower : AnimatedSprite2D
 	}
 
 	private void UpdateUI()
-{
-	if (shieldBar != null) shieldBar.Value = currentShield;
-	if (healthBar != null) healthBar.Value = currentHealth;
-
-	// ====================== SHIELD BAR ======================
-	if (shieldBar != null)
 	{
-		StyleBoxFlat style = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
-		if (style == null)
+		if (shieldBar != null) shieldBar.Value = currentShield;
+		if (healthBar != null) healthBar.Value = currentHealth;
+
+		// ====================== SHIELD BAR ======================
+		if (shieldBar != null)
 		{
-			style = new StyleBoxFlat();
-			shieldBar.AddThemeStyleboxOverride("fill", style);
+			// Fill color (shrinking part) - Light Blue
+			StyleBoxFlat fillStyle = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fillStyle != null)
+			{
+				float pct = currentShield / MaxShield;
+				Color lightBlue = new Color(0.31f, 0.78f, 0.97f);
+				fillStyle.BgColor = lightBlue;
+			}
+
+			// Background color (behind the fill) - Dark Blue when low/empty
+			StyleBoxFlat bgStyle = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bgStyle != null)
+			{
+				float pct = currentShield / MaxShield;
+				if (pct <= 0.05f)
+					bgStyle.BgColor = new Color(0.08f, 0.25f, 0.65f); // Dark Blue when empty
+				else
+					bgStyle.BgColor = new Color(0.15f, 0.35f, 0.75f); // Medium blue
+			}
 		}
 
-		float pct = currentShield / MaxShield;
-
-		// Light Blue (full) → Dark Blue (empty)
-		Color lightBlue = new Color(0.31f, 0.78f, 0.97f);   // Starting light blue
-		Color darkBlue  = new Color(0.08f, 0.25f, 0.65f);   // Fully dark blue when empty
-
-		style.BgColor = lightBlue.Lerp(darkBlue, 1f - pct);
-
-		// Border & rounding
-		style.BorderWidthLeft = 2;
-		style.BorderWidthTop = 2;
-		style.BorderWidthRight = 2;
-		style.BorderWidthBottom = 2;
-		style.BorderColor = new Color(0.05f, 0.18f, 0.45f);
-		style.CornerRadiusTopLeft = 8;
-		style.CornerRadiusTopRight = 8;
-		style.CornerRadiusBottomLeft = 8;
-		style.CornerRadiusBottomRight = 8;
-	}
-
-	// ====================== HEALTH BAR ======================
-	if (healthBar != null)
-	{
-		StyleBoxFlat style = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
-		if (style == null)
+		// ====================== HEALTH BAR ======================
+		if (healthBar != null)
 		{
-			style = new StyleBoxFlat();
-			healthBar.AddThemeStyleboxOverride("fill", style);
+			// Fill color
+			StyleBoxFlat fillStyle = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fillStyle != null)
+			{
+				float pct = currentHealth / MaxHealth;
+				if (pct > 0.6f)
+					fillStyle.BgColor = Colors.LimeGreen;
+				else if (pct > 0.3f)
+					fillStyle.BgColor = Colors.Yellow;
+				else
+					fillStyle.BgColor = Colors.Red;
+			}
+
+			// Background color - Dark Red when empty
+			StyleBoxFlat bgStyle = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bgStyle != null)
+			{
+				float pct = currentHealth / MaxHealth;
+				if (pct <= 0.05f)
+					bgStyle.BgColor = Colors.DarkRed;
+				else
+					bgStyle.BgColor = new Color(0.2f, 0.2f, 0.2f);
+			}
 		}
 
-		float pct = currentHealth / MaxHealth;
+		// ====================== ICONS ======================
+		if (shieldIcon != null && shieldIcon.SpriteFrames != null)
+		{
+			string target = "shield_full";
+			if (currentShield <= 0) target = "shield_broken";
+			else if (currentShield <= 25) target = "shield_25";
+			else if (currentShield <= 50) target = "shield_50";
+			else if (currentShield <= 75) target = "shield_75";
 
-		// Green (full) → Red (empty)
-		Color green = Colors.LimeGreen;
-		Color red   = Colors.Red;
+			if (shieldIcon.Animation != target)
+				shieldIcon.Play(target);
+		}
 
-		style.BgColor = green.Lerp(red, 1f - pct);
+		if (heartIcon != null && heartIcon.SpriteFrames != null)
+		{
+			string target = "heart_full";
+			if (currentHealth <= 0) target = "heart_broken";
+			else if (currentHealth <= 25) target = "heart_25";
+			else if (currentHealth <= 50) target = "heart_50";
+			else if (currentHealth <= 75) target = "heart_75";
 
-		// Border & rounding
-		style.BorderWidthLeft = 2;
-		style.BorderWidthTop = 2;
-		style.BorderWidthRight = 2;
-		style.BorderWidthBottom = 2;
-		style.BorderColor = new Color(0.1f, 0.1f, 0.1f);
-		style.CornerRadiusTopLeft = 8;
-		style.CornerRadiusTopRight = 8;
-		style.CornerRadiusBottomLeft = 8;
-		style.CornerRadiusBottomRight = 8;
-	}
-
-	// Update Icons
-	if (shieldIcon != null && shieldIcon.SpriteFrames != null)
-	{
-		if (currentShield > 75) shieldIcon.Play("shield_full");
-		else if (currentShield > 50) shieldIcon.Play("shield_75");
-		else if (currentShield > 25) shieldIcon.Play("shield_50");
-		else if (currentShield > 0) shieldIcon.Play("shield_25");
-		else shieldIcon.Play("shield_broken");
-	}
-
-	if (heartIcon != null && heartIcon.SpriteFrames != null)
-	{
-		if (currentHealth > 75) heartIcon.Play("heart_full");
-		else if (currentHealth > 50) heartIcon.Play("heart_75");
-		else if (currentHealth > 25) heartIcon.Play("heart_50");
-		else if (currentHealth > 0) heartIcon.Play("heart_25");
-		else heartIcon.Play("heart_broken");
+			if (heartIcon.Animation != target)
+				heartIcon.Play(target);
 		}
 	}
 }
