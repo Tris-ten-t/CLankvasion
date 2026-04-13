@@ -1,0 +1,47 @@
+[gd_scene load_steps=3 format=3 uid="uid://gdihmkdlg2rc"]
+
+[ext_resource type="Script" uid="uid://cguy6h2plnbm1" path="res://scripts/GameOverMenu.cs" id="1_5e8aq"]
+[ext_resource type="Texture2D" uid="uid://bcmxoq7y3vcqr" path="res://assets/Misc/GameOver.png" id="1_gla7p"]
+
+[node name="GameOverMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 100
+script = ExtResource("1_5e8aq")
+
+[node name="Background" type="TextureRect" parent="."]
+z_index = -1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_gla7p")
+
+[node name="Content" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -37.0
+offset_right = 20.0
+offset_bottom = 37.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Label" type="Label" parent="Content"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Content"]
+layout_mode = 2
+
+[node name="RestartButton" type="Button" parent="Content"]
+layout_mode = 2
+text = "Restart"
+
+[node name="QuitButton" type="Button" parent="Content"]
+layout_mode = 2
+text = "Quit"

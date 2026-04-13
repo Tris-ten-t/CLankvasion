@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene load_steps=30 format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/MainTower.tscn" id="1_u55m2"]
 [ext_resource type="PackedScene" uid="uid://crbfak2hna7a3" path="res://scenes/bullet.tscn" id="2_8qhwf"]
@@ -17,12 +17,12 @@
 [sub_resource type="Resource" id="Resource_j4i6t"]
 script = ExtResource("9_j4i6t")
 WaveNumber = 1
-TotalEnemies = 1
+TotalEnemies = 20
 RollerCount = 0
-ClankCount = 1
+ClankCount = 0
 BullCount = 0
 ClinkCount = 0
-ClunkCount = 0
+ClunkCount = 20
 SpawnInterval = 1.2
 metadata/_custom_type_script = "uid://b1p46weu3p6ka"
 
@@ -101,6 +101,30 @@ animations = [{
 "name": &"shield_full",
 "speed": 5.0
 }]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wyr7o"]
+bg_color = Color(0, 0.784314, 0.862745, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.223529, 0, 1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hwuss"]
+bg_color = Color(0, 0.726205, 0.172661, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0, 0.0745098, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6at8u"]
 atlas = ExtResource("13_hwuss")
@@ -207,7 +231,7 @@ show_percentage = false
 
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -10
-position = Vector2(3.8147e-06, -5.96046e-08)
+position = Vector2(9.09495e-13, 1)
 scale = Vector2(10, 10)
 texture = ExtResource("9_ueojj")
 centered = false
@@ -257,29 +281,40 @@ grow_horizontal = 0
 
 [node name="StatusContainer" type="VBoxContainer" parent="UI/TowerStatus"]
 layout_mode = 0
-offset_left = -152.0
+offset_left = -340.0
 offset_top = 1.0
-offset_right = -112.0
-offset_bottom = 41.0
+offset_right = -120.0
+offset_bottom = 61.0
 
 [node name="ShieldContainer" type="HBoxContainer" parent="UI/TowerStatus/StatusContainer"]
 layout_mode = 2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
-position = Vector2(-122, 17)
+[node name="ShieldIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
+position = Vector2(-19, 18)
+scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_0wc2m")
-animation = &"shield_full"
 
 [node name="ShieldBar" type="ProgressBar" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
+custom_minimum_size = Vector2(220, 28)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_wyr7o")
+show_percentage = false
 
 [node name="HealthContainer" type="HBoxContainer" parent="UI/TowerStatus/StatusContainer"]
 layout_mode = 2
 
 [node name="HealthBar" type="ProgressBar" parent="UI/TowerStatus/StatusContainer/HealthContainer"]
+custom_minimum_size = Vector2(220, 28)
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_styles/background = SubResource("StyleBoxFlat_hwuss")
+show_percentage = false
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/HealthContainer"]
-position = Vector2(-88, 27)
+[node name="HeartIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/HealthContainer"]
+position = Vector2(-19, 17)
+scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_tb56k")
-animation = &"heart_25"
+animation = &"heart_full"

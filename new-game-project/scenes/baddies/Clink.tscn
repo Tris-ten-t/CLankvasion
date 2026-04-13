@@ -81,7 +81,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"death",
-"speed": 5.0
+"speed": 15.0
 }, {
 "frames": [],
 "loop": true,
@@ -118,7 +118,6 @@ script = ExtResource("1_qkmkt")
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
 animation = &"death"
-frame_progress = 0.720015
 
 [node name="Collision" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)

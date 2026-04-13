@@ -13,7 +13,6 @@ public partial class MainTower : AnimatedSprite2D
 	// Shield & Health
 	[Export] public float MaxShield = 100f;
 	[Export] public float MaxHealth = 100f;
-	[Export] public float ShieldRegenRate = 5f;
 
 	private double lastFireTime = 0.0;
 	private Marker2D muzzle;
@@ -22,11 +21,13 @@ public partial class MainTower : AnimatedSprite2D
 	private float currentShield;
 	private float currentHealth;
 
-	// UI
+	// UI References
 	private ProgressBar shieldBar;
 	private ProgressBar healthBar;
 	private AnimatedSprite2D shieldIcon;
 	private AnimatedSprite2D heartIcon;
+
+	private bool gameOverTriggered = false;
 
 	public override void _Ready()
 	{
@@ -47,13 +48,28 @@ public partial class MainTower : AnimatedSprite2D
 		currentShield = MaxShield;
 		currentHealth = MaxHealth;
 
-		// UI references
 		shieldBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldBar");
 		healthBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/HealthContainer/HealthBar");
 		shieldIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldIcon");
 		heartIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/HealthContainer/HeartIcon");
 
+		ForceSeparateStyles();
 		UpdateUI();
+	}
+
+	private void ForceSeparateStyles()
+	{
+		if (shieldBar != null)
+		{
+			shieldBar.AddThemeStyleboxOverride("fill", new StyleBoxFlat());
+			shieldBar.AddThemeStyleboxOverride("background", new StyleBoxFlat());
+		}
+
+		if (healthBar != null)
+		{
+			healthBar.AddThemeStyleboxOverride("fill", new StyleBoxFlat());
+			healthBar.AddThemeStyleboxOverride("background", new StyleBoxFlat());
+		}
 	}
 
 	public override void _Process(double delta)
@@ -65,13 +81,7 @@ public partial class MainTower : AnimatedSprite2D
 		if (Input.IsMouseButtonPressed(MouseButton.Left))
 			TryFire(mousePos);
 
-		// Shield regen
-		if (currentShield < MaxShield)
-		{
-			currentShield += ShieldRegenRate * (float)delta;
-			if (currentShield > MaxShield) currentShield = MaxShield;
-			UpdateUI();
-		}
+		UpdateUI();
 	}
 
 	private void TryFire(Vector2 targetPos)
@@ -94,7 +104,6 @@ public partial class MainTower : AnimatedSprite2D
 		shootFlashTimer.Start(ShootFlashDuration);
 	}
 
-	// === NEW: Take Damage from Enemies ===
 	public void TakeDamage(float damage)
 	{
 		if (currentShield > 0)
@@ -112,10 +121,30 @@ public partial class MainTower : AnimatedSprite2D
 
 		UpdateUI();
 
-		if (currentHealth <= 0)
+		if (currentHealth <= 0 && !gameOverTriggered)
 		{
-			GD.Print("Tower Destroyed - Game Over!");
-			// TODO: Add Game Over screen later
+			gameOverTriggered = true;
+			TriggerGameOver();
+		}
+	}
+
+	private void TriggerGameOver()
+	{
+		GD.Print("Tower Destroyed - Showing Game Over Menu");
+
+		// Correct path you gave me
+		var gameOverScene = GD.Load<PackedScene>("res://scenes/GameOverMenu.tscn");
+		if (gameOverScene != null)
+		{
+			var menu = gameOverScene.Instantiate<CanvasLayer>();
+			GetTree().CurrentScene.AddChild(menu);
+
+			GetTree().Paused = true;        // Pause the game
+			GD.Print("Game Over Menu shown successfully!");
+		}
+		else
+		{
+			GD.PrintErr("ERROR: Could not load GameOverMenu.tscn at res://scenes/GameOverMenu.tscn");
 		}
 	}
 
@@ -124,24 +153,77 @@ public partial class MainTower : AnimatedSprite2D
 		if (shieldBar != null) shieldBar.Value = currentShield;
 		if (healthBar != null) healthBar.Value = currentHealth;
 
-		// Shield Icon Animation
-		if (shieldIcon != null && shieldIcon.SpriteFrames != null)
+		// Shield Bar
+		if (shieldBar != null)
 		{
-			if (currentShield > 75) shieldIcon.Play("shield_full");
-			else if (currentShield > 50) shieldIcon.Play("shield_75");
-			else if (currentShield > 25) shieldIcon.Play("shield_50");
-			else if (currentShield > 0) shieldIcon.Play("shield_25");
-			else shieldIcon.Play("shield_broken");
+			StyleBoxFlat fillStyle = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fillStyle != null)
+			{
+				float pct = currentShield / MaxShield;
+				Color lightBlue = new Color(0.31f, 0.78f, 0.97f);
+				fillStyle.BgColor = lightBlue;
+			}
+
+			StyleBoxFlat bgStyle = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bgStyle != null)
+			{
+				float pct = currentShield / MaxShield;
+				if (pct <= 0.05f)
+					bgStyle.BgColor = new Color(0.08f, 0.25f, 0.65f);
+				else
+					bgStyle.BgColor = new Color(0.15f, 0.35f, 0.75f);
+			}
 		}
 
-		// Heart Icon Animation
+		// Health Bar
+		if (healthBar != null)
+		{
+			StyleBoxFlat fillStyle = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fillStyle != null)
+			{
+				float pct = currentHealth / MaxHealth;
+				if (pct > 0.6f)
+					fillStyle.BgColor = Colors.LimeGreen;
+				else if (pct > 0.3f)
+					fillStyle.BgColor = Colors.Yellow;
+				else
+					fillStyle.BgColor = Colors.Red;
+			}
+
+			StyleBoxFlat bgStyle = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bgStyle != null)
+			{
+				float pct = currentHealth / MaxHealth;
+				if (pct <= 0.05f)
+					bgStyle.BgColor = Colors.DarkRed;
+				else
+					bgStyle.BgColor = new Color(0.2f, 0.2f, 0.2f);
+			}
+		}
+
+		// Icons
+		if (shieldIcon != null && shieldIcon.SpriteFrames != null)
+		{
+			string target = "shield_full";
+			if (currentShield <= 0) target = "shield_broken";
+			else if (currentShield <= 25) target = "shield_25";
+			else if (currentShield <= 50) target = "shield_50";
+			else if (currentShield <= 75) target = "shield_75";
+
+			if (shieldIcon.Animation != target)
+				shieldIcon.Play(target);
+		}
+
 		if (heartIcon != null && heartIcon.SpriteFrames != null)
 		{
-			if (currentHealth > 75) heartIcon.Play("heart_full");
-			else if (currentHealth > 50) heartIcon.Play("heart_75");
-			else if (currentHealth > 25) heartIcon.Play("heart_50");
-			else if (currentHealth > 0) heartIcon.Play("heart_25");
-			else heartIcon.Play("heart_broken");
+			string target = "heart_full";
+			if (currentHealth <= 0) target = "heart_broken";
+			else if (currentHealth <= 25) target = "heart_25";
+			else if (currentHealth <= 50) target = "heart_50";
+			else if (currentHealth <= 75) target = "heart_75";
+
+			if (heartIcon.Animation != target)
+				heartIcon.Play(target);
 		}
 	}
 }
