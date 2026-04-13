@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene load_steps=37 format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/MainTower.tscn" id="1_u55m2"]
 [ext_resource type="PackedScene" uid="uid://crbfak2hna7a3" path="res://scenes/bullet.tscn" id="2_8qhwf"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://im8rhf83t1dn" path="res://assets/Misc/lights.png" id="10_j4i6t"]
 [ext_resource type="Texture2D" uid="uid://cdoy25vehl4p2" path="res://assets/Misc/shield.png" id="12_wyr7o"]
 [ext_resource type="Texture2D" uid="uid://cdypu7i6s35qt" path="res://assets/Misc/heart.png" id="13_hwuss"]
+[ext_resource type="Texture2D" uid="uid://d0yx1lislshof" path="res://assets/Misc/Coin Drop Anim.png" id="14_hwuss"]
 
 [sub_resource type="Resource" id="Resource_j4i6t"]
 script = ExtResource("9_j4i6t")
@@ -194,6 +195,49 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_hwuss"]
+atlas = ExtResource("14_hwuss")
+region = Rect2(4, 4, 13, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0wc2m"]
+atlas = ExtResource("14_hwuss")
+region = Rect2(21, 4, 13, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tb56k"]
+atlas = ExtResource("14_hwuss")
+region = Rect2(38, 4, 13, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1cm3t"]
+atlas = ExtResource("14_hwuss")
+region = Rect2(55, 4, 13, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ptcv5"]
+atlas = ExtResource("14_hwuss")
+region = Rect2(72, 4, 13, 13)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ue8ih"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hwuss")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0wc2m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tb56k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1cm3t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ptcv5")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
 [node name="Area" type="Node"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -318,3 +362,21 @@ position = Vector2(-19, 17)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_tb56k")
 animation = &"heart_full"
+
+[node name="CoinContainer" type="HBoxContainer" parent="UI/TowerStatus"]
+layout_mode = 0
+offset_left = -24.0
+offset_right = 16.0
+offset_bottom = 45.0
+
+[node name="CoinLabel" type="Label" parent="UI/TowerStatus/CoinContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "0"
+horizontal_alignment = 1
+
+[node name="CoinIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/CoinContainer"]
+position = Vector2(-15, 23)
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_ue8ih")
+frame_progress = 0.606821

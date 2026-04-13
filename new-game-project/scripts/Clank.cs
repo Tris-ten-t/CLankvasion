@@ -34,7 +34,6 @@ public partial class Clank : CharacterBody2D, IDamageable
 			_animatedSprite.AnimationFinished += OnAnimationFinished;
 		}
 
-		// Health bar
 		var template = GetTree().Root.GetNodeOrNull<ProgressBar>("Area/HealthBarTemplate");
 		if (template != null)
 		{
@@ -77,15 +76,12 @@ public partial class Clank : CharacterBody2D, IDamageable
 			_healthBarInstance.GlobalPosition = GlobalPosition + offset;
 		}
 
-		// Distance-based contact detection (more reliable than signals)
 		float distanceToTower = GlobalPosition.DistanceTo(_tower.GlobalPosition);
-		if (distanceToTower < 40f)   // Adjust this value if needed
+		if (distanceToTower < 40f)
 		{
-			GD.Print("[Clank] Close enough to tower! Dealing damage...");
 			if (_tower is MainTower tower)
-			{
 				tower.TakeDamage(DamageToTower);
-			}
+
 			_isDying = true;
 			Die();
 		}
@@ -108,7 +104,6 @@ public partial class Clank : CharacterBody2D, IDamageable
 
 	private void Die()
 	{
-		GD.Print("[Clank] Starting death animation");
 		Velocity = Vector2.Zero;
 		SetPhysicsProcess(false);
 
@@ -126,18 +121,14 @@ public partial class Clank : CharacterBody2D, IDamageable
 	private void OnAnimationFinished()
 	{
 		if (_animatedSprite.Animation == DeathAnimation)
-		{
 			CleanupAndDie();
-		}
 		else if (_animatedSprite.Animation == WalkAnimation && !_isDying)
-		{
 			_animatedSprite.Play(WalkAnimation);
-		}
 	}
 
 	private void CleanupAndDie()
 	{
-		GD.Print("[Clank] Enemy removed");
+		Economy.AddCoins(2);        // Clank gives 2 coins
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 			_healthBarInstance.QueueFree();
 

@@ -6,7 +6,7 @@ public partial class Bull : CharacterBody2D, IDamageable
 	[Export] public int MaxHealth = 20;
 	[Export] public string WalkAnimation = "walk";
 	[Export] public string DeathAnimation = "death";
-	[Export] public int DamageToTower = 12;     // Bull is tankier, so does more damage
+	[Export] public int DamageToTower = 12;     // Bull is strong
 
 	private int _currentHealth;
 	private ProgressBar _healthBarInstance;
@@ -34,7 +34,6 @@ public partial class Bull : CharacterBody2D, IDamageable
 			_animatedSprite.AnimationFinished += OnAnimationFinished;
 		}
 
-		// Health bar
 		var template = GetTree().Root.GetNodeOrNull<ProgressBar>("Area/HealthBarTemplate");
 		if (template != null)
 		{
@@ -77,15 +76,12 @@ public partial class Bull : CharacterBody2D, IDamageable
 			_healthBarInstance.GlobalPosition = GlobalPosition + offset;
 		}
 
-		// Distance-based tower contact
 		float distanceToTower = GlobalPosition.DistanceTo(_tower.GlobalPosition);
 		if (distanceToTower < 40f)
 		{
-			GD.Print("[Bull] Close enough to tower! Dealing damage...");
 			if (_tower is MainTower tower)
-			{
 				tower.TakeDamage(DamageToTower);
-			}
+
 			_isDying = true;
 			Die();
 		}
@@ -108,7 +104,6 @@ public partial class Bull : CharacterBody2D, IDamageable
 
 	private void Die()
 	{
-		GD.Print("[Bull] Starting death animation");
 		Velocity = Vector2.Zero;
 		SetPhysicsProcess(false);
 
@@ -126,18 +121,14 @@ public partial class Bull : CharacterBody2D, IDamageable
 	private void OnAnimationFinished()
 	{
 		if (_animatedSprite.Animation == DeathAnimation)
-		{
 			CleanupAndDie();
-		}
 		else if (_animatedSprite.Animation == WalkAnimation && !_isDying)
-		{
 			_animatedSprite.Play(WalkAnimation);
-		}
 	}
 
 	private void CleanupAndDie()
 	{
-		GD.Print("[Bull] Enemy removed");
+		Economy.AddCoins(4);        // Bull gives 4 coins
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 			_healthBarInstance.QueueFree();
 

@@ -26,6 +26,7 @@ public partial class MainTower : AnimatedSprite2D
 	private ProgressBar healthBar;
 	private AnimatedSprite2D shieldIcon;
 	private AnimatedSprite2D heartIcon;
+	private Label coinLabel;
 
 	private bool gameOverTriggered = false;
 
@@ -48,15 +49,18 @@ public partial class MainTower : AnimatedSprite2D
 		currentShield = MaxShield;
 		currentHealth = MaxHealth;
 
+		// Find UI elements
 		shieldBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldBar");
 		healthBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/HealthContainer/HealthBar");
 		shieldIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldIcon");
 		heartIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/HealthContainer/HeartIcon");
+		coinLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/CoinContainer/CoinLabel");
 
-		ForceSeparateStyles();
+		ForceSeparateStyles();     // ← This was missing
 		UpdateUI();
 	}
 
+	// This method creates separate styles for shield and health bars
 	private void ForceSeparateStyles()
 	{
 		if (shieldBar != null)
@@ -81,6 +85,12 @@ public partial class MainTower : AnimatedSprite2D
 		if (Input.IsMouseButtonPressed(MouseButton.Left))
 			TryFire(mousePos);
 
+		// Hotkey to open shop (B key)
+		if (Input.IsActionJustPressed("open_shop"))
+		{
+			OpenShopMenu();
+		}
+
 		UpdateUI();
 	}
 
@@ -102,6 +112,21 @@ public partial class MainTower : AnimatedSprite2D
 
 		Play(ShootAnimation);
 		shootFlashTimer.Start(ShootFlashDuration);
+	}
+
+	private void OpenShopMenu()
+	{
+		var shopScene = GD.Load<PackedScene>("res://scenes/ShopMenu.tscn");
+		if (shopScene != null)
+		{
+			var shopMenu = shopScene.Instantiate<CanvasLayer>();
+			GetTree().CurrentScene.AddChild(shopMenu);
+			GD.Print("Shop menu opened");
+		}
+		else
+		{
+			GD.PrintErr("ShopMenu.tscn not found at res://scenes/ShopMenu.tscn");
+		}
 	}
 
 	public void TakeDamage(float damage)
@@ -132,19 +157,12 @@ public partial class MainTower : AnimatedSprite2D
 	{
 		GD.Print("Tower Destroyed - Showing Game Over Menu");
 
-		// Correct path you gave me
 		var gameOverScene = GD.Load<PackedScene>("res://scenes/GameOverMenu.tscn");
 		if (gameOverScene != null)
 		{
 			var menu = gameOverScene.Instantiate<CanvasLayer>();
 			GetTree().CurrentScene.AddChild(menu);
-
-			GetTree().Paused = true;        // Pause the game
-			GD.Print("Game Over Menu shown successfully!");
-		}
-		else
-		{
-			GD.PrintErr("ERROR: Could not load GameOverMenu.tscn at res://scenes/GameOverMenu.tscn");
+			GetTree().Paused = true;
 		}
 	}
 
@@ -152,6 +170,7 @@ public partial class MainTower : AnimatedSprite2D
 	{
 		if (shieldBar != null) shieldBar.Value = currentShield;
 		if (healthBar != null) healthBar.Value = currentHealth;
+		if (coinLabel != null) coinLabel.Text = Economy.Coins.ToString();
 
 		// Shield Bar
 		if (shieldBar != null)

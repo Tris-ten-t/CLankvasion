@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3 uid="uid://cpnx03n6m6wvi"]
+
+[ext_resource type="Script" uid="uid://dfl0kbe58vrkp" path="res://scripts/ShopMenu.cs" id="1_u8hot"]
+
+[node name="ShopMenu" type="CanvasLayer"]
+script = ExtResource("1_u8hot")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(501, 497)
+zoom = Vector2(1.15, 0.65)
+
+[node name="BackgroundPanel" type="Panel" parent="."]
+offset_left = 1357.0
+offset_top = 138.0
+offset_right = 2511.0
+offset_bottom = 790.0
+
+[node name="TitleLabel" type="Label" parent="."]
+offset_left = 468.0
+offset_top = 7.0
+offset_right = 508.0
+offset_bottom = 30.0
+theme_override_font_sizes/font_size = 50
+text = "Shop"
+
+[node name="ItemList" type="VBoxContainer" parent="."]
+offset_left = 503.0
+offset_top = 80.0
+offset_right = 550.0
+offset_bottom = 120.0
+
+[node name="MineButton" type="Button" parent="ItemList"]
+layout_mode = 2
+text = "Mine"
+
+[node name="ItemDetails" type="VBoxContainer" parent="."]
+offset_left = 199.0
+offset_top = 63.0
+offset_right = 239.0
+offset_bottom = 152.0
+
+[node name="ItemNameLabel" type="Label" parent="ItemDetails"]
+layout_mode = 2
+
+[node name="ItemDescriptionLabel" type="Label" parent="ItemDetails"]
+layout_mode = 2
+
+[node name="ItemCostLabel" type="Label" parent="ItemDetails"]
+layout_mode = 2
+
+[node name="BuyButton" type="Button" parent="ItemDetails"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="."]
+offset_left = 487.0
+offset_top = 558.0
+offset_right = 537.0
+offset_bottom = 589.0
+text = "Close"
