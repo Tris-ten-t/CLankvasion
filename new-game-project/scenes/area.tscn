@@ -1,11 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene load_steps=12 format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/MainTower.tscn" id="1_u55m2"]
 [ext_resource type="PackedScene" uid="uid://crbfak2hna7a3" path="res://scenes/bullet.tscn" id="2_8qhwf"]
 [ext_resource type="Script" uid="uid://bmsu2c03wmaf0" path="res://scripts/EnemySpawner.cs" id="3_5jt5u"]
-[ext_resource type="PackedScene" uid="uid://l10cqcjw4o6l" path="res://scenes/Enemy.tscn" id="4_t8tu6"]
-[ext_resource type="PackedScene" uid="uid://bctmja5grypfx" path="res://scenes/Clank.tscn" id="5_t8tu6"]
-[ext_resource type="PackedScene" uid="uid://bs31nupjx0w0d" path="res://scenes/Clink.tscn" id="6_mphia"]
+[ext_resource type="PackedScene" uid="uid://l10cqcjw4o6l" path="res://scenes/baddies/Enemy.tscn" id="4_t8tu6"]
+[ext_resource type="PackedScene" uid="uid://bctmja5grypfx" path="res://scenes/baddies/Clank.tscn" id="5_t8tu6"]
+[ext_resource type="PackedScene" uid="uid://bs31nupjx0w0d" path="res://scenes/baddies/Clink.tscn" id="6_mphia"]
+[ext_resource type="PackedScene" uid="uid://c37k7xq7odh1w" path="res://scenes/baddies/Bull.tscn" id="7_abe4w"]
+[ext_resource type="PackedScene" uid="uid://crh83etprgl4q" path="res://scenes/baddies/Clunk.tscn" id="7_wx6cp"]
+[ext_resource type="Texture2D" uid="uid://cenyxjtl5285k" path="res://assets/Misc/background1.png" id="9_ueojj"]
+[ext_resource type="Texture2D" uid="uid://im8rhf83t1dn" path="res://assets/Misc/lights.png" id="10_j4i6t"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2hywi"]
 bg_color = Color(2.35841e-06, 0.72328, 0.26336, 1)
@@ -18,21 +22,26 @@ border_color = Color(0, 0, 0, 1)
 [node name="Area" type="Node"]
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(576, 325)
+position = Vector2(499, 500)
+zoom = Vector2(1.15, 0.65)
 
 [node name="MainTower" parent="." groups=["towers"] instance=ExtResource("1_u55m2")]
-position = Vector2(576, 325)
+position = Vector2(510, 500)
 scale = Vector2(3, 2.976)
 BulletScene = ExtResource("2_8qhwf")
+FireRate = 0.1
 
 [node name="Muzzle" type="Marker2D" parent="MainTower"]
 position = Vector2(0, 7.86291)
 
 [node name="EnemySpawner" type="Node2D" parent="."]
+position = Vector2(-2, 2)
 script = ExtResource("3_5jt5u")
 RollerScene = ExtResource("4_t8tu6")
 ClankScene = ExtResource("5_t8tu6")
+BullScene = ExtResource("7_abe4w")
 ClinkScene = ExtResource("6_mphia")
+ClunkScene = ExtResource("7_wx6cp")
 
 [node name="HealthBarTemplate" type="ProgressBar" parent="."]
 visible = false
@@ -43,3 +52,42 @@ offset_right = 104.0
 offset_bottom = 30.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_2hywi")
 show_percentage = false
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -10
+position = Vector2(3.8147e-06, -5.96046e-08)
+scale = Vector2(10, 10)
+texture = ExtResource("9_ueojj")
+centered = false
+
+[node name="Streetlights" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(500, 500)
+scale = Vector2(10, 10)
+texture = ExtResource("10_j4i6t")
+
+[node name="SpawnPoints" type="Node2D" parent="."]
+
+[node name="SpawnPoint1" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(-84, 433)
+
+[node name="SpawnPoint2" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(-80, 573)
+
+[node name="SpawnPoint3" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(452, 1056)
+
+[node name="SpawnPoint4" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(577, 1059)
+
+[node name="SpawnPoint5" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(1027, 581)
+
+[node name="SpawnPoint6" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(1026, 434)
+
+[node name="SpawnPoint7" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(566, -63)
+
+[node name="SpawnPoint8" type="Marker2D" parent="SpawnPoints"]
+position = Vector2(425, -64)
