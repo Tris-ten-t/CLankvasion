@@ -27,6 +27,8 @@ public partial class MainTower : AnimatedSprite2D
 	private AnimatedSprite2D shieldIcon;
 	private AnimatedSprite2D heartIcon;
 
+	private bool gameOverTriggered = false;
+
 	public override void _Ready()
 	{
 		muzzle = GetNodeOrNull<Marker2D>("Muzzle");
@@ -46,7 +48,6 @@ public partial class MainTower : AnimatedSprite2D
 		currentShield = MaxShield;
 		currentHealth = MaxHealth;
 
-		// Find UI nodes
 		shieldBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldBar");
 		healthBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/HealthContainer/HealthBar");
 		shieldIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldIcon");
@@ -120,9 +121,29 @@ public partial class MainTower : AnimatedSprite2D
 
 		UpdateUI();
 
-		if (currentHealth <= 0)
+		if (currentHealth <= 0 && !gameOverTriggered)
 		{
-			GD.Print("Tower Destroyed - Game Over!");
+			gameOverTriggered = true;
+			TriggerGameOver();
+		}
+	}
+
+	private void TriggerGameOver()
+	{
+		GD.Print("Tower Destroyed - Showing Game Over Menu");
+
+		var gameOverScene = GD.Load<PackedScene>("res://GameOverMenu.tscn");
+		if (gameOverScene != null)
+		{
+			var menu = gameOverScene.Instantiate<CanvasLayer>();
+			GetTree().CurrentScene.AddChild(menu);
+
+			// Optional: Pause the game
+			GetTree().Paused = true;
+		}
+		else
+		{
+			GD.PrintErr("GameOverMenu.tscn not found! Make sure the scene exists at res://GameOverMenu.tscn");
 		}
 	}
 
@@ -131,10 +152,9 @@ public partial class MainTower : AnimatedSprite2D
 		if (shieldBar != null) shieldBar.Value = currentShield;
 		if (healthBar != null) healthBar.Value = currentHealth;
 
-		// ====================== SHIELD BAR ======================
+		// Shield Bar
 		if (shieldBar != null)
 		{
-			// Fill color (shrinking part) - Light Blue
 			StyleBoxFlat fillStyle = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
 			if (fillStyle != null)
 			{
@@ -143,22 +163,20 @@ public partial class MainTower : AnimatedSprite2D
 				fillStyle.BgColor = lightBlue;
 			}
 
-			// Background color (behind the fill) - Dark Blue when low/empty
 			StyleBoxFlat bgStyle = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
 			if (bgStyle != null)
 			{
 				float pct = currentShield / MaxShield;
 				if (pct <= 0.05f)
-					bgStyle.BgColor = new Color(0.08f, 0.25f, 0.65f); // Dark Blue when empty
+					bgStyle.BgColor = new Color(0.08f, 0.25f, 0.65f);
 				else
-					bgStyle.BgColor = new Color(0.15f, 0.35f, 0.75f); // Medium blue
+					bgStyle.BgColor = new Color(0.15f, 0.35f, 0.75f);
 			}
 		}
 
-		// ====================== HEALTH BAR ======================
+		// Health Bar
 		if (healthBar != null)
 		{
-			// Fill color
 			StyleBoxFlat fillStyle = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
 			if (fillStyle != null)
 			{
@@ -171,7 +189,6 @@ public partial class MainTower : AnimatedSprite2D
 					fillStyle.BgColor = Colors.Red;
 			}
 
-			// Background color - Dark Red when empty
 			StyleBoxFlat bgStyle = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
 			if (bgStyle != null)
 			{
@@ -183,7 +200,7 @@ public partial class MainTower : AnimatedSprite2D
 			}
 		}
 
-		// ====================== ICONS ======================
+		// Icons
 		if (shieldIcon != null && shieldIcon.SpriteFrames != null)
 		{
 			string target = "shield_full";
