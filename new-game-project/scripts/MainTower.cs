@@ -132,18 +132,19 @@ public partial class MainTower : AnimatedSprite2D
 	{
 		GD.Print("Tower Destroyed - Showing Game Over Menu");
 
-		var gameOverScene = GD.Load<PackedScene>("res://GameOverMenu.tscn");
+		// Correct path you gave me
+		var gameOverScene = GD.Load<PackedScene>("res://scenes/GameOverMenu.tscn");
 		if (gameOverScene != null)
 		{
 			var menu = gameOverScene.Instantiate<CanvasLayer>();
 			GetTree().CurrentScene.AddChild(menu);
 
-			// Optional: Pause the game
-			GetTree().Paused = true;
+			GetTree().Paused = true;        // Pause the game
+			GD.Print("Game Over Menu shown successfully!");
 		}
 		else
 		{
-			GD.PrintErr("GameOverMenu.tscn not found! Make sure the scene exists at res://GameOverMenu.tscn");
+			GD.PrintErr("ERROR: Could not load GameOverMenu.tscn at res://scenes/GameOverMenu.tscn");
 		}
 	}
 
