@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdoy25vehl4p2"
-path="res://.godot/imported/Shield_Health Anim.png-4856752485312bd4503f8390c614123c.ctex"
+uid="uid://cdypu7i6s35qt"
+path="res://.godot/imported/heart.png-9031ea26ca3b6803900b3fcb7462d91e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Misc/Shield_Health Anim.png"
-dest_files=["res://.godot/imported/Shield_Health Anim.png-4856752485312bd4503f8390c614123c.ctex"]
+source_file="res://assets/Misc/heart.png"
+dest_files=["res://.godot/imported/heart.png-9031ea26ca3b6803900b3fcb7462d91e.ctex"]
 
 [params]
 

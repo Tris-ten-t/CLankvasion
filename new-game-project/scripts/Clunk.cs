@@ -2,15 +2,15 @@ using Godot;
 
 public partial class Clunk : CharacterBody2D, IDamageable
 {
-	[Export] public float Speed = 58f;           // Fast
-	[Export] public int MaxHealth = 20;          // High HP
-	[Export] public string WalkAnimation = "walk";   // Make sure this matches SpriteFrames exactly
+	[Export] public float Speed = 58f;
+	[Export] public int MaxHealth = 20;
+	[Export] public string WalkAnimation = "walk";
 	[Export] public string DeathAnimation = "death";
+	[Export] public int DamageToTower = 10;
 
 	private int _currentHealth;
 	private ProgressBar _healthBarInstance;
 	private AnimatedSprite2D _animatedSprite;
-	private Vector2 _targetPos;
 	private Node2D _tower;
 	private bool _isDead = false;
 
@@ -21,30 +21,20 @@ public partial class Clunk : CharacterBody2D, IDamageable
 
 		if (_animatedSprite == null)
 		{
-			GD.Print("[Clunk] ERROR: No AnimatedSprite2D named 'Sprite' found!");
+			GD.Print("[Clunk] ERROR: No Sprite found!");
 			return;
 		}
 
-		GD.Print("[Clunk] Sprite found. Available animations: ", string.Join(", ", _animatedSprite.SpriteFrames?.GetAnimationNames() ?? new string[0]));
-
-		// Force sprite upright
 		_animatedSprite.Rotation = 0f;
 		_animatedSprite.FlipV = false;
 
-		// Try to play walk animation
 		if (_animatedSprite.SpriteFrames != null && _animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
 		{
 			_animatedSprite.Play(WalkAnimation);
-			GD.Print("[Clunk] Successfully started playing walk animation: " + WalkAnimation);
-		}
-		else
-		{
-			GD.Print("[Clunk] ERROR: Animation '" + WalkAnimation + "' not found in SpriteFrames!");
 		}
 
 		_animatedSprite.AnimationFinished += OnAnimationFinished;
 
-		// Health bar setup
 		var template = GetTree().Root.GetNodeOrNull<ProgressBar>("Area/HealthBarTemplate");
 		if (template != null)
 		{
@@ -54,38 +44,47 @@ public partial class Clunk : CharacterBody2D, IDamageable
 			_healthBarInstance.ZIndex = 10;
 			_healthBarInstance.Rotation = Mathf.Pi / 2;
 		}
-		else
-		{
-			GD.Print("ERROR: HealthBarTemplate not found at 'Area/HealthBarTemplate'");
-		}
 
 		_tower = GetTree().GetFirstNodeInGroup("towers") as Node2D;
-		if (_tower != null)
-			_targetPos = _tower.GlobalPosition;
 
 		UpdateHealthBar();
+		GD.Print("[Clunk] Spawned and ready. Monitoring distance to tower...");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_tower == null || _isDead) return;
+		if (_isDead || _tower == null) 
+		{
+			Velocity = Vector2.Zero;
+			return;
+		}
 
-		Vector2 direction = (_targetPos - GlobalPosition).Normalized();
+		Vector2 direction = (_tower.GlobalPosition - GlobalPosition).Normalized();
 		Velocity = direction * Speed;
 		MoveAndSlide();
 
-		if (_animatedSprite != null && direction.LengthSquared() > 0.1f)
-		{
+		if (_animatedSprite != null)
 			_animatedSprite.FlipH = direction.X < 0;
-			_animatedSprite.FlipV = false;
-			_animatedSprite.Rotation = 0f;
-		}
 
+		// Health bar
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 		{
 			_healthBarInstance.Rotation = Mathf.Pi / 2;
 			Vector2 offset = new Vector2(-50, -40);
 			_healthBarInstance.GlobalPosition = GlobalPosition + offset;
+		}
+
+		// NEW: Simple distance check - much more reliable than signals
+		float distanceToTower = GlobalPosition.DistanceTo(_tower.GlobalPosition);
+		if (distanceToTower < 40f)   // Adjust this number if needed (40 = roughly enemy size)
+		{
+			GD.Print("[Clunk] Close enough to tower! Dealing damage...");
+			if (_tower is MainTower tower)
+			{
+				tower.TakeDamage(DamageToTower);
+			}
+			_isDead = true;
+			Die();
 		}
 	}
 
@@ -106,7 +105,9 @@ public partial class Clunk : CharacterBody2D, IDamageable
 
 	private void Die()
 	{
+		GD.Print("[Clunk] Starting death animation");
 		Velocity = Vector2.Zero;
+		SetPhysicsProcess(false);
 
 		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null &&
 			_animatedSprite.SpriteFrames.HasAnimation(DeathAnimation))
@@ -125,14 +126,11 @@ public partial class Clunk : CharacterBody2D, IDamageable
 		{
 			CleanupAndDie();
 		}
-		else if (_animatedSprite.Animation == WalkAnimation)
-		{
-			_animatedSprite.Play(WalkAnimation); // Force loop
-		}
 	}
 
 	private void CleanupAndDie()
 	{
+		GD.Print("[Clunk] Enemy removed");
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 			_healthBarInstance.QueueFree();
 
