@@ -1,61 +1,78 @@
 using Godot;
-
 public partial class ShopMenu : CanvasLayer
 {
-	// References (set in editor)
 	private Label itemNameLabel;
 	private Label itemDescriptionLabel;
 	private Label itemCostLabel;
 	private Button buyButton;
-
 	private string selectedItem = "";
-
 	public override void _Ready()
 	{
+		GD.Print("Shop Menu opened");
+		Layer = 128;
+		GetTree().Paused = true;
+		ProcessMode = ProcessModeEnum.Always;
 		itemNameLabel = GetNodeOrNull<Label>("ItemDetails/ItemNameLabel");
 		itemDescriptionLabel = GetNodeOrNull<Label>("ItemDetails/ItemDescriptionLabel");
 		itemCostLabel = GetNodeOrNull<Label>("ItemDetails/ItemCostLabel");
 		buyButton = GetNodeOrNull<Button>("ItemDetails/BuyButton");
 
+		GD.Print("itemNameLabel: ", itemNameLabel);
+		GD.Print("itemDescriptionLabel: ", itemDescriptionLabel);
+		GD.Print("itemCostLabel: ", itemCostLabel);
+		GD.Print("buyButton: ", buyButton);
+
 		if (buyButton != null)
 			buyButton.Pressed += OnBuyPressed;
-
-		// Start with nothing selected
+		var closeButton = GetNodeOrNull<Button>("CloseButton");
+		if (closeButton != null)
+			closeButton.Pressed += OnCloseButtonPressed;
+		else
+			GD.PrintErr("CloseButton not found!");
 		ClearDetails();
 	}
-
-	// Called when player clicks "Mine Tower" button
-	public void OnMineButtonPressed()
+	public void _on_mine_button_pressed()
 	{
 		selectedItem = "Mine";
-		itemNameLabel.Text = "Mine Tower";
-		itemDescriptionLabel.Text = "Explosive trap. Deals moderate area damage when an enemy touches it.";
-		itemCostLabel.Text = "Cost: 25 coins";
-		buyButton.Disabled = Economy.Coins < 25;
+		if (itemNameLabel != null) itemNameLabel.Text = "Mine Tower";
+		if (itemDescriptionLabel != null) 
+			itemDescriptionLabel.Text = "Explosive trap that deals moderate area damage when an enemy touches it.\nGreat for defending narrow paths.";
+		if (itemCostLabel != null) itemCostLabel.Text = "Cost: 25 coins";
+		if (buyButton != null)
+			buyButton.Disabled = Economy.Coins < 25;
+		GD.Print("Mine button clicked - details updated");
 	}
-
 	private void OnBuyPressed()
 	{
 		if (selectedItem == "Mine" && Economy.Coins >= 25)
 		{
 			Economy.AddCoins(-25);
-			GD.Print("Mine purchased! (Placement logic will be added next)");
-			// TODO: Switch to placement mode
-			QueueFree(); // Close menu after purchase for now
+			GD.Print("Mine Tower purchased!");
+			CloseMenu();
+		}
+		else
+		{
+			GD.Print("Not enough coins!");
 		}
 	}
-
 	private void ClearDetails()
 	{
 		if (itemNameLabel != null) itemNameLabel.Text = "";
-		if (itemDescriptionLabel != null) itemDescriptionLabel.Text = "Select an item to see details.";
+		if (itemDescriptionLabel != null) 
+			itemDescriptionLabel.Text = "Select an item from the left to see details.";
 		if (itemCostLabel != null) itemCostLabel.Text = "";
 		if (buyButton != null) buyButton.Disabled = true;
 	}
-
-	// Close button
-	public void OnClosePressed()
+	private void OnCloseButtonPressed()
 	{
+		GetTree().Paused = false;
 		QueueFree();
+		GD.Print("Shop menu closed");
+	}
+	private void CloseMenu()
+	{
+		GetTree().Paused = false;
+		QueueFree();
+		GD.Print("Shop menu closed");
 	}
 }
