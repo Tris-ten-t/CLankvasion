@@ -2,16 +2,17 @@ using Godot;
 
 public static class Economy
 {
-	public static int Coins { get; private set; } = 0;
+	public static int Coins { get; private set; } = 999999;   // Infinite money for testing
 
 	public static void AddCoins(int amount)
 	{
-		Coins += amount;
-		GD.Print($"[Economy] +{amount} coins → Total: {Coins}");
-	}
+		if (amount < 0)
+		{
+			GD.Print("Infinite money mode - purchase allowed");
+			return; // Don't subtract money
+		}
 
-	public static void Reset()
-	{
-		Coins = 0;
+		Coins += amount;
+		GD.Print($"Coins updated: {Coins}");
 	}
 }

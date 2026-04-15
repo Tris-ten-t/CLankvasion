@@ -1,0 +1,87 @@
+[gd_scene load_steps=12 format=3 uid="uid://dunebikm2td2q"]
+
+[ext_resource type="Script" uid="uid://deexga0dc5k8v" path="res://scripts/Mine.cs" id="1_gmlf2"]
+[ext_resource type="Texture2D" uid="uid://b7dkdafeawln0" path="res://assets/towers/Mine Anim.png" id="2_ry3lr"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nwtmj"]
+radius = 160.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ke0lc"]
+atlas = ExtResource("2_ry3lr")
+region = Rect2(4, 23, 16, 17)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fgt8m"]
+atlas = ExtResource("2_ry3lr")
+region = Rect2(23, 20, 17, 20)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kh0u7"]
+atlas = ExtResource("2_ry3lr")
+region = Rect2(43, 15, 17, 29)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7t6m3"]
+atlas = ExtResource("2_ry3lr")
+region = Rect2(61, 11, 25, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kklfu"]
+atlas = ExtResource("2_ry3lr")
+region = Rect2(5, 44, 47, 44)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xpffi"]
+atlas = ExtResource("2_ry3lr")
+region = Rect2(3, 3, 13, 13)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nwtmj"]
+atlas = ExtResource("2_ry3lr")
+region = Rect2(20, 3, 13, 13)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ke0lc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ke0lc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fgt8m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kh0u7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7t6m3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kklfu")
+}],
+"loop": false,
+"name": &"Boom",
+"speed": 11.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xpffi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nwtmj")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="Mine" type="Area2D"]
+z_index = -5
+collision_layer = 6
+collision_mask = 2
+script = ExtResource("1_gmlf2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_nwtmj")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-0.249998, 0)
+scale = Vector2(2.96154, 3)
+sprite_frames = SubResource("SpriteFrames_ke0lc")
+animation = &"Idle"
+
+[node name="ExplosionTimer" type="Timer" parent="."]
+wait_time = 0.001

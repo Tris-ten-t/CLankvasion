@@ -109,7 +109,7 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8eoo"]
 size = Vector2(69, 39)
 
-[node name="Enemy2" type="CharacterBody2D"]
+[node name="Enemy2" type="CharacterBody2D" groups=["enemies"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_qkmkt")

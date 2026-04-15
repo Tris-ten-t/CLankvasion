@@ -27,6 +27,10 @@ public partial class MainTower : AnimatedSprite2D
 
 	private bool gameOverTriggered = false;
 
+	// Placement System
+	private bool isPlacingMine = false;
+	private PackedScene mineScene;
+
 	public override void _Ready()
 	{
 		muzzle = GetNodeOrNull<Marker2D>("Muzzle");
@@ -76,27 +80,30 @@ public partial class MainTower : AnimatedSprite2D
 		Rotation -= Mathf.Pi / 2;
 
 		if (Input.IsMouseButtonPressed(MouseButton.Left))
-			TryFire(mousePos);
+		{
+			if (isPlacingMine)
+				PlaceMine(mousePos);
+			else
+				TryFire(mousePos);
+		}
 
-		// Hotkey to open shop (Tab)
-		if (Input.IsActionJustPressed("open_shop"))
+		if (Input.IsActionJustPressed("open_shop") && !isPlacingMine)
 		{
 			OpenShopMenu();
 		}
+
+		if (Input.IsActionJustPressed("ui_cancel") && isPlacingMine)
+			CancelPlacement();
 
 		UpdateUI();
 	}
 
 	private void OpenShopMenu()
 	{
-		GD.Print("[Tower] Tab pressed - attempting to open shop");
-
-		// Check if menu already exists
 		if (GetTree().CurrentScene.GetNodeOrNull<CanvasLayer>("ShopMenu") != null)
-		{
-			GD.Print("[Tower] Shop menu is already open");
 			return;
-		}
+
+		GD.Print("[Tower] Opening shop menu...");
 
 		var shopScene = GD.Load<PackedScene>("res://scenes/shop_menu.tscn");
 		if (shopScene != null)
@@ -106,10 +113,35 @@ public partial class MainTower : AnimatedSprite2D
 			GetTree().CurrentScene.AddChild(shopMenu);
 			GD.Print("[Tower] Shop menu opened successfully!");
 		}
+	}
+
+	public void StartMinePlacement()
+	{
+		isPlacingMine = true;
+		mineScene = GD.Load<PackedScene>("res://scenes/Towers/Mine.tscn");
+
+		if (mineScene != null)
+			GD.Print("✅ Mine placement mode ON - Left click to place");
 		else
-		{
-			GD.PrintErr("[Tower] Could not load res://scenes/shop_menu.tscn");
-		}
+			GD.PrintErr("Mine.tscn not found!");
+	}
+
+	private void PlaceMine(Vector2 position)
+	{
+		if (mineScene == null) return;
+
+		var mine = mineScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(mine);
+		mine.GlobalPosition = position;
+
+		GD.Print($"Mine placed at {position}");
+		isPlacingMine = false;
+	}
+
+	private void CancelPlacement()
+	{
+		isPlacingMine = false;
+		GD.Print("Mine placement cancelled");
 	}
 
 	private void TryFire(Vector2 targetPos)
@@ -174,37 +206,61 @@ public partial class MainTower : AnimatedSprite2D
 		if (healthBar != null) healthBar.Value = currentHealth;
 		if (coinLabel != null) coinLabel.Text = Economy.Coins.ToString();
 
+		// Shield Bar styling
 		if (shieldBar != null)
 		{
-			var fill = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
-			if (fill != null) fill.BgColor = new Color(0.31f, 0.78f, 0.97f);
+			StyleBoxFlat fillStyle = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fillStyle != null)
+				fillStyle.BgColor = new Color(0.31f, 0.78f, 0.97f);
 
-			var bg = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
-			if (bg != null)
-				bg.BgColor = (currentShield / MaxShield <= 0.05f) ? new Color(0.08f, 0.25f, 0.65f) : new Color(0.15f, 0.35f, 0.75f);
+			StyleBoxFlat bgStyle = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bgStyle != null)
+			{
+				float pct = currentShield / MaxShield;
+				bgStyle.BgColor = (pct <= 0.05f) ? new Color(0.08f, 0.25f, 0.65f) : new Color(0.15f, 0.35f, 0.75f);
+			}
 		}
 
+		// Health Bar styling
 		if (healthBar != null)
 		{
-			var fill = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
-			if (fill != null)
-				fill.BgColor = (currentHealth / MaxHealth > 0.6f) ? Colors.LimeGreen : (currentHealth / MaxHealth > 0.3f) ? Colors.Yellow : Colors.Red;
+			StyleBoxFlat fillStyle = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fillStyle != null)
+			{
+				float pct = currentHealth / MaxHealth;
+				fillStyle.BgColor = (pct > 0.6f) ? Colors.LimeGreen : (pct > 0.3f) ? Colors.Yellow : Colors.Red;
+			}
 
-			var bg = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
-			if (bg != null)
-				bg.BgColor = (currentHealth / MaxHealth <= 0.05f) ? Colors.DarkRed : new Color(0.2f, 0.2f, 0.2f);
+			StyleBoxFlat bgStyle = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bgStyle != null)
+			{
+				float pct = currentHealth / MaxHealth;
+				bgStyle.BgColor = (pct <= 0.05f) ? Colors.DarkRed : new Color(0.2f, 0.2f, 0.2f);
+			}
 		}
 
-		if (shieldIcon?.SpriteFrames != null)
+		// Shield Icon
+		if (shieldIcon != null && shieldIcon.SpriteFrames != null)
 		{
-			string anim = currentShield > 75 ? "shield_full" : currentShield > 50 ? "shield_75" : currentShield > 25 ? "shield_50" : currentShield > 0 ? "shield_25" : "shield_broken";
-			if (shieldIcon.Animation != anim) shieldIcon.Play(anim);
+			string target = currentShield > 75 ? "shield_full" : 
+						   currentShield > 50 ? "shield_75" : 
+						   currentShield > 25 ? "shield_50" : 
+						   currentShield > 0 ? "shield_25" : "shield_broken";
+
+			if (shieldIcon.Animation != target)
+				shieldIcon.Play(target);
 		}
 
-		if (heartIcon?.SpriteFrames != null)
+		// Heart Icon
+		if (heartIcon != null && heartIcon.SpriteFrames != null)
 		{
-			string anim = currentHealth > 75 ? "heart_full" : currentHealth > 50 ? "heart_75" : currentHealth > 25 ? "heart_50" : currentHealth > 0 ? "heart_25" : "heart_broken";
-			if (heartIcon.Animation != anim) heartIcon.Play(anim);
+			string target = currentHealth > 75 ? "heart_full" : 
+						   currentHealth > 50 ? "heart_75" : 
+						   currentHealth > 25 ? "heart_50" : 
+						   currentHealth > 0 ? "heart_25" : "heart_broken";
+
+			if (heartIcon.Animation != target)
+				heartIcon.Play(target);
 		}
 	}
 }
