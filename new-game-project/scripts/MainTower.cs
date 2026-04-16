@@ -29,7 +29,11 @@ public partial class MainTower : AnimatedSprite2D
 
 	// Placement System
 	private bool isPlacingMine = false;
+	private bool isPlacingWaterTank = false;
+	private bool isPlacingEmp = false;
 	private PackedScene mineScene;
+	private PackedScene waterTankScene;
+	private PackedScene empScene;
 
 	public override void _Ready()
 	{
@@ -83,16 +87,20 @@ public partial class MainTower : AnimatedSprite2D
 		{
 			if (isPlacingMine)
 				PlaceMine(mousePos);
+			else if (isPlacingWaterTank)
+				PlaceWaterTank(mousePos);
+			else if (isPlacingEmp)
+				PlaceEmp(mousePos);
 			else
 				TryFire(mousePos);
 		}
 
-		if (Input.IsActionJustPressed("open_shop") && !isPlacingMine)
+		if (Input.IsActionJustPressed("open_shop") && !isPlacingMine && !isPlacingWaterTank && !isPlacingEmp)
 		{
 			OpenShopMenu();
 		}
 
-		if (Input.IsActionJustPressed("ui_cancel") && isPlacingMine)
+		if (Input.IsActionJustPressed("ui_cancel") && (isPlacingMine || isPlacingWaterTank || isPlacingEmp))
 			CancelPlacement();
 
 		UpdateUI();
@@ -103,45 +111,75 @@ public partial class MainTower : AnimatedSprite2D
 		if (GetTree().CurrentScene.GetNodeOrNull<CanvasLayer>("ShopMenu") != null)
 			return;
 
-		GD.Print("[Tower] Opening shop menu...");
-
 		var shopScene = GD.Load<PackedScene>("res://scenes/shop_menu.tscn");
 		if (shopScene != null)
 		{
 			var shopMenu = shopScene.Instantiate<CanvasLayer>();
 			shopMenu.Name = "ShopMenu";
 			GetTree().CurrentScene.AddChild(shopMenu);
-			GD.Print("[Tower] Shop menu opened successfully!");
 		}
 	}
 
 	public void StartMinePlacement()
 	{
 		isPlacingMine = true;
-		mineScene = GD.Load<PackedScene>("res://scenes/Towers/Mine.tscn");
+		isPlacingWaterTank = false;
+		isPlacingEmp = false;
+		mineScene = GD.Load<PackedScene>("res://scenes/Mine.tscn");
+		GD.Print("Mine placement mode activated");
+	}
 
-		if (mineScene != null)
-			GD.Print("✅ Mine placement mode ON - Left click to place");
-		else
-			GD.PrintErr("Mine.tscn not found!");
+	public void StartWaterTankPlacement()
+	{
+		isPlacingWaterTank = true;
+		isPlacingMine = false;
+		isPlacingEmp = false;
+		waterTankScene = GD.Load<PackedScene>("res://scenes/Towers/WaterTank.tscn");
+		GD.Print("Water Tank placement mode activated");
+	}
+
+	public void StartEmpPlacement()
+	{
+		isPlacingEmp = true;
+		isPlacingMine = false;
+		isPlacingWaterTank = false;
+		empScene = GD.Load<PackedScene>("res://scenes/Towers/Emp.tscn");
+		GD.Print("EMP placement mode activated");
 	}
 
 	private void PlaceMine(Vector2 position)
 	{
 		if (mineScene == null) return;
-
 		var mine = mineScene.Instantiate<Area2D>();
 		GetTree().CurrentScene.AddChild(mine);
 		mine.GlobalPosition = position;
-
-		GD.Print($"Mine placed at {position}");
 		isPlacingMine = false;
+	}
+
+	private void PlaceWaterTank(Vector2 position)
+	{
+		if (waterTankScene == null) return;
+		var tank = waterTankScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(tank);
+		tank.GlobalPosition = position;
+		isPlacingWaterTank = false;
+	}
+
+	private void PlaceEmp(Vector2 position)
+	{
+		if (empScene == null) return;
+		var emp = empScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(emp);
+		emp.GlobalPosition = position;
+		isPlacingEmp = false;
 	}
 
 	private void CancelPlacement()
 	{
 		isPlacingMine = false;
-		GD.Print("Mine placement cancelled");
+		isPlacingWaterTank = false;
+		isPlacingEmp = false;
+		GD.Print("Placement cancelled");
 	}
 
 	private void TryFire(Vector2 targetPos)
@@ -206,61 +244,37 @@ public partial class MainTower : AnimatedSprite2D
 		if (healthBar != null) healthBar.Value = currentHealth;
 		if (coinLabel != null) coinLabel.Text = Economy.Coins.ToString();
 
-		// Shield Bar styling
 		if (shieldBar != null)
 		{
-			StyleBoxFlat fillStyle = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
-			if (fillStyle != null)
-				fillStyle.BgColor = new Color(0.31f, 0.78f, 0.97f);
+			var fill = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fill != null) fill.BgColor = new Color(0.31f, 0.78f, 0.97f);
 
-			StyleBoxFlat bgStyle = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
-			if (bgStyle != null)
-			{
-				float pct = currentShield / MaxShield;
-				bgStyle.BgColor = (pct <= 0.05f) ? new Color(0.08f, 0.25f, 0.65f) : new Color(0.15f, 0.35f, 0.75f);
-			}
+			var bg = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bg != null)
+				bg.BgColor = (currentShield / MaxShield <= 0.05f) ? new Color(0.08f, 0.25f, 0.65f) : new Color(0.15f, 0.35f, 0.75f);
 		}
 
-		// Health Bar styling
 		if (healthBar != null)
 		{
-			StyleBoxFlat fillStyle = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
-			if (fillStyle != null)
-			{
-				float pct = currentHealth / MaxHealth;
-				fillStyle.BgColor = (pct > 0.6f) ? Colors.LimeGreen : (pct > 0.3f) ? Colors.Yellow : Colors.Red;
-			}
+			var fill = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fill != null)
+				fill.BgColor = (currentHealth / MaxHealth > 0.6f) ? Colors.LimeGreen : (currentHealth / MaxHealth > 0.3f) ? Colors.Yellow : Colors.Red;
 
-			StyleBoxFlat bgStyle = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
-			if (bgStyle != null)
-			{
-				float pct = currentHealth / MaxHealth;
-				bgStyle.BgColor = (pct <= 0.05f) ? Colors.DarkRed : new Color(0.2f, 0.2f, 0.2f);
-			}
+			var bg = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bg != null)
+				bg.BgColor = (currentHealth / MaxHealth <= 0.05f) ? Colors.DarkRed : new Color(0.2f, 0.2f, 0.2f);
 		}
 
-		// Shield Icon
-		if (shieldIcon != null && shieldIcon.SpriteFrames != null)
+		if (shieldIcon?.SpriteFrames != null)
 		{
-			string target = currentShield > 75 ? "shield_full" : 
-						   currentShield > 50 ? "shield_75" : 
-						   currentShield > 25 ? "shield_50" : 
-						   currentShield > 0 ? "shield_25" : "shield_broken";
-
-			if (shieldIcon.Animation != target)
-				shieldIcon.Play(target);
+			string anim = currentShield > 75 ? "shield_full" : currentShield > 50 ? "shield_75" : currentShield > 25 ? "shield_50" : currentShield > 0 ? "shield_25" : "shield_broken";
+			if (shieldIcon.Animation != anim) shieldIcon.Play(anim);
 		}
 
-		// Heart Icon
-		if (heartIcon != null && heartIcon.SpriteFrames != null)
+		if (heartIcon?.SpriteFrames != null)
 		{
-			string target = currentHealth > 75 ? "heart_full" : 
-						   currentHealth > 50 ? "heart_75" : 
-						   currentHealth > 25 ? "heart_50" : 
-						   currentHealth > 0 ? "heart_25" : "heart_broken";
-
-			if (heartIcon.Animation != target)
-				heartIcon.Play(target);
+			string anim = currentHealth > 75 ? "heart_full" : currentHealth > 50 ? "heart_75" : currentHealth > 25 ? "heart_50" : currentHealth > 0 ? "heart_25" : "heart_broken";
+			if (heartIcon.Animation != anim) heartIcon.Play(anim);
 		}
 	}
 }

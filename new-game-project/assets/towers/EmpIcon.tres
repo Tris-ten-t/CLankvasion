@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://d0cm6w0u81qdg"]
+
+[ext_resource type="Texture2D" uid="uid://cpl8ao4rywpab" path="res://assets/towers/EMP Tower Anim.png" id="1_d4adr"]
+
+[resource]
+atlas = ExtResource("1_d4adr")
+region = Rect2(0, 3.56614, 45.132, 50.0501)

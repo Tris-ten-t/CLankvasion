@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://s6cwvg7xosp6"]
+
+[ext_resource type="Texture2D" uid="uid://c8wjw1qh6jdn6" path="res://assets/towers/Water Tank Anim.png" id="1_ygyws"]
+
+[resource]
+atlas = ExtResource("1_ygyws")
+region = Rect2(3.81237, 3.72621, 28.4779, 31.1582)

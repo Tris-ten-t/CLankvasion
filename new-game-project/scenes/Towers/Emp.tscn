@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://srg7a7pm5kdo"]
+
+[ext_resource type="Texture2D" uid="uid://cpl8ao4rywpab" path="res://assets/towers/EMP Tower Anim.png" id="1_kg5tc"]
+[ext_resource type="Script" uid="uid://veluf06icjs" path="res://scenes/Towers/Emp.cs" id="1_wjqs4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_wjqs4"]
+radius = 48.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tg3gn"]
+atlas = ExtResource("1_kg5tc")
+region = Rect2(0, 4, 45, 49)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sf1eq"]
+atlas = ExtResource("1_kg5tc")
+region = Rect2(48, 2, 47, 53)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jk2ea"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tg3gn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sf1eq")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="Emp" type="Area2D"]
+z_index = -5
+collision_layer = 6
+collision_mask = 2
+script = ExtResource("1_wjqs4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_wjqs4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_jk2ea")
+animation = &"Idle"
+frame_progress = 0.604106
+
+[node name="StunTimer" type="Timer" parent="."]

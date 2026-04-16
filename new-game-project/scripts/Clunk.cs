@@ -151,4 +151,5 @@ public partial class Clunk : CharacterBody2D, IDamageable
 		newStyle.BgColor = barColor;
 		_healthBarInstance.AddThemeStyleboxOverride("fill", newStyle);
 	}
+	
 }

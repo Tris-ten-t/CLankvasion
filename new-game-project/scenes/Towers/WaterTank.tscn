@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://bnp6fu7n73vnk"]
+
+[ext_resource type="Script" uid="uid://h1834jniow8y" path="res://assets/towers/WaterTank.cs" id="1_dwx57"]
+[ext_resource type="Texture2D" uid="uid://c8wjw1qh6jdn6" path="res://assets/towers/Water Tank Anim.png" id="2_ah5e2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n41r4"]
+radius = 32.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_41x5t"]
+atlas = ExtResource("2_ah5e2")
+region = Rect2(4, 4, 28, 31)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u46kf"]
+atlas = ExtResource("2_ah5e2")
+region = Rect2(36, 4, 28, 31)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_apli8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_41x5t")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u46kf")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="WaterTank" type="Area2D"]
+collision_layer = 6
+collision_mask = 2
+script = ExtResource("1_dwx57")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+z_index = -5
+shape = SubResource("CircleShape2D_n41r4")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_apli8")
+animation = &"Idle"
+frame_progress = 0.875374
+
+[node name="DamageTimer" type="Timer" parent="."]

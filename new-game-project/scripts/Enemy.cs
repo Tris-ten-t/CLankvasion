@@ -146,4 +146,5 @@ public partial class Enemy : CharacterBody2D, IDamageable
 		newStyle.BgColor = barColor;
 		_healthBarInstance.AddThemeStyleboxOverride("fill", newStyle);
 	}
+	
 }

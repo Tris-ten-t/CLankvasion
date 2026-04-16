@@ -1,0 +1,7 @@
+[gd_resource type="AtlasTexture" load_steps=2 format=3 uid="uid://4161qj0xtyls"]
+
+[ext_resource type="Texture2D" uid="uid://b7dkdafeawln0" path="res://assets/towers/Mine Anim.png" id="1_mxp2f"]
+
+[resource]
+atlas = ExtResource("1_mxp2f")
+region = Rect2(3.01736, 3.08677, 13.3796, 13.2956)
