@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dy36rmmw8woly"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pk0dw"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}]
+
+[node name="TrashCompactor" type="Area2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_pk0dw")
+animation = &"Idle"
+
+[node name="PullTimer" type="Timer" parent="."]
