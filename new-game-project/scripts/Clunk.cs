@@ -13,6 +13,8 @@ public partial class Clunk : CharacterBody2D, IDamageable
 	private AnimatedSprite2D _animatedSprite;
 	private Node2D _tower;
 	private bool _isDying = false;
+	private bool isStunned = false;
+	private double stunEndTime = 0.0;
 
 	public override void _Ready()
 	{
@@ -50,9 +52,28 @@ public partial class Clunk : CharacterBody2D, IDamageable
 		UpdateHealthBar();
 		GD.Print("[Clunk] Spawned and monitoring distance to tower...");
 	}
+	public void Stun(float duration)
+	{
+		isStunned = true;
+		stunEndTime = Time.GetTicksMsec() / 1000.0 + duration;
+		Velocity = Vector2.Zero;
+		GD.Print($"[{Name}] Stunned for {duration} seconds");
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (isStunned)
+		{
+			if(Time.GetTicksMsec() / 1000.0 > stunEndTime)
+			{
+				isStunned = false;
+			}
+			else
+			{
+				Velocity = Vector2.Zero;
+				return;
+			}
+		}
 		if (_isDying || _tower == null)
 		{
 			Velocity = Vector2.Zero;
@@ -151,5 +172,5 @@ public partial class Clunk : CharacterBody2D, IDamageable
 		newStyle.BgColor = barColor;
 		_healthBarInstance.AddThemeStyleboxOverride("fill", newStyle);
 	}
-	
+		
 }

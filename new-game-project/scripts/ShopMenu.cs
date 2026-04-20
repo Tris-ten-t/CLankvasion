@@ -47,7 +47,7 @@ public partial class ShopMenu : CanvasLayer
 
 		if (itemIcon != null)
 		{
-			var atlas = GD.Load<AtlasTexture>("res://assets/icons/MineIcon.tres");
+			var atlas = GD.Load<AtlasTexture>("res://assets/towers/MineIcon.tres");
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
 		if (buyButton != null) buyButton.Disabled = false;
@@ -64,7 +64,7 @@ public partial class ShopMenu : CanvasLayer
 
 		if (itemIcon != null)
 		{
-			var atlas = GD.Load<AtlasTexture>("res://assets/icons/WaterTankIcon.tres");
+			var atlas = GD.Load<AtlasTexture>("res://assets/towers/WaterTankIcon.tres");
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
 		if (buyButton != null) buyButton.Disabled = false;

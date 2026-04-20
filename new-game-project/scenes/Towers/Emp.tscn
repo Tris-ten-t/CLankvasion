@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://srg7a7pm5kdo"]
 
 [ext_resource type="Texture2D" uid="uid://cpl8ao4rywpab" path="res://assets/towers/EMP Tower Anim.png" id="1_kg5tc"]
-[ext_resource type="Script" uid="uid://veluf06icjs" path="res://scenes/Towers/Emp.cs" id="1_wjqs4"]
+[ext_resource type="Script" uid="uid://veluf06icjs" path="res://scripts/Emp.cs" id="1_wjqs4"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_wjqs4"]
 radius = 48.0

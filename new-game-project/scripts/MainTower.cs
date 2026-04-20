@@ -117,6 +117,7 @@ public partial class MainTower : AnimatedSprite2D
 			var shopMenu = shopScene.Instantiate<CanvasLayer>();
 			shopMenu.Name = "ShopMenu";
 			GetTree().CurrentScene.AddChild(shopMenu);
+			GD.Print("[Tower] Shop menu opened successfully!");
 		}
 	}
 

@@ -10,7 +10,7 @@ public partial class Emp : Area2D
 
 	public override void _Ready()
 	{
-		ZIndex = -5;
+		ZIndex = -5;   // Behind enemies
 
 		animatedSprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");
 		if (animatedSprite != null && animatedSprite.SpriteFrames.HasAnimation("Idle"))
@@ -18,7 +18,7 @@ public partial class Emp : Area2D
 
 		BodyEntered += OnBodyEntered;
 
-		GD.Print("[Emp] Deployed and ready");
+		GD.Print("[EMP] Deployed and ready");
 	}
 
 	private void OnBodyEntered(Node body)
@@ -27,10 +27,11 @@ public partial class Emp : Area2D
 
 		if (body is CharacterBody2D enemy && enemy.IsInGroup("enemies"))
 		{
-			GD.Print($"[Emp] Triggered by {enemy.Name} - stunning area!");
+			GD.Print($"[EMP] Triggered by {enemy.Name} - stunning area!");
 			StunEnemiesInArea();
 			hasBeenUsed = true;
 
+			// Play explosion/activation animation if you have one
 			if (animatedSprite != null && animatedSprite.SpriteFrames.HasAnimation("Boom"))
 			{
 				animatedSprite.Play("Boom");
@@ -50,12 +51,12 @@ public partial class Emp : Area2D
 		{
 			Shape = new CircleShape2D { Radius = EffectRadius },
 			Transform = GlobalTransform,
-			CollisionMask = 2,
+			CollisionMask = 2,   // Change if your enemies use a different layer
 		};
 
 		var hits = space.IntersectShape(query);
 
-		int stunnedCount = 0;
+		int count = 0;
 		foreach (var hit in hits)
 		{
 			if (hit["collider"].AsGodotObject() is CharacterBody2D enemy && enemy.IsInGroup("enemies"))
@@ -63,11 +64,11 @@ public partial class Emp : Area2D
 				if (enemy.HasMethod("Stun"))
 				{
 					enemy.Call("Stun", StunDuration);
-					stunnedCount++;
+					count++;
 				}
 			}
 		}
 
-		GD.Print($"[Emp] Stunned {stunnedCount} enemies for {StunDuration} seconds");
+		GD.Print($"[EMP] Stunned {count} enemies for {StunDuration} seconds");
 	}
 }

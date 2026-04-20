@@ -1,4 +1,5 @@
 using Godot;
+using System.Collections.Generic;
 
 public partial class EnemySpawner : Node2D
 {
@@ -8,108 +9,92 @@ public partial class EnemySpawner : Node2D
 	[Export] public PackedScene ClinkScene;
 	[Export] public PackedScene ClunkScene;
 
-	[Export] public WaveData[] Waves;
+	[Export] public NodePath[] SpawnPoints;   // Drag your Marker2D spawn points here
 
+	[Export] public WaveData[] Waves = new WaveData[0];
+
+	[Export] public float SpawnInterval = 1.2f;   // Time between each enemy spawn
+
+	private List<Marker2D> _spawnMarkers = new List<Marker2D>();
+	private List<PackedScene> _spawnQueue = new List<PackedScene>();
 	private Timer _spawnTimer;
-	private int _currentWave = 0;
-	private int _enemiesSpawnedThisWave = 0;
-	private int _totalEnemiesThisWave = 0;
-	private Node2D _tower;
-	private Node2D _spawnPoints;
 
 	public override void _Ready()
 	{
-		_tower = GetTree().GetFirstNodeInGroup("towers") as Node2D;
-		_spawnPoints = GetTree().CurrentScene.GetNodeOrNull<Node2D>("SpawnPoints");
-
-		if (Waves == null || Waves.Length == 0)
+		// Load spawn points
+		foreach (var path in SpawnPoints)
 		{
-			GD.Print("WARNING: No waves defined in EnemySpawner!");
-			return;
+			var marker = GetNodeOrNull<Marker2D>(path);
+			if (marker != null)
+				_spawnMarkers.Add(marker);
 		}
 
-		StartWave(0);
-	}
+		if (_spawnMarkers.Count == 0)
+			GD.PrintErr("No spawn points assigned! Add Marker2Ds to SpawnPoints array.");
 
-	private void StartWave(int waveIndex)
-	{
-		if (waveIndex >= Waves.Length)
-		{
-			GD.Print("All waves completed!");
-			return;
-		}
-
-		_currentWave = waveIndex;
-		var wave = Waves[waveIndex];
-
-		_totalEnemiesThisWave = wave.TotalEnemies;
-		_enemiesSpawnedThisWave = 0;
-
-		GD.Print($"Starting Wave {wave.WaveNumber} - Total Enemies: {wave.TotalEnemies}");
-
+		// Setup spawn timer
 		_spawnTimer = new Timer();
-		_spawnTimer.WaitTime = wave.SpawnInterval;
-		_spawnTimer.Autostart = true;
-		_spawnTimer.Timeout += SpawnEnemyFromWave;
+		_spawnTimer.WaitTime = SpawnInterval;
+		_spawnTimer.Timeout += SpawnNextEnemy;
 		AddChild(_spawnTimer);
+
+		// Start first wave automatically
+		if (Waves.Length > 0)
+			StartWave(Waves[0]);
+		else
+			GD.Print("No waves defined in EnemySpawner.");
 	}
 
-	private void SpawnEnemyFromWave()
+	public void StartWave(WaveData wave)
 	{
-		if (_enemiesSpawnedThisWave >= _totalEnemiesThisWave)
+		_spawnQueue.Clear();
+
+		// Add exact number of each enemy
+		for (int i = 0; i < wave.RollerCount; i++) _spawnQueue.Add(RollerScene);
+		for (int i = 0; i < wave.ClankCount; i++) _spawnQueue.Add(ClankScene);
+		for (int i = 0; i < wave.BullCount; i++) _spawnQueue.Add(BullScene);
+		for (int i = 0; i < wave.ClinkCount; i++) _spawnQueue.Add(ClinkScene);
+		for (int i = 0; i < wave.ClunkCount; i++) _spawnQueue.Add(ClunkScene);
+
+		// Shuffle so order is random
+		ShuffleList(_spawnQueue);
+
+		GD.Print($"Starting Wave {wave.WaveNumber} - Total Enemies: {_spawnQueue.Count}");
+		_spawnTimer.Start();   // Start spawning
+	}
+
+	private void ShuffleList<T>(List<T> list)
+	{
+		for (int i = list.Count - 1; i > 0; i--)
 		{
-			_spawnTimer.QueueFree();
-			CallDeferred("CheckWaveComplete");
+			int j = (int)(GD.Randi() % (uint)(i + 1));
+			T temp = list[i];
+			list[i] = list[j];
+			list[j] = temp;
+		}
+	}
+
+	private void SpawnNextEnemy()
+	{
+		if (_spawnQueue.Count == 0)
+		{
+			_spawnTimer.Stop();
+			GD.Print("Wave finished - no more enemies to spawn");
 			return;
 		}
 
-		var wave = Waves[_currentWave];
-		PackedScene selectedScene = GetEnemyFromWave(wave);
+		if (_spawnMarkers.Count == 0) return;
 
-		if (selectedScene == null) return;
+		PackedScene selectedScene = _spawnQueue[0];
+		_spawnQueue.RemoveAt(0);
 
 		var enemy = selectedScene.Instantiate<CharacterBody2D>();
 		GetTree().CurrentScene.AddChild(enemy);
 
-		if (_spawnPoints != null && _spawnPoints.GetChildCount() > 0)
-		{
-			int idx = GD.RandRange(0, _spawnPoints.GetChildCount() - 1);
-			var spawnMarker = _spawnPoints.GetChild<Node2D>(idx);
-			enemy.GlobalPosition = spawnMarker.GlobalPosition;
-		}
+		// Spawn at a random spawn point
+		int spawnIndex = (int)(GD.Randi() % (uint)_spawnMarkers.Count);
+		enemy.GlobalPosition = _spawnMarkers[spawnIndex].GlobalPosition;
 
-		_enemiesSpawnedThisWave++;
-	}
-
-	private PackedScene GetEnemyFromWave(WaveData wave)
-	{
-		int total = wave.RollerCount + wave.ClankCount + wave.BullCount + wave.ClinkCount + wave.ClunkCount;
-		if (total == 0) return RollerScene;
-
-		int roll = GD.RandRange(1, total);
-
-		if (roll <= wave.RollerCount) return RollerScene;
-		roll -= wave.RollerCount;
-		if (roll <= wave.ClankCount) return ClankScene;
-		roll -= wave.ClankCount;
-		if (roll <= wave.BullCount) return BullScene;
-		roll -= wave.BullCount;
-		if (roll <= wave.ClinkCount) return ClinkScene;
-		return ClunkScene ?? RollerScene;
-	}
-
-	private void CheckWaveComplete()
-	{
-		var timer = new Timer();
-		timer.WaitTime = 8.0f; // Break between waves
-		timer.OneShot = true;
-		timer.Timeout += () => StartWave(_currentWave + 1);
-		AddChild(timer);
-		timer.Start();
-	}
-
-	public void ResetCounter()
-	{
-		_enemiesSpawnedThisWave = 0;
+		GD.Print($"Spawned {enemy.Name} at spawn point {spawnIndex} - Remaining: {_spawnQueue.Count}");
 	}
 }
