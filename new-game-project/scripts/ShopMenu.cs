@@ -36,7 +36,6 @@ public partial class ShopMenu : CanvasLayer
 		ClearDetails();
 	}
 
-	// Mine
 	public void _on_mine_button_pressed()
 	{
 		selectedItem = "Mine";
@@ -53,7 +52,6 @@ public partial class ShopMenu : CanvasLayer
 		if (buyButton != null) buyButton.Disabled = false;
 	}
 
-	// Water Tank
 	public void _on_water_tank_button_pressed()
 	{
 		selectedItem = "WaterTank";
@@ -70,7 +68,6 @@ public partial class ShopMenu : CanvasLayer
 		if (buyButton != null) buyButton.Disabled = false;
 	}
 
-	// Emp (NEW)
 	public void _on_emp_button_pressed()
 	{
 		selectedItem = "Emp";
@@ -82,6 +79,23 @@ public partial class ShopMenu : CanvasLayer
 		if (itemIcon != null)
 		{
 			var atlas = GD.Load<AtlasTexture>("res://assets/towers/EmpIcon.tres");
+			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
+		}
+		if (buyButton != null) buyButton.Disabled = false;
+	}
+
+	// Trash Compactor Button
+	public void _on_trash_compactor_button_pressed()
+	{
+		selectedItem = "TrashCompactor";
+		if (itemNameLabel != null) itemNameLabel.Text = "Trash Compactor";
+		if (itemDescriptionLabel != null)
+			itemDescriptionLabel.Text = "Draws in the first enemy that touches it and eliminates it instantly.\nSingle use - high cost.";
+		if (itemCostLabel != null) itemCostLabel.Text = "Cost: 120 coins";
+
+		if (itemIcon != null)
+		{
+			var atlas = GD.Load<AtlasTexture>("res://assets/towers/TrashCompactorIcon.tres");
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
 		if (buyButton != null) buyButton.Disabled = false;
@@ -108,6 +122,13 @@ public partial class ShopMenu : CanvasLayer
 			Economy.AddCoins(-75);
 			CloseMenu();
 			if (mainTower != null) mainTower.StartEmpPlacement();
+		}
+		else if (selectedItem == "TrashCompactor")
+		{
+			Economy.AddCoins(-120);
+			GD.Print("Trash Compactor purchased! Entering placement mode...");
+			CloseMenu();
+			if (mainTower != null) mainTower.StartTrashCompactorPlacement();
 		}
 	}
 

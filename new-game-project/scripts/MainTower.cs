@@ -27,13 +27,16 @@ public partial class MainTower : AnimatedSprite2D
 
 	private bool gameOverTriggered = false;
 
-	// Placement System
+	// Placement System - All 4 Towers
 	private bool isPlacingMine = false;
 	private bool isPlacingWaterTank = false;
 	private bool isPlacingEmp = false;
+	private bool isPlacingTrashCompactor = false;
+
 	private PackedScene mineScene;
 	private PackedScene waterTankScene;
 	private PackedScene empScene;
+	private PackedScene trashCompactorScene;
 
 	public override void _Ready()
 	{
@@ -91,16 +94,18 @@ public partial class MainTower : AnimatedSprite2D
 				PlaceWaterTank(mousePos);
 			else if (isPlacingEmp)
 				PlaceEmp(mousePos);
+			else if (isPlacingTrashCompactor)
+				PlaceTrashCompactor(mousePos);
 			else
 				TryFire(mousePos);
 		}
 
-		if (Input.IsActionJustPressed("open_shop") && !isPlacingMine && !isPlacingWaterTank && !isPlacingEmp)
+		if (Input.IsActionJustPressed("open_shop") && !isPlacingMine && !isPlacingWaterTank && !isPlacingEmp && !isPlacingTrashCompactor)
 		{
 			OpenShopMenu();
 		}
 
-		if (Input.IsActionJustPressed("ui_cancel") && (isPlacingMine || isPlacingWaterTank || isPlacingEmp))
+		if (Input.IsActionJustPressed("ui_cancel") && (isPlacingMine || isPlacingWaterTank || isPlacingEmp || isPlacingTrashCompactor))
 			CancelPlacement();
 
 		UpdateUI();
@@ -117,35 +122,47 @@ public partial class MainTower : AnimatedSprite2D
 			var shopMenu = shopScene.Instantiate<CanvasLayer>();
 			shopMenu.Name = "ShopMenu";
 			GetTree().CurrentScene.AddChild(shopMenu);
-			GD.Print("[Tower] Shop menu opened successfully!");
 		}
 	}
 
 	public void StartMinePlacement()
 	{
+		ResetPlacement();
 		isPlacingMine = true;
-		isPlacingWaterTank = false;
-		isPlacingEmp = false;
 		mineScene = GD.Load<PackedScene>("res://scenes/Mine.tscn");
 		GD.Print("Mine placement mode activated");
 	}
 
 	public void StartWaterTankPlacement()
 	{
+		ResetPlacement();
 		isPlacingWaterTank = true;
-		isPlacingMine = false;
-		isPlacingEmp = false;
 		waterTankScene = GD.Load<PackedScene>("res://scenes/Towers/WaterTank.tscn");
 		GD.Print("Water Tank placement mode activated");
 	}
 
 	public void StartEmpPlacement()
 	{
+		ResetPlacement();
 		isPlacingEmp = true;
-		isPlacingMine = false;
-		isPlacingWaterTank = false;
 		empScene = GD.Load<PackedScene>("res://scenes/Towers/Emp.tscn");
 		GD.Print("EMP placement mode activated");
+	}
+
+	public void StartTrashCompactorPlacement()
+	{
+		ResetPlacement();
+		isPlacingTrashCompactor = true;
+		trashCompactorScene = GD.Load<PackedScene>("res://scenes/Towers/TrashCompactor.tscn");
+		GD.Print("Trash Compactor placement mode activated");
+	}
+
+	private void ResetPlacement()
+	{
+		isPlacingMine = false;
+		isPlacingWaterTank = false;
+		isPlacingEmp = false;
+		isPlacingTrashCompactor = false;
 	}
 
 	private void PlaceMine(Vector2 position)
@@ -175,11 +192,18 @@ public partial class MainTower : AnimatedSprite2D
 		isPlacingEmp = false;
 	}
 
+	private void PlaceTrashCompactor(Vector2 position)
+	{
+		if (trashCompactorScene == null) return;
+		var compactor = trashCompactorScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(compactor);
+		compactor.GlobalPosition = position;
+		isPlacingTrashCompactor = false;
+	}
+
 	private void CancelPlacement()
 	{
-		isPlacingMine = false;
-		isPlacingWaterTank = false;
-		isPlacingEmp = false;
+		ResetPlacement();
 		GD.Print("Placement cancelled");
 	}
 
