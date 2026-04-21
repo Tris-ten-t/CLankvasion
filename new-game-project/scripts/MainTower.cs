@@ -2,7 +2,6 @@ using Godot;
 
 public partial class MainTower : AnimatedSprite2D
 {
-	// Shooting
 	[Export] public PackedScene BulletScene;
 	[Export] public float FireRate = 0.5f;
 	[Export] public float BulletSpeed = 800f;
@@ -10,7 +9,6 @@ public partial class MainTower : AnimatedSprite2D
 	[Export] public string ShootAnimation = "shoot";
 	[Export] public float ShootFlashDuration = 0.15f;
 
-	// Shield & Health
 	[Export] public float MaxShield = 100f;
 	[Export] public float MaxHealth = 100f;
 
@@ -21,13 +19,24 @@ public partial class MainTower : AnimatedSprite2D
 	private float currentShield;
 	private float currentHealth;
 
-	// UI References
 	private ProgressBar shieldBar;
 	private ProgressBar healthBar;
 	private AnimatedSprite2D shieldIcon;
 	private AnimatedSprite2D heartIcon;
+	private Label coinLabel;
 
 	private bool gameOverTriggered = false;
+
+	// Placement System - All 4 Towers
+	private bool isPlacingMine = false;
+	private bool isPlacingWaterTank = false;
+	private bool isPlacingEmp = false;
+	private bool isPlacingTrashCompactor = false;
+
+	private PackedScene mineScene;
+	private PackedScene waterTankScene;
+	private PackedScene empScene;
+	private PackedScene trashCompactorScene;
 
 	public override void _Ready()
 	{
@@ -38,8 +47,7 @@ public partial class MainTower : AnimatedSprite2D
 			AddChild(muzzle);
 		}
 
-		shootFlashTimer = new Timer();
-		shootFlashTimer.OneShot = true;
+		shootFlashTimer = new Timer { OneShot = true };
 		shootFlashTimer.Timeout += () => Play(IdleAnimation);
 		AddChild(shootFlashTimer);
 
@@ -52,6 +60,7 @@ public partial class MainTower : AnimatedSprite2D
 		healthBar = GetTree().CurrentScene.GetNodeOrNull<ProgressBar>("UI/TowerStatus/StatusContainer/HealthContainer/HealthBar");
 		shieldIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldIcon");
 		heartIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/HealthContainer/HeartIcon");
+		coinLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/CoinContainer/CoinLabel");
 
 		ForceSeparateStyles();
 		UpdateUI();
@@ -64,7 +73,6 @@ public partial class MainTower : AnimatedSprite2D
 			shieldBar.AddThemeStyleboxOverride("fill", new StyleBoxFlat());
 			shieldBar.AddThemeStyleboxOverride("background", new StyleBoxFlat());
 		}
-
 		if (healthBar != null)
 		{
 			healthBar.AddThemeStyleboxOverride("fill", new StyleBoxFlat());
@@ -79,9 +87,124 @@ public partial class MainTower : AnimatedSprite2D
 		Rotation -= Mathf.Pi / 2;
 
 		if (Input.IsMouseButtonPressed(MouseButton.Left))
-			TryFire(mousePos);
+		{
+			if (isPlacingMine)
+				PlaceMine(mousePos);
+			else if (isPlacingWaterTank)
+				PlaceWaterTank(mousePos);
+			else if (isPlacingEmp)
+				PlaceEmp(mousePos);
+			else if (isPlacingTrashCompactor)
+				PlaceTrashCompactor(mousePos);
+			else
+				TryFire(mousePos);
+		}
+
+		if (Input.IsActionJustPressed("open_shop") && !isPlacingMine && !isPlacingWaterTank && !isPlacingEmp && !isPlacingTrashCompactor)
+		{
+			OpenShopMenu();
+		}
+
+		if (Input.IsActionJustPressed("ui_cancel") && (isPlacingMine || isPlacingWaterTank || isPlacingEmp || isPlacingTrashCompactor))
+			CancelPlacement();
 
 		UpdateUI();
+	}
+
+	private void OpenShopMenu()
+	{
+		if (GetTree().CurrentScene.GetNodeOrNull<CanvasLayer>("ShopMenu") != null)
+			return;
+
+		var shopScene = GD.Load<PackedScene>("res://scenes/shop_menu.tscn");
+		if (shopScene != null)
+		{
+			var shopMenu = shopScene.Instantiate<CanvasLayer>();
+			shopMenu.Name = "ShopMenu";
+			GetTree().CurrentScene.AddChild(shopMenu);
+		}
+	}
+
+	public void StartMinePlacement()
+	{
+		ResetPlacement();
+		isPlacingMine = true;
+		mineScene = GD.Load<PackedScene>("res://scenes/Mine.tscn");
+		GD.Print("Mine placement mode activated");
+	}
+
+	public void StartWaterTankPlacement()
+	{
+		ResetPlacement();
+		isPlacingWaterTank = true;
+		waterTankScene = GD.Load<PackedScene>("res://scenes/Towers/WaterTank.tscn");
+		GD.Print("Water Tank placement mode activated");
+	}
+
+	public void StartEmpPlacement()
+	{
+		ResetPlacement();
+		isPlacingEmp = true;
+		empScene = GD.Load<PackedScene>("res://scenes/Towers/Emp.tscn");
+		GD.Print("EMP placement mode activated");
+	}
+
+	public void StartTrashCompactorPlacement()
+	{
+		ResetPlacement();
+		isPlacingTrashCompactor = true;
+		trashCompactorScene = GD.Load<PackedScene>("res://scenes/Towers/TrashCompactor.tscn");
+		GD.Print("Trash Compactor placement mode activated");
+	}
+
+	private void ResetPlacement()
+	{
+		isPlacingMine = false;
+		isPlacingWaterTank = false;
+		isPlacingEmp = false;
+		isPlacingTrashCompactor = false;
+	}
+
+	private void PlaceMine(Vector2 position)
+	{
+		if (mineScene == null) return;
+		var mine = mineScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(mine);
+		mine.GlobalPosition = position;
+		isPlacingMine = false;
+	}
+
+	private void PlaceWaterTank(Vector2 position)
+	{
+		if (waterTankScene == null) return;
+		var tank = waterTankScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(tank);
+		tank.GlobalPosition = position;
+		isPlacingWaterTank = false;
+	}
+
+	private void PlaceEmp(Vector2 position)
+	{
+		if (empScene == null) return;
+		var emp = empScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(emp);
+		emp.GlobalPosition = position;
+		isPlacingEmp = false;
+	}
+
+	private void PlaceTrashCompactor(Vector2 position)
+	{
+		if (trashCompactorScene == null) return;
+		var compactor = trashCompactorScene.Instantiate<Area2D>();
+		GetTree().CurrentScene.AddChild(compactor);
+		compactor.GlobalPosition = position;
+		isPlacingTrashCompactor = false;
+	}
+
+	private void CancelPlacement()
+	{
+		ResetPlacement();
+		GD.Print("Placement cancelled");
 	}
 
 	private void TryFire(Vector2 targetPos)
@@ -131,20 +254,12 @@ public partial class MainTower : AnimatedSprite2D
 	private void TriggerGameOver()
 	{
 		GD.Print("Tower Destroyed - Showing Game Over Menu");
-
-		// Correct path you gave me
 		var gameOverScene = GD.Load<PackedScene>("res://scenes/GameOverMenu.tscn");
 		if (gameOverScene != null)
 		{
 			var menu = gameOverScene.Instantiate<CanvasLayer>();
 			GetTree().CurrentScene.AddChild(menu);
-
-			GetTree().Paused = true;        // Pause the game
-			GD.Print("Game Over Menu shown successfully!");
-		}
-		else
-		{
-			GD.PrintErr("ERROR: Could not load GameOverMenu.tscn at res://scenes/GameOverMenu.tscn");
+			GetTree().Paused = true;
 		}
 	}
 
@@ -152,78 +267,39 @@ public partial class MainTower : AnimatedSprite2D
 	{
 		if (shieldBar != null) shieldBar.Value = currentShield;
 		if (healthBar != null) healthBar.Value = currentHealth;
+		if (coinLabel != null) coinLabel.Text = Economy.Coins.ToString();
 
-		// Shield Bar
 		if (shieldBar != null)
 		{
-			StyleBoxFlat fillStyle = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
-			if (fillStyle != null)
-			{
-				float pct = currentShield / MaxShield;
-				Color lightBlue = new Color(0.31f, 0.78f, 0.97f);
-				fillStyle.BgColor = lightBlue;
-			}
+			var fill = shieldBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fill != null) fill.BgColor = new Color(0.31f, 0.78f, 0.97f);
 
-			StyleBoxFlat bgStyle = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
-			if (bgStyle != null)
-			{
-				float pct = currentShield / MaxShield;
-				if (pct <= 0.05f)
-					bgStyle.BgColor = new Color(0.08f, 0.25f, 0.65f);
-				else
-					bgStyle.BgColor = new Color(0.15f, 0.35f, 0.75f);
-			}
+			var bg = shieldBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bg != null)
+				bg.BgColor = (currentShield / MaxShield <= 0.05f) ? new Color(0.08f, 0.25f, 0.65f) : new Color(0.15f, 0.35f, 0.75f);
 		}
 
-		// Health Bar
 		if (healthBar != null)
 		{
-			StyleBoxFlat fillStyle = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
-			if (fillStyle != null)
-			{
-				float pct = currentHealth / MaxHealth;
-				if (pct > 0.6f)
-					fillStyle.BgColor = Colors.LimeGreen;
-				else if (pct > 0.3f)
-					fillStyle.BgColor = Colors.Yellow;
-				else
-					fillStyle.BgColor = Colors.Red;
-			}
+			var fill = healthBar.GetThemeStylebox("fill") as StyleBoxFlat;
+			if (fill != null)
+				fill.BgColor = (currentHealth / MaxHealth > 0.6f) ? Colors.LimeGreen : (currentHealth / MaxHealth > 0.3f) ? Colors.Yellow : Colors.Red;
 
-			StyleBoxFlat bgStyle = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
-			if (bgStyle != null)
-			{
-				float pct = currentHealth / MaxHealth;
-				if (pct <= 0.05f)
-					bgStyle.BgColor = Colors.DarkRed;
-				else
-					bgStyle.BgColor = new Color(0.2f, 0.2f, 0.2f);
-			}
+			var bg = healthBar.GetThemeStylebox("background") as StyleBoxFlat;
+			if (bg != null)
+				bg.BgColor = (currentHealth / MaxHealth <= 0.05f) ? Colors.DarkRed : new Color(0.2f, 0.2f, 0.2f);
 		}
 
-		// Icons
-		if (shieldIcon != null && shieldIcon.SpriteFrames != null)
+		if (shieldIcon?.SpriteFrames != null)
 		{
-			string target = "shield_full";
-			if (currentShield <= 0) target = "shield_broken";
-			else if (currentShield <= 25) target = "shield_25";
-			else if (currentShield <= 50) target = "shield_50";
-			else if (currentShield <= 75) target = "shield_75";
-
-			if (shieldIcon.Animation != target)
-				shieldIcon.Play(target);
+			string anim = currentShield > 75 ? "shield_full" : currentShield > 50 ? "shield_75" : currentShield > 25 ? "shield_50" : currentShield > 0 ? "shield_25" : "shield_broken";
+			if (shieldIcon.Animation != anim) shieldIcon.Play(anim);
 		}
 
-		if (heartIcon != null && heartIcon.SpriteFrames != null)
+		if (heartIcon?.SpriteFrames != null)
 		{
-			string target = "heart_full";
-			if (currentHealth <= 0) target = "heart_broken";
-			else if (currentHealth <= 25) target = "heart_25";
-			else if (currentHealth <= 50) target = "heart_50";
-			else if (currentHealth <= 75) target = "heart_75";
-
-			if (heartIcon.Animation != target)
-				heartIcon.Play(target);
+			string anim = currentHealth > 75 ? "heart_full" : currentHealth > 50 ? "heart_75" : currentHealth > 25 ? "heart_50" : currentHealth > 0 ? "heart_25" : "heart_broken";
+			if (heartIcon.Animation != anim) heartIcon.Play(anim);
 		}
 	}
 }

@@ -6,35 +6,37 @@ public partial class Clunk : CharacterBody2D, IDamageable
 	[Export] public int MaxHealth = 20;
 	[Export] public string WalkAnimation = "walk";
 	[Export] public string DeathAnimation = "death";
-	[Export] public int DamageToTower = 10;
+	[Export] public int DamageToTower = 10;     // Clunk is fast and tanky
 
 	private int _currentHealth;
 	private ProgressBar _healthBarInstance;
 	private AnimatedSprite2D _animatedSprite;
 	private Node2D _tower;
-	private bool _isDead = false;
+	private bool _isDying = false;
+	private bool isStunned = false;
+	private double stunEndTime = 0.0;
 
 	public override void _Ready()
 	{
 		_currentHealth = MaxHealth;
-		_animatedSprite = GetNodeOrNull<AnimatedSprite2D>("Sprite");
+		_animatedSprite = GetNode<AnimatedSprite2D>("Sprite");
 
-		if (_animatedSprite == null)
+		if (_animatedSprite != null)
 		{
-			GD.Print("[Clunk] ERROR: No Sprite found!");
-			return;
+			_animatedSprite.Rotation = 0f;
+			_animatedSprite.FlipV = false;
 		}
 
-		_animatedSprite.Rotation = 0f;
-		_animatedSprite.FlipV = false;
-
-		if (_animatedSprite.SpriteFrames != null && _animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
+		if (_animatedSprite != null && _animatedSprite.SpriteFrames != null)
 		{
-			_animatedSprite.Play(WalkAnimation);
+			if (_animatedSprite.SpriteFrames.HasAnimation(WalkAnimation))
+			{
+				_animatedSprite.Play(WalkAnimation);
+			}
+			_animatedSprite.AnimationFinished += OnAnimationFinished;
 		}
 
-		_animatedSprite.AnimationFinished += OnAnimationFinished;
-
+		// Health bar
 		var template = GetTree().Root.GetNodeOrNull<ProgressBar>("Area/HealthBarTemplate");
 		if (template != null)
 		{
@@ -48,12 +50,31 @@ public partial class Clunk : CharacterBody2D, IDamageable
 		_tower = GetTree().GetFirstNodeInGroup("towers") as Node2D;
 
 		UpdateHealthBar();
-		GD.Print("[Clunk] Spawned and ready. Monitoring distance to tower...");
+		GD.Print("[Clunk] Spawned and monitoring distance to tower...");
+	}
+	public void Stun(float duration)
+	{
+		isStunned = true;
+		stunEndTime = Time.GetTicksMsec() / 1000.0 + duration;
+		Velocity = Vector2.Zero;
+		GD.Print($"[{Name}] Stunned for {duration} seconds");
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_isDead || _tower == null) 
+		if (isStunned)
+		{
+			if(Time.GetTicksMsec() / 1000.0 > stunEndTime)
+			{
+				isStunned = false;
+			}
+			else
+			{
+				Velocity = Vector2.Zero;
+				return;
+			}
+		}
+		if (_isDying || _tower == null)
 		{
 			Velocity = Vector2.Zero;
 			return;
@@ -63,10 +84,13 @@ public partial class Clunk : CharacterBody2D, IDamageable
 		Velocity = direction * Speed;
 		MoveAndSlide();
 
-		if (_animatedSprite != null)
+		if (_animatedSprite != null && direction.LengthSquared() > 0.1f)
+		{
 			_animatedSprite.FlipH = direction.X < 0;
+			_animatedSprite.FlipV = false;
+			_animatedSprite.Rotation = 0f;
+		}
 
-		// Health bar
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 		{
 			_healthBarInstance.Rotation = Mathf.Pi / 2;
@@ -74,23 +98,21 @@ public partial class Clunk : CharacterBody2D, IDamageable
 			_healthBarInstance.GlobalPosition = GlobalPosition + offset;
 		}
 
-		// NEW: Simple distance check - much more reliable than signals
+		// Distance-based tower contact
 		float distanceToTower = GlobalPosition.DistanceTo(_tower.GlobalPosition);
-		if (distanceToTower < 40f)   // Adjust this number if needed (40 = roughly enemy size)
+		if (distanceToTower < 40f)
 		{
-			GD.Print("[Clunk] Close enough to tower! Dealing damage...");
 			if (_tower is MainTower tower)
-			{
 				tower.TakeDamage(DamageToTower);
-			}
-			_isDead = true;
+
+			_isDying = true;
 			Die();
 		}
 	}
 
 	public void TakeDamage(int damage)
 	{
-		if (_isDead) return;
+		if (_isDying) return;
 
 		_currentHealth -= damage;
 		if (_currentHealth < 0) _currentHealth = 0;
@@ -98,14 +120,13 @@ public partial class Clunk : CharacterBody2D, IDamageable
 
 		if (_currentHealth <= 0)
 		{
-			_isDead = true;
+			_isDying = true;
 			Die();
 		}
 	}
 
 	private void Die()
 	{
-		GD.Print("[Clunk] Starting death animation");
 		Velocity = Vector2.Zero;
 		SetPhysicsProcess(false);
 
@@ -123,14 +144,14 @@ public partial class Clunk : CharacterBody2D, IDamageable
 	private void OnAnimationFinished()
 	{
 		if (_animatedSprite.Animation == DeathAnimation)
-		{
 			CleanupAndDie();
-		}
+		else if (_animatedSprite.Animation == WalkAnimation && !_isDying)
+			_animatedSprite.Play(WalkAnimation);
 	}
 
 	private void CleanupAndDie()
 	{
-		GD.Print("[Clunk] Enemy removed");
+		Economy.AddCoins(5);        // Clunk gives 5 coins
 		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
 			_healthBarInstance.QueueFree();
 
@@ -146,9 +167,10 @@ public partial class Clunk : CharacterBody2D, IDamageable
 
 		Color barColor = healthPct > 0.6f ? Colors.Green : healthPct > 0.3f ? Colors.Yellow : Colors.Red;
 
-		StyleBoxFlat currentStyle = _healthBarInstance.GetThemeStylebox("fill") as StyleBoxFlat;
-		StyleBoxFlat newStyle = currentStyle != null ? (StyleBoxFlat)currentStyle.Duplicate() : new StyleBoxFlat();
+		var currentStyle = _healthBarInstance.GetThemeStylebox("fill") as StyleBoxFlat;
+		var newStyle = currentStyle != null ? (StyleBoxFlat)currentStyle.Duplicate() : new StyleBoxFlat();
 		newStyle.BgColor = barColor;
 		_healthBarInstance.AddThemeStyleboxOverride("fill", newStyle);
 	}
+		
 }
