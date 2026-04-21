@@ -129,7 +129,7 @@ public partial class MainTower : AnimatedSprite2D
 	{
 		ResetPlacement();
 		isPlacingMine = true;
-		mineScene = GD.Load<PackedScene>("res://scenes/Mine.tscn");
+		mineScene = GD.Load<PackedScene>("res://scenes/Towers/Mine.tscn");
 		GD.Print("Mine placement mode activated");
 	}
 

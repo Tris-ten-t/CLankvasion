@@ -19,11 +19,11 @@
 script = ExtResource("9_j4i6t")
 WaveNumber = 1
 TotalEnemies = 10
-RollerCount = 2
-ClankCount = 2
+RollerCount = 4
+ClankCount = 3
 BullCount = 2
-ClinkCount = 2
-ClunkCount = 2
+ClinkCount = 1
+ClunkCount = 0
 SpawnInterval = 1.2
 metadata/_custom_type_script = "uid://b1p46weu3p6ka"
 
@@ -261,7 +261,8 @@ ClankScene = ExtResource("5_t8tu6")
 BullScene = ExtResource("7_abe4w")
 ClinkScene = ExtResource("6_mphia")
 ClunkScene = ExtResource("7_wx6cp")
-Waves = [SubResource("Resource_hwuss")]
+SpawnPoints = Array[NodePath]([NodePath("../SpawnPoints/SpawnPoint1"), NodePath("../SpawnPoints/SpawnPoint2"), NodePath("../SpawnPoints/SpawnPoint3"), NodePath("../SpawnPoints/SpawnPoint4"), NodePath("../SpawnPoints/SpawnPoint5"), NodePath("../SpawnPoints/SpawnPoint6"), NodePath("../SpawnPoints/SpawnPoint7"), NodePath("../SpawnPoints/SpawnPoint8")])
+Waves = [SubResource("Resource_hwuss"), null]
 
 [node name="HealthBarTemplate" type="ProgressBar" parent="."]
 visible = false
