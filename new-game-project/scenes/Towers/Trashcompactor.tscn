@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://dy36rmmw8woly"]
 
-[ext_resource type="Script" uid="uid://cxem2skm25wnm" path="res://scenes/Towers/TrashCompactor.cs" id="1_wy6jp"]
+[ext_resource type="Script" uid="uid://cxem2skm25wnm" path="res://scripts/TrashCompactor.cs" id="1_wy6jp"]
 [ext_resource type="Texture2D" uid="uid://cg5m7seeeg3ul" path="res://assets/towers/Trash Compactor Anim.png" id="2_17saq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xd0v0"]

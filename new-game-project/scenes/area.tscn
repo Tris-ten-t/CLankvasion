@@ -261,7 +261,6 @@ ClankScene = ExtResource("5_t8tu6")
 BullScene = ExtResource("7_abe4w")
 ClinkScene = ExtResource("6_mphia")
 ClunkScene = ExtResource("7_wx6cp")
-SpawnPoints = Array[NodePath]([NodePath("../SpawnPoints/SpawnPoint1"), NodePath("../SpawnPoints/SpawnPoint2"), NodePath("../SpawnPoints/SpawnPoint3"), NodePath("../SpawnPoints/SpawnPoint4"), NodePath("../SpawnPoints/SpawnPoint5"), NodePath("../SpawnPoints/SpawnPoint6"), NodePath("../SpawnPoints/SpawnPoint7"), NodePath("../SpawnPoints/SpawnPoint8")])
 Waves = [SubResource("Resource_hwuss")]
 
 [node name="HealthBarTemplate" type="ProgressBar" parent="."]
