@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 [gd_scene load_steps=28 format=3 uid="uid://dbsmm2170dfpw"]
+=======
+[gd_scene load_steps=38 format=3 uid="uid://dbsmm2170dfpw"]
+>>>>>>> Stashed changes
 
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/MainTower.tscn" id="1_u55m2"]
 [ext_resource type="PackedScene" uid="uid://crbfak2hna7a3" path="res://scenes/bullet.tscn" id="2_8qhwf"]
@@ -23,6 +27,18 @@ ClankCount = 1
 BullCount = 0
 ClinkCount = 0
 ClunkCount = 0
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_5ii6m"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 2
+TotalEnemies = 35
+RollerCount = 5
+ClankCount = 5
+BullCount = 5
+ClinkCount = 5
+ClunkCount = 15
 SpawnInterval = 1.2
 metadata/_custom_type_script = "uid://b1p46weu3p6ka"
 
@@ -193,7 +209,12 @@ ClankScene = ExtResource("5_t8tu6")
 BullScene = ExtResource("7_abe4w")
 ClinkScene = ExtResource("6_mphia")
 ClunkScene = ExtResource("7_wx6cp")
+<<<<<<< Updated upstream
 Waves = Array[Resource]([SubResource("Resource_j4i6t")])
+=======
+SpawnPoints = Array[NodePath]([NodePath("../SpawnPoints/SpawnPoint1"), NodePath("../SpawnPoints/SpawnPoint2"), NodePath("../SpawnPoints/SpawnPoint3"), NodePath("../SpawnPoints/SpawnPoint4"), NodePath("../SpawnPoints/SpawnPoint5"), NodePath("../SpawnPoints/SpawnPoint6"), NodePath("../SpawnPoints/SpawnPoint7"), NodePath("../SpawnPoints/SpawnPoint8")])
+Waves = [SubResource("Resource_hwuss"), SubResource("Resource_5ii6m")]
+>>>>>>> Stashed changes
 
 [node name="HealthBarTemplate" type="ProgressBar" parent="."]
 visible = false
