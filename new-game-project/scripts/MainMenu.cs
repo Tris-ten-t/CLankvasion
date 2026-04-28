@@ -91,7 +91,7 @@ public partial class MainMenu : Control
 
 	private void OnStartPressed()
 	{
-		GetTree().ChangeSceneToFile("res://scenes/area.tscn");  // Update this path to your game scene
+		GetTree().ChangeSceneToFile("res://scenes/LevelSelect.tscn"); // Adjust path to yours
 	}
 
 	private void OnSettingsPressed()
