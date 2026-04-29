@@ -55,6 +55,10 @@ text = "Start"
 layout_mode = 2
 text = "Settings"
 
+[node name="LeaderboardButton" type="Button" parent="CenterContainer/MainButtons"]
+layout_mode = 2
+text = "Leaderboard"
+
 [node name="QuitButton" type="Button" parent="CenterContainer/MainButtons"]
 layout_mode = 2
 text = "Quit"
@@ -91,4 +95,48 @@ text = "Fullscreen"
 
 [node name="BackButton" type="Button" parent="CenterContainer/SettingsPanel"]
 layout_mode = 2
+text = "Back"
+
+[node name="LeaderboardPanel" type="Control" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Level1Score" type="Label" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -21.0
+offset_top = -65.0
+offset_right = 19.0
+offset_bottom = -42.0
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+
+[node name="Level2Score" type="Label" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -20.0
+offset_top = -29.0
+offset_right = 20.0
+offset_bottom = -6.0
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+
+[node name="Level3Score" type="Label" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -19.0
+offset_top = 5.0
+offset_right = 21.0
+offset_bottom = 28.0
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+
+[node name="Level4Score" type="Label" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -22.0
+offset_top = 42.0
+offset_right = 18.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+
+[node name="BackButton" type="Button" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -23.0
+offset_top = 100.0
+offset_right = 22.0
+offset_bottom = 131.0
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
 text = "Back"

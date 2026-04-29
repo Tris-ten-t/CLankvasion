@@ -7,12 +7,15 @@ public partial class MainMenu : Control
 	private Button startButton;
 	private Button settingsButton;
 	private Button quitButton;
+	private Button leaderboardButton;
 	private VBoxContainer mainButtons;
 	private VBoxContainer settingsPanel;
+	private Control leaderboardPanel;
 	private HSlider volumeSlider;
 	private OptionButton resolutionOption;
 	private CheckButton fullscreenToggle;
 	private Button backButton;
+	private Button leaderboardBackButton;
 	private TextureRect animatedSpriteBG;
 
 	private Vector2 screenCenter;
@@ -23,34 +26,35 @@ public partial class MainMenu : Control
 		startButton = GetNode<Button>("CenterContainer/MainButtons/StartButton");
 		settingsButton = GetNode<Button>("CenterContainer/MainButtons/SettingsButton");
 		quitButton = GetNode<Button>("CenterContainer/MainButtons/QuitButton");
+		leaderboardButton = GetNode<Button>("CenterContainer/MainButtons/LeaderboardButton");
 		mainButtons = GetNode<VBoxContainer>("CenterContainer/MainButtons");
 		settingsPanel = GetNode<VBoxContainer>("CenterContainer/SettingsPanel");
+		leaderboardPanel = GetNode<Control>("CenterContainer/LeaderboardPanel");
 		volumeSlider = GetNode<HSlider>("CenterContainer/SettingsPanel/VolumeSlider");
 		resolutionOption = GetNode<OptionButton>("CenterContainer/SettingsPanel/ResolutionOption");
 		fullscreenToggle = GetNode<CheckButton>("CenterContainer/SettingsPanel/FullscreenToggle");
 		backButton = GetNode<Button>("CenterContainer/SettingsPanel/BackButton");
+		leaderboardBackButton = GetNode<Button>("CenterContainer/LeaderboardPanel/BackButton");
 		animatedSpriteBG = GetNode<TextureRect>("AnimatedSpriteBG");
 
 		// Connect signals
 		startButton.Pressed += OnStartPressed;
 		settingsButton.Pressed += OnSettingsPressed;
 		quitButton.Pressed += OnQuitPressed;
+		leaderboardButton.Pressed += OnLeaderboardPressed;
 		backButton.Pressed += OnBackPressed;
+		leaderboardBackButton.Pressed += OnLeaderboardBackPressed;
 		volumeSlider.ValueChanged += OnVolumeChanged;
 		resolutionOption.ItemSelected += OnResolutionSelected;
 		fullscreenToggle.Toggled += OnFullscreenToggled;
 
-		// Connect window resize signal (using GetWindow() for the current window)
 		GetWindow().SizeChanged += OnWindowSizeChanged;
 
 		// Init settings values
 		int masterIndex = AudioServer.GetBusIndex("Master");
 		volumeSlider.Value = Mathf.DbToLinear(AudioServer.GetBusVolumeDb(masterIndex));
-
-		// Correct way to check current mode
 		fullscreenToggle.ButtonPressed = (DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Fullscreen);
 
-		// Select current resolution in dropdown
 		Vector2I curSize = GetWindow().Size;
 		for (int i = 0; i < resolutionOption.ItemCount; i++)
 		{
@@ -66,9 +70,12 @@ public partial class MainMenu : Control
 			}
 		}
 
-		// Setup for animation
 		UpdateScreenCenter();
 		ResetBackgroundPosition();
+
+		// Hide panels on start
+		settingsPanel.Visible = false;
+		leaderboardPanel.Visible = false;
 	}
 
 	public override void _Process(double delta)
@@ -76,11 +83,7 @@ public partial class MainMenu : Control
 		if (animatedSpriteBG != null)
 		{
 			Vector2 mousePos = GetViewport().GetMousePosition();
-			Vector2 targetOffset = (screenCenter - mousePos) * 0.025f;  // Tweak multiplier for intensity
-
-			// Optional auto-drift (uncomment for extra animation)
-			// targetOffset.X += Mathf.Sin((float)Time.GetTicksMsec() / 2000f) * 30f;
-			// targetOffset.Y += Mathf.Cos((float)Time.GetTicksMsec() / 3000f) * 20f;
+			Vector2 targetOffset = (screenCenter - mousePos) * 0.025f;
 
 			Tween tween = CreateTween();
 			tween.SetEase(Tween.EaseType.Out);
@@ -91,13 +94,40 @@ public partial class MainMenu : Control
 
 	private void OnStartPressed()
 	{
-		GetTree().ChangeSceneToFile("res://scenes/LevelSelect.tscn"); // Adjust path to yours
+		GetTree().ChangeSceneToFile("res://scenes/LevelSelect.tscn");
 	}
 
 	private void OnSettingsPressed()
 	{
 		mainButtons.Visible = false;
 		settingsPanel.Visible = true;
+	}
+
+	private void OnLeaderboardPressed()
+	{
+		mainButtons.Visible = false;
+		leaderboardPanel.Visible = true;
+		UpdateLeaderboard();
+	}
+
+	private void UpdateLeaderboard()
+	{
+		string[] levelNames = new string[]
+		{
+			"The City",
+			"The Island",
+			"The Volcano",
+			"The Pizzeria?",
+		};
+
+		for (int i = 0; i < levelNames.Length; i++)
+		{
+			int level = i + 1;
+			int totalWaves = GameData.Instance.GetTotalWavesForLevel(level);
+			var label = GetNodeOrNull<Label>($"CenterContainer/LeaderboardPanel/Level{level}Score");
+			if (label != null)
+				label.Text = $"{levelNames[i]}: {totalWaves} waves survived";
+		}
 	}
 
 	private void OnQuitPressed()
@@ -108,6 +138,12 @@ public partial class MainMenu : Control
 	private void OnBackPressed()
 	{
 		settingsPanel.Visible = false;
+		mainButtons.Visible = true;
+	}
+
+	private void OnLeaderboardBackPressed()
+	{
+		leaderboardPanel.Visible = false;
 		mainButtons.Visible = true;
 	}
 
@@ -126,41 +162,30 @@ public partial class MainMenu : Control
 			int.TryParse(parts[1].Trim(), out int h))
 		{
 			Vector2I newSize = new Vector2I(w, h);
-
-			// Set the new window size (reliable in Godot 4)
 			GetWindow().Size = newSize;
-
-			// Optional: Center the window nicely on screen
 			Vector2I screenSize = DisplayServer.ScreenGetSize();
 			GetWindow().Position = (screenSize - newSize) / 2;
-
-			// Update animation center
 			UpdateScreenCenter();
 		}
 	}
 
 	private void OnFullscreenToggled(bool toggledOn)
 	{
-	if (toggledOn)
-	{
-		// Prep for fullscreen: Set to desktop resolution
-		Vector2I desktopSize = DisplayServer.ScreenGetSize();
-		GetWindow().Size = desktopSize;
-		GetWindow().Position = Vector2I.Zero;  // Top-left corner
+		if (toggledOn)
+		{
+			Vector2I desktopSize = DisplayServer.ScreenGetSize();
+			GetWindow().Size = desktopSize;
+			GetWindow().Position = Vector2I.Zero;
+			DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
+		}
+		else
+		{
+			DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
+			GetWindow().Size = new Vector2I(1920, 1080);
+			GetWindow().Position = (DisplayServer.ScreenGetSize() - GetWindow().Size) / 2;
+		}
 
-		// True fullscreen (hides taskbar, no borders)
-		DisplayServer.WindowSetMode(DisplayServer.WindowMode.ExclusiveFullscreen);
-	}
-	else
-	{
-		// Back to windowed: Restore your preferred size (e.g., 1920x1080)
-		DisplayServer.WindowSetMode(DisplayServer.WindowMode.Windowed);
-		GetWindow().Size = new Vector2I(1920, 1080);  // ← Change to your base res
-		GetWindow().Position = (DisplayServer.ScreenGetSize() - GetWindow().Size) / 2;  // Center it
-	}
-
-	// Update background animation center
-	UpdateScreenCenter();
+		UpdateScreenCenter();
 	}
 
 	private void UpdateScreenCenter()
@@ -172,13 +197,13 @@ public partial class MainMenu : Control
 	{
 		if (animatedSpriteBG != null)
 		{
-			animatedSpriteBG.Position = new Vector2(-400, -200);  // Match your scene's initial offset
+			animatedSpriteBG.Position = new Vector2(-400, -200);
 		}
 	}
 
 	private void OnWindowSizeChanged()
 	{
 		UpdateScreenCenter();
-		ResetBackgroundPosition();  // Optional: Reset on resize
+		ResetBackgroundPosition();
 	}
 }

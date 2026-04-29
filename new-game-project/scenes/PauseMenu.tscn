@@ -1,18 +1,18 @@
 [gd_scene load_steps=6 format=3 uid="uid://duhoek0mg1rdu"]
 
-[ext_resource type="Script" uid="uid://ce1q0tufyewm8" path="res://PauseMenu.cs" id="1_jvnd5"]
+[ext_resource type="Script" uid="uid://ce1q0tufyewm8" path="res://scripts/PauseMenu.cs" id="1_jvnd5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jvnd5"]
-bg_color = Color(0, 0.72054, 0.323423, 1)
+bg_color = Color(0.651336, 0.58361, 0.563848, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_g4jo0"]
-bg_color = Color(0.211226, 0.612195, 1, 1)
+bg_color = Color(0.0850674, 0.00653336, 0.0789451, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_komsw"]
-bg_color = Color(0.211765, 0.611765, 1, 1)
+bg_color = Color(0.0862745, 0.00784314, 0.0784314, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5w6ei"]
-bg_color = Color(0.211765, 0.611765, 1, 1)
+bg_color = Color(0.0862745, 0.00784314, 0.0784314, 1)
 
 [node name="PauseMenu" type="CanvasLayer"]
 script = ExtResource("1_jvnd5")
