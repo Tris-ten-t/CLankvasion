@@ -20,10 +20,9 @@ public partial class GameData : Node
 		var scores = LoadAllScores();
 		string key = $"level_{level}";
 
-		if (!scores.ContainsKey(key))
-			scores[key] = 0;
-
-		scores[key] += wavesCompleted; // Add to cumulative total
+		// Only save if it's higher than the current best
+		if (!scores.ContainsKey(key) || wavesCompleted > scores[key])
+			scores[key] = wavesCompleted;
 
 		string json = JsonSerializer.Serialize(scores);
 		using var file = FileAccess.Open(SavePath, FileAccess.ModeFlags.Write);
