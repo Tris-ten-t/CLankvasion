@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dtvkjb85x4a8i" path="res://scripts/Leaderboard.cs" id="1_0tlxa"]
 
-[node name="Control" type="Control"]
+[node name="Control2" type="Control"]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
