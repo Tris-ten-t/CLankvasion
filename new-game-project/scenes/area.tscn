@@ -386,8 +386,8 @@ animation = &"heart_full"
 
 [node name="CoinContainer" type="HBoxContainer" parent="UI/TowerStatus"]
 layout_mode = 0
-offset_left = -24.0
-offset_right = 16.0
+offset_left = -85.0
+offset_right = -45.0
 offset_bottom = 45.0
 
 [node name="CoinLabel" type="Label" parent="UI/TowerStatus/CoinContainer"]
@@ -401,6 +401,18 @@ position = Vector2(-15, 23)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_ue8ih")
 frame_progress = 0.606821
+
+[node name="WaveContainer" type="HBoxContainer" parent="UI/TowerStatus"]
+layout_mode = 0
+offset_left = -110.0
+offset_top = 29.0
+offset_right = -63.0
+offset_bottom = 69.0
+
+[node name="WaveLabel" type="Label" parent="UI/TowerStatus/WaveContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Wave:"
 
 [node name="PauseMenu" parent="." instance=ExtResource("18_vsljy")]
 process_mode = 3
