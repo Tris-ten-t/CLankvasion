@@ -10,6 +10,12 @@ public partial class ShopMenu : CanvasLayer
 
 	private string selectedItem = "";
 
+	// Item costs
+	private const int MineCost = 25;
+	private const int WaterTankCost = 60;
+	private const int EmpCost = 75;
+	private const int TrashCompactorCost = 120;
+
 	public override void _Ready()
 	{
 		GD.Print("Shop Menu opened");
@@ -33,7 +39,31 @@ public partial class ShopMenu : CanvasLayer
 		else
 			GD.PrintErr("CloseButton not found!");
 
+		// Update all item buttons based on current coins
+		UpdateShopButtons();
 		ClearDetails();
+	}
+
+	private void UpdateShopButtons()
+	{
+		int coins = Economy.Coins;
+
+		// Grey out item buttons if player can't afford them
+		SetItemButtonAffordable("MineButton", coins >= MineCost);
+		SetItemButtonAffordable("WaterTankButton", coins >= WaterTankCost);
+		SetItemButtonAffordable("EmpButton", coins >= EmpCost);
+		SetItemButtonAffordable("TrashCompactorButton", coins >= TrashCompactorCost);
+	}
+
+	private void SetItemButtonAffordable(string buttonName, bool canAfford)
+	{
+		var button = GetNodeOrNull<Button>(buttonName);
+		if (button != null)
+		{
+			button.Disabled = !canAfford;
+			// Modulate the button to visually show it's unaffordable
+			button.Modulate = canAfford ? new Color(1, 1, 1, 1) : new Color(0.5f, 0.5f, 0.5f, 0.7f);
+		}
 	}
 
 	public void _on_mine_button_pressed()
@@ -42,14 +72,17 @@ public partial class ShopMenu : CanvasLayer
 		if (itemNameLabel != null) itemNameLabel.Text = "Mine Tower";
 		if (itemDescriptionLabel != null)
 			itemDescriptionLabel.Text = "Explosive trap that deals moderate area damage when an enemy touches it.\nGreat for defending narrow paths.";
-		if (itemCostLabel != null) itemCostLabel.Text = "Cost: 25 coins";
+		if (itemCostLabel != null) itemCostLabel.Text = $"Cost: {MineCost} coins";
 
 		if (itemIcon != null)
 		{
 			var atlas = GD.Load<AtlasTexture>("res://assets/towers/MineIcon.tres");
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
-		if (buyButton != null) buyButton.Disabled = false;
+
+		// Only enable buy button if player can afford it
+		if (buyButton != null)
+			buyButton.Disabled = Economy.Coins < MineCost;
 	}
 
 	public void _on_water_tank_button_pressed()
@@ -58,14 +91,16 @@ public partial class ShopMenu : CanvasLayer
 		if (itemNameLabel != null) itemNameLabel.Text = "Water Tank";
 		if (itemDescriptionLabel != null)
 			itemDescriptionLabel.Text = "Deals low damage over time in an area for 25 seconds.\nExcellent for sustained area control.";
-		if (itemCostLabel != null) itemCostLabel.Text = "Cost: 60 coins";
+		if (itemCostLabel != null) itemCostLabel.Text = $"Cost: {WaterTankCost} coins";
 
 		if (itemIcon != null)
 		{
 			var atlas = GD.Load<AtlasTexture>("res://assets/towers/WaterTankIcon.tres");
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
-		if (buyButton != null) buyButton.Disabled = false;
+
+		if (buyButton != null)
+			buyButton.Disabled = Economy.Coins < WaterTankCost;
 	}
 
 	public void _on_emp_button_pressed()
@@ -74,58 +109,61 @@ public partial class ShopMenu : CanvasLayer
 		if (itemNameLabel != null) itemNameLabel.Text = "EMP Tower";
 		if (itemDescriptionLabel != null)
 			itemDescriptionLabel.Text = "Stuns all enemies in a large area for 5 seconds.\nSingle use - breaks after activation.";
-		if (itemCostLabel != null) itemCostLabel.Text = "Cost: 75 coins";
+		if (itemCostLabel != null) itemCostLabel.Text = $"Cost: {EmpCost} coins";
 
 		if (itemIcon != null)
 		{
 			var atlas = GD.Load<AtlasTexture>("res://assets/towers/EmpIcon.tres");
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
-		if (buyButton != null) buyButton.Disabled = false;
+
+		if (buyButton != null)
+			buyButton.Disabled = Economy.Coins < EmpCost;
 	}
 
-	// Trash Compactor Button
 	public void _on_trash_compactor_button_pressed()
 	{
 		selectedItem = "TrashCompactor";
 		if (itemNameLabel != null) itemNameLabel.Text = "Trash Compactor";
 		if (itemDescriptionLabel != null)
 			itemDescriptionLabel.Text = "Draws in the first enemy that touches it and eliminates it instantly.\nSingle use - high cost.";
-		if (itemCostLabel != null) itemCostLabel.Text = "Cost: 120 coins";
+		if (itemCostLabel != null) itemCostLabel.Text = $"Cost: {TrashCompactorCost} coins";
 
 		if (itemIcon != null)
 		{
 			var atlas = GD.Load<AtlasTexture>("res://assets/towers/TrashCompactorIcon.tres");
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
-		if (buyButton != null) buyButton.Disabled = false;
+
+		if (buyButton != null)
+			buyButton.Disabled = Economy.Coins < TrashCompactorCost;
 	}
 
 	private void OnBuyPressed()
 	{
 		var mainTower = GetTree().CurrentScene.GetNodeOrNull<MainTower>("MainTower");
 
-		if (selectedItem == "Mine")
+		if (selectedItem == "Mine" && Economy.Coins >= MineCost)
 		{
-			Economy.AddCoins(-25);
+			Economy.AddCoins(-MineCost);
 			CloseMenu();
 			if (mainTower != null) mainTower.StartMinePlacement();
 		}
-		else if (selectedItem == "WaterTank")
+		else if (selectedItem == "WaterTank" && Economy.Coins >= WaterTankCost)
 		{
-			Economy.AddCoins(-60);
+			Economy.AddCoins(-WaterTankCost);
 			CloseMenu();
 			if (mainTower != null) mainTower.StartWaterTankPlacement();
 		}
-		else if (selectedItem == "Emp")
+		else if (selectedItem == "Emp" && Economy.Coins >= EmpCost)
 		{
-			Economy.AddCoins(-75);
+			Economy.AddCoins(-EmpCost);
 			CloseMenu();
 			if (mainTower != null) mainTower.StartEmpPlacement();
 		}
-		else if (selectedItem == "TrashCompactor")
+		else if (selectedItem == "TrashCompactor" && Economy.Coins >= TrashCompactorCost)
 		{
-			Economy.AddCoins(-120);
+			Economy.AddCoins(-TrashCompactorCost);
 			GD.Print("Trash Compactor purchased! Entering placement mode...");
 			CloseMenu();
 			if (mainTower != null) mainTower.StartTrashCompactorPlacement();

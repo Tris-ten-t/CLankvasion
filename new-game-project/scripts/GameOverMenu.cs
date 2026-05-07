@@ -1,20 +1,20 @@
 using Godot;
-
 public partial class GameOverMenu : CanvasLayer
 {
 	public override void _Ready()
 	{
 		GD.Print("Game Over Menu _Ready() - Setting up buttons...");
-
-		Layer = 128;                    // High layer
+		Layer = 128;
 		GetTree().Paused = true;
 
-		// Find buttons (with multiple possible paths)
-		Button restartBtn = GetNodeOrNull<Button>("%RestartButton") 
+		// Save the score when game over screen appears
+		GameData.Instance.SaveScore(GameData.Instance.SelectedLevel, GameData.Instance.CurrentWave);
+		GD.Print($"Score saved - Level: {GameData.Instance.SelectedLevel}, Waves: {GameData.Instance.CurrentWave}");
+
+		Button restartBtn = GetNodeOrNull<Button>("%RestartButton")
 						 ?? GetNodeOrNull<Button>("Content/RestartButton")
 						 ?? GetNodeOrNull<Button>("RestartButton");
-
-		Button quitBtn = GetNodeOrNull<Button>("%QuitButton") 
+		Button quitBtn = GetNodeOrNull<Button>("%QuitButton")
 					  ?? GetNodeOrNull<Button>("Content/QuitButton")
 					  ?? GetNodeOrNull<Button>("QuitButton");
 
@@ -46,12 +46,10 @@ public partial class GameOverMenu : CanvasLayer
 	{
 		GD.Print("Quit button clicked! Exiting game...");
 		GetTree().Paused = false;
-		GetTree().Quit();
+		GetTree().ChangeSceneToFile("res://scenes/MainMenu.tscn"); // Changed to go to menu instead of quitting
 	}
 
-	// Make sure input is processed even when paused
 	public override void _Input(InputEvent @event)
 	{
-		// This helps ensure clicks are registered
 	}
 }

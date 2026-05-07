@@ -68,6 +68,7 @@ public partial class EnemySpawner : Node2D
 	private void StartNextWave()
 	{
 		_currentWaveIndex++;
+		GameData.Instance.CurrentWave = _currentWaveIndex; // Track current wave
 
 		if (_currentWaveIndex < Waves.Length)
 		{

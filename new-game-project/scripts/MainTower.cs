@@ -24,6 +24,7 @@ public partial class MainTower : AnimatedSprite2D
 	private AnimatedSprite2D shieldIcon;
 	private AnimatedSprite2D heartIcon;
 	private Label coinLabel;
+	private Label waveLabel;
 
 	private bool gameOverTriggered = false;
 
@@ -61,6 +62,7 @@ public partial class MainTower : AnimatedSprite2D
 		shieldIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/ShieldContainer/ShieldIcon");
 		heartIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/HealthContainer/HeartIcon");
 		coinLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/CoinContainer/CoinLabel");
+		waveLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/WaveContainer/WaveLabel");
 
 		ForceSeparateStyles();
 		UpdateUI();
@@ -268,6 +270,10 @@ public partial class MainTower : AnimatedSprite2D
 		if (shieldBar != null) shieldBar.Value = currentShield;
 		if (healthBar != null) healthBar.Value = currentHealth;
 		if (coinLabel != null) coinLabel.Text = Economy.Coins.ToString();
+
+		// Update wave label
+		if (waveLabel != null)
+			waveLabel.Text = $"Wave: {GameData.Instance.CurrentWave + 1}";
 
 		if (shieldBar != null)
 		{

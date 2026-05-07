@@ -55,6 +55,10 @@ text = "Start"
 layout_mode = 2
 text = "Settings"
 
+[node name="LeaderboardButton" type="Button" parent="CenterContainer/MainButtons"]
+layout_mode = 2
+text = "Leaderboard"
+
 [node name="QuitButton" type="Button" parent="CenterContainer/MainButtons"]
 layout_mode = 2
 text = "Quit"
@@ -91,4 +95,51 @@ text = "Fullscreen"
 
 [node name="BackButton" type="Button" parent="CenterContainer/SettingsPanel"]
 layout_mode = 2
+text = "Back"
+
+[node name="LeaderboardPanel" type="Control" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="TabContainer" type="HBoxContainer" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -189.0
+offset_top = -235.0
+offset_right = 185.0
+offset_bottom = -163.0
+
+[node name="Level1Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+text = "The City"
+
+[node name="Level2Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+text = "The Island"
+
+[node name="Level3Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+text = "The Volcano"
+
+[node name="Level4Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+text = "The Pizzaria"
+
+[node name="ScoresLabel" type="Label" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -22.0
+offset_top = -149.0
+offset_right = 18.0
+offset_bottom = -126.0
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+
+[node name="BackButton" type="Button" parent="CenterContainer/LeaderboardPanel"]
+layout_mode = 0
+offset_left = -23.0
+offset_top = 100.0
+offset_right = 22.0
+offset_bottom = 131.0
+theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
 text = "Back"
