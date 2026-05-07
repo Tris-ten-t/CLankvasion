@@ -19,10 +19,10 @@ public partial class MainMenu : Control
 	private TextureRect animatedSpriteBG;
 
 	private Vector2 screenCenter;
+	private int _selectedLeaderboardLevel = 1;
 
 	public override void _Ready()
 	{
-		// Get nodes
 		startButton = GetNode<Button>("CenterContainer/MainButtons/StartButton");
 		settingsButton = GetNode<Button>("CenterContainer/MainButtons/SettingsButton");
 		quitButton = GetNode<Button>("CenterContainer/MainButtons/QuitButton");
@@ -37,7 +37,6 @@ public partial class MainMenu : Control
 		leaderboardBackButton = GetNode<Button>("CenterContainer/LeaderboardPanel/BackButton");
 		animatedSpriteBG = GetNode<TextureRect>("AnimatedSpriteBG");
 
-		// Connect signals
 		startButton.Pressed += OnStartPressed;
 		settingsButton.Pressed += OnSettingsPressed;
 		quitButton.Pressed += OnQuitPressed;
@@ -48,9 +47,17 @@ public partial class MainMenu : Control
 		resolutionOption.ItemSelected += OnResolutionSelected;
 		fullscreenToggle.Toggled += OnFullscreenToggled;
 
+		// Connect level tab buttons in leaderboard
+		for (int i = 1; i <= 4; i++)
+		{
+			int level = i;
+			var tabButton = GetNodeOrNull<Button>($"CenterContainer/LeaderboardPanel/TabContainer/Level{i}Button");
+			if (tabButton != null)
+				tabButton.Pressed += () => OnLeaderboardTabPressed(level);
+		}
+
 		GetWindow().SizeChanged += OnWindowSizeChanged;
 
-		// Init settings values
 		int masterIndex = AudioServer.GetBusIndex("Master");
 		volumeSlider.Value = Mathf.DbToLinear(AudioServer.GetBusVolumeDb(masterIndex));
 		fullscreenToggle.ButtonPressed = (DisplayServer.WindowGetMode() == DisplayServer.WindowMode.Fullscreen);
@@ -73,7 +80,6 @@ public partial class MainMenu : Control
 		UpdateScreenCenter();
 		ResetBackgroundPosition();
 
-		// Hide panels on start
 		settingsPanel.Visible = false;
 		leaderboardPanel.Visible = false;
 	}
@@ -107,10 +113,16 @@ public partial class MainMenu : Control
 	{
 		mainButtons.Visible = false;
 		leaderboardPanel.Visible = true;
-		UpdateLeaderboard();
+		ShowScoresForLevel(_selectedLeaderboardLevel);
 	}
 
-	private void UpdateLeaderboard()
+	private void OnLeaderboardTabPressed(int level)
+	{
+		_selectedLeaderboardLevel = level;
+		ShowScoresForLevel(level);
+	}
+
+	private void ShowScoresForLevel(int level)
 	{
 		string[] levelNames = new string[]
 		{
@@ -120,14 +132,28 @@ public partial class MainMenu : Control
 			"The Pizzeria?",
 		};
 
-		for (int i = 0; i < levelNames.Length; i++)
+		var scores = GameData.Instance.GetScoresForLevel(level);
+		var scoresLabel = GetNodeOrNull<Label>("CenterContainer/LeaderboardPanel/ScoresLabel");
+
+		if (scoresLabel == null) return;
+
+		string display = $"{levelNames[level - 1]} - Top 10\n";
+		display += "─────────────────\n";
+
+		if (scores.Count == 0)
 		{
-			int level = i + 1;
-			int totalWaves = GameData.Instance.GetTotalWavesForLevel(level);
-			var label = GetNodeOrNull<Label>($"CenterContainer/LeaderboardPanel/Level{level}Score");
-			if (label != null)
-				label.Text = $"{levelNames[i]}: {totalWaves} waves survived";
+			display += "No scores yet!";
 		}
+		else
+		{
+			for (int i = 0; i < scores.Count; i++)
+			{
+				string medal = i == 0 ? "🥇" : i == 1 ? "🥈" : i == 2 ? "🥉" : $"{i + 1}.";
+				display += $"{medal} {scores[i]} waves\n";
+			}
+		}
+
+		scoresLabel.Text = display;
 	}
 
 	private void OnQuitPressed()

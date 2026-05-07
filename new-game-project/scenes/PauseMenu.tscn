@@ -21,14 +21,14 @@ script = ExtResource("1_jvnd5")
 offset_left = 23.0
 offset_top = 100.0
 offset_right = 126.0
-offset_bottom = 232.0
+offset_bottom = 236.0
 scale = Vector2(2, 2)
 theme_override_styles/panel = SubResource("StyleBoxFlat_jvnd5")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PausePanel"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 103.0
+offset_bottom = 132.0
 
 [node name="Label" type="Label" parent="PausePanel/VBoxContainer"]
 layout_mode = 2
@@ -49,3 +49,8 @@ text = "Restart"
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_5w6ei")
 text = "Quit to Menu"
+
+[node name="Quit Game" type="Button" parent="PausePanel/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_5w6ei")
+text = "Quit Game"

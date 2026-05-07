@@ -19,7 +19,6 @@ public partial class Leaderboard : Control
 		_scoresLabel = GetNode<Label>("ScoresLabel");
 		_tabContainer = GetNode<HBoxContainer>("TabContainer");
 
-		// Create a tab button for each level
 		for (int i = 0; i < _levelNames.Length; i++)
 		{
 			int levelNumber = i + 1;
@@ -29,7 +28,6 @@ public partial class Leaderboard : Control
 			_tabContainer.AddChild(button);
 		}
 
-		// Show first level by default
 		ShowScoresForLevel(1);
 	}
 
@@ -41,14 +39,25 @@ public partial class Leaderboard : Control
 
 	private void ShowScoresForLevel(int level)
 	{
-		int totalWaves = GameData.Instance.GetTotalWavesForLevel(level);
+		var scores = GameData.Instance.GetScoresForLevel(level);
 		string levelName = _levelNames[level - 1];
 
-		string display = $"{levelName}\n";
+		string display = $"{levelName} - Top 10\n";
 		display += "─────────────────\n";
-		display += $"Total Waves Survived: {totalWaves}\n";
+
+		if (scores.Count == 0)
+		{
+			display += "No scores yet!";
+		}
+		else
+		{
+			for (int i = 0; i < scores.Count; i++)
+			{
+				string medal = i == 0 ? "🥇" : i == 1 ? "🥈" : i == 2 ? "🥉" : $"{i + 1}.";
+				display += $"{medal} {scores[i]} waves\n";
+			}
+		}
 
 		_scoresLabel.Text = display;
-		GD.Print($"Showing scores for {levelName}: {totalWaves} waves");
 	}
 }

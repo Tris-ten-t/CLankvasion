@@ -2,7 +2,7 @@ using Godot;
 
 public static class Economy
 {
-	public static int Coins { get; private set; } = 999999;   // Infinite money for testing
+	public static int Coins { get; private set; } = 0;   // Infinite money for testing
 
 	public static void AddCoins(int amount)
 	{
