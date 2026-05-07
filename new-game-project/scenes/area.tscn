@@ -1,9 +1,12 @@
-[gd_scene load_steps=38 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene load_steps=41 format=3 uid="uid://dbsmm2170dfpw"]
 
+[ext_resource type="Script" uid="uid://bgtnvge7s74ca" path="res://scenes/Area.cs" id="1_5ii6m"]
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/Towers/MainTower.tscn" id="1_u55m2"]
 [ext_resource type="PackedScene" uid="uid://crbfak2hna7a3" path="res://scenes/bullet.tscn" id="2_8qhwf"]
+[ext_resource type="Texture2D" uid="uid://fdm8pkmecng1" path="res://assets/Misc/Island background.png" id="3_3vqv2"]
 [ext_resource type="Script" uid="uid://bmsu2c03wmaf0" path="res://scripts/EnemySpawner.cs" id="3_5jt5u"]
 [ext_resource type="PackedScene" uid="uid://l10cqcjw4o6l" path="res://scenes/baddies/Enemy.tscn" id="4_t8tu6"]
+[ext_resource type="Texture2D" uid="uid://c3lntx6ne5wvl" path="res://assets/Misc/Volcana backgorund.png" id="4_vsljy"]
 [ext_resource type="PackedScene" uid="uid://bctmja5grypfx" path="res://scenes/baddies/Clank.tscn" id="5_t8tu6"]
 [ext_resource type="PackedScene" uid="uid://bs31nupjx0w0d" path="res://scenes/baddies/Clink.tscn" id="6_mphia"]
 [ext_resource type="PackedScene" uid="uid://c37k7xq7odh1w" path="res://scenes/baddies/Bull.tscn" id="7_abe4w"]
@@ -250,7 +253,11 @@ animations = [{
 "speed": 8.0
 }]
 
-[node name="Area" type="Node"]
+[node name="Area" type="Node2D"]
+script = ExtResource("1_5ii6m")
+LevelBackgrounds = [ExtResource("9_ueojj"), ExtResource("3_3vqv2"), ExtResource("4_vsljy"), null]
+BackgroundPath = NodePath("Background")
+StreetlightsPath = NodePath("Streetlights")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(499, 500)
