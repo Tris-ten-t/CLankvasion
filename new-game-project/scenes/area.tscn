@@ -268,7 +268,7 @@ zoom = Vector2(1.15, 0.65)
 position = Vector2(510, 500)
 scale = Vector2(3, 2.976)
 BulletScene = ExtResource("2_8qhwf")
-FireRate = 0.1
+FireRate = 1.0
 
 [node name="Muzzle" type="Marker2D" parent="MainTower" unique_id=1853743626]
 position = Vector2(0, 7.86291)
@@ -415,5 +415,23 @@ offset_bottom = 69.0
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Wave:"
+
+[node name="LevelLabel" type="Label" parent="UI/TowerStatus" unique_id=1636162026]
+layout_mode = 0
+offset_left = -110.0
+offset_top = 63.0
+offset_right = -66.0
+offset_bottom = 86.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "blank"
+
+[node name="FireModeLabel" type="Label" parent="UI/TowerStatus" unique_id=1129015422]
+layout_mode = 0
+offset_left = -341.0
+offset_top = 61.0
+offset_right = -297.0
+offset_bottom = 84.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "blank"
 
 [node name="PauseMenu" parent="." unique_id=128880731 instance=ExtResource("18_vsljy")]
