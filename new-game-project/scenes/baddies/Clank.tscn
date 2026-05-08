@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bctmja5grypfx"]
+[gd_scene format=3 uid="uid://bctmja5grypfx"]
 
 [ext_resource type="Script" uid="uid://jt7ll8na6vg8" path="res://scripts/Clank.cs" id="1_074mf"]
 [ext_resource type="Texture2D" uid="uid://dcx40vcwh3lsr" path="res://assets/Enemies/Walking/Clank Anim.png" id="2_40mx7"]
@@ -183,12 +183,22 @@ size = Vector2(69, 39)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3nqdv"]
 size = Vector2(68, 38)
 
-[node name="Clank" type="CharacterBody2D" groups=["enemies"]]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_3nqdv"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 98, 0)
+scale_min = 2.0
+scale_max = 4.0
+
+[node name="Clank" type="CharacterBody2D" unique_id=204143909 groups=["enemies"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_074mf")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=96952189]
 position = Vector2(-1, 0)
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
@@ -196,14 +206,22 @@ animation = &"death"
 frame = 17
 frame_progress = 1.0
 
-[node name="Collision" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1217027296]
 position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_d8eoo")
 
-[node name="TowerDetector" type="Area2D" parent="."]
+[node name="TowerDetector" type="Area2D" parent="." unique_id=432946305]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerDetector"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerDetector" unique_id=1252648377]
 position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_3nqdv")
+
+[node name="DeathParticles" type="GPUParticles2D" parent="." unique_id=368656122]
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_3nqdv")
 
 [connection signal="body_entered" from="TowerDetector" to="." method="_on_tower_detector_body_entered"]

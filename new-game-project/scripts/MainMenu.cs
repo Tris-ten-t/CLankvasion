@@ -23,6 +23,9 @@ public partial class MainMenu : Control
 
 	public override void _Ready()
 	{
+		var theme = GD.Load<Theme>("res://assets/GameTheme.tres");
+if (theme != null)
+	Theme = theme;
 		startButton = GetNode<Button>("CenterContainer/MainButtons/StartButton");
 		settingsButton = GetNode<Button>("CenterContainer/MainButtons/SettingsButton");
 		quitButton = GetNode<Button>("CenterContainer/MainButtons/QuitButton");

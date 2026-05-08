@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=3 uid="uid://l10cqcjw4o6l"]
+[gd_scene format=3 uid="uid://l10cqcjw4o6l"]
 
 [ext_resource type="Script" uid="uid://bnydq60pb2adb" path="res://scripts/Enemy.cs" id="1_3gvst"]
 [ext_resource type="Texture2D" uid="uid://brtuieg7ynj0b" path="res://assets/Enemies/Walking/Roller Anim.png" id="2_55jtl"]
@@ -242,15 +242,33 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_hkgyc"]
 radius = 17.0294
 
-[node name="Enemy2" type="CharacterBody2D" groups=["enemies"]]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_jmqhq"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 98, 0)
+scale_min = 2.0
+scale_max = 4.0
+
+[node name="Enemy2" type="CharacterBody2D" unique_id=1062685468 groups=["enemies"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_3gvst")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=263002095]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
 animation = &"walk"
 
-[node name="Collision" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=232374264]
 shape = SubResource("CircleShape2D_hkgyc")
+
+[node name="DeathParticles" type="GPUParticles2D" parent="." unique_id=1370813981]
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_jmqhq")

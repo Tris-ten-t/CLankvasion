@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="Script" uid="uid://bgtnvge7s74ca" path="res://scenes/Area.cs" id="1_5ii6m"]
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/Towers/MainTower.tscn" id="1_u55m2"]
@@ -16,24 +16,18 @@
 [ext_resource type="Texture2D" uid="uid://im8rhf83t1dn" path="res://assets/Misc/lights.png" id="10_j4i6t"]
 [ext_resource type="Texture2D" uid="uid://cdoy25vehl4p2" path="res://assets/Misc/shield.png" id="12_wyr7o"]
 [ext_resource type="Texture2D" uid="uid://cdypu7i6s35qt" path="res://assets/Misc/heart.png" id="13_hwuss"]
+[ext_resource type="Shader" uid="uid://bgbm10xye5nac" path="res://assets/BackgroundShader.gdshader" id="14_0wc2m"]
 [ext_resource type="Texture2D" uid="uid://d0yx1lislshof" path="res://assets/Misc/Coin Drop Anim.png" id="14_hwuss"]
+[ext_resource type="Theme" uid="uid://dqbb5fchcec7r" path="res://assets/GameTheme.tres" id="15_kyxft"]
 [ext_resource type="PackedScene" uid="uid://duhoek0mg1rdu" path="res://scenes/PauseMenu.tscn" id="18_vsljy"]
 
 [sub_resource type="Resource" id="Resource_hwuss"]
 script = ExtResource("9_j4i6t")
-WaveNumber = 1
-TotalEnemies = 10
-RollerCount = 4
-ClankCount = 3
-BullCount = 2
-ClinkCount = 1
-ClunkCount = 0
 SpawnInterval = 1.2
 metadata/_custom_type_script = "uid://b1p46weu3p6ka"
 
 [sub_resource type="Resource" id="Resource_5ii6m"]
 script = ExtResource("9_j4i6t")
-WaveNumber = 1
 TotalEnemies = 35
 RollerCount = 5
 ClankCount = 5
@@ -50,6 +44,12 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6at8u"]
+shader = ExtResource("14_0wc2m")
+shader_parameter/vignette_strength = 0.1010000047975
+shader_parameter/vignette_size = 0.630000029925
+shader_parameter/tint_color = Color(1, 1, 1, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5ii6m"]
 atlas = ExtResource("12_wyr7o")
@@ -254,26 +254,26 @@ animations = [{
 "speed": 8.0
 }]
 
-[node name="Area" type="Node2D"]
+[node name="Area" type="Node2D" unique_id=1747747270]
 script = ExtResource("1_5ii6m")
 LevelBackgrounds = [ExtResource("9_ueojj"), ExtResource("3_3vqv2"), ExtResource("4_vsljy"), null]
 BackgroundPath = NodePath("Background")
 StreetlightsPath = NodePath("Streetlights")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=420510988]
 position = Vector2(499, 500)
 zoom = Vector2(1.15, 0.65)
 
-[node name="MainTower" parent="." groups=["towers"] instance=ExtResource("1_u55m2")]
+[node name="MainTower" parent="." unique_id=1162498285 groups=["towers"] instance=ExtResource("1_u55m2")]
 position = Vector2(510, 500)
 scale = Vector2(3, 2.976)
 BulletScene = ExtResource("2_8qhwf")
 FireRate = 0.1
 
-[node name="Muzzle" type="Marker2D" parent="MainTower"]
+[node name="Muzzle" type="Marker2D" parent="MainTower" unique_id=1853743626]
 position = Vector2(0, 7.86291)
 
-[node name="EnemySpawner" type="Node2D" parent="."]
+[node name="EnemySpawner" type="Node2D" parent="." unique_id=399513927]
 position = Vector2(-2, 2)
 script = ExtResource("3_5jt5u")
 RollerScene = ExtResource("4_t8tu6")
@@ -284,7 +284,7 @@ ClunkScene = ExtResource("7_wx6cp")
 SpawnPoints = Array[NodePath]([NodePath("../SpawnPoints/SpawnPoint1"), NodePath("../SpawnPoints/SpawnPoint2"), NodePath("../SpawnPoints/SpawnPoint3"), NodePath("../SpawnPoints/SpawnPoint4"), NodePath("../SpawnPoints/SpawnPoint5"), NodePath("../SpawnPoints/SpawnPoint6"), NodePath("../SpawnPoints/SpawnPoint7"), NodePath("../SpawnPoints/SpawnPoint8")])
 Waves = [SubResource("Resource_hwuss"), SubResource("Resource_5ii6m")]
 
-[node name="HealthBarTemplate" type="ProgressBar" parent="."]
+[node name="HealthBarTemplate" type="ProgressBar" parent="." unique_id=1806348462]
 visible = false
 custom_minimum_size = Vector2(0, -25)
 offset_left = 100.0
@@ -294,48 +294,49 @@ offset_bottom = 30.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_2hywi")
 show_percentage = false
 
-[node name="Background" type="Sprite2D" parent="."]
+[node name="Background" type="Sprite2D" parent="." unique_id=1897171339]
 z_index = -10
+material = SubResource("ShaderMaterial_6at8u")
 position = Vector2(9.09495e-13, 1)
 scale = Vector2(10, 10)
 texture = ExtResource("9_ueojj")
 centered = false
 
-[node name="Streetlights" type="Sprite2D" parent="."]
+[node name="Streetlights" type="Sprite2D" parent="." unique_id=1242892542]
 z_index = 5
 position = Vector2(500, 500)
 scale = Vector2(10, 10)
 texture = ExtResource("10_j4i6t")
 
-[node name="SpawnPoints" type="Node2D" parent="."]
+[node name="SpawnPoints" type="Node2D" parent="." unique_id=888866476]
 
-[node name="SpawnPoint1" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint1" type="Marker2D" parent="SpawnPoints" unique_id=1860822436]
 position = Vector2(-84, 433)
 
-[node name="SpawnPoint2" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint2" type="Marker2D" parent="SpawnPoints" unique_id=2119757226]
 position = Vector2(-80, 573)
 
-[node name="SpawnPoint3" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint3" type="Marker2D" parent="SpawnPoints" unique_id=1121855590]
 position = Vector2(452, 1056)
 
-[node name="SpawnPoint4" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint4" type="Marker2D" parent="SpawnPoints" unique_id=877858277]
 position = Vector2(577, 1059)
 
-[node name="SpawnPoint5" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint5" type="Marker2D" parent="SpawnPoints" unique_id=2082726392]
 position = Vector2(1027, 581)
 
-[node name="SpawnPoint6" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint6" type="Marker2D" parent="SpawnPoints" unique_id=1502948033]
 position = Vector2(1026, 434)
 
-[node name="SpawnPoint7" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint7" type="Marker2D" parent="SpawnPoints" unique_id=1823706035]
 position = Vector2(566, -63)
 
-[node name="SpawnPoint8" type="Marker2D" parent="SpawnPoints"]
+[node name="SpawnPoint8" type="Marker2D" parent="SpawnPoints" unique_id=1018213681]
 position = Vector2(425, -64)
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=390628123]
 
-[node name="TowerStatus" type="Control" parent="UI"]
+[node name="TowerStatus" type="Control" parent="UI" unique_id=1389264576]
 layout_mode = 3
 anchors_preset = 1
 anchor_left = 1.0
@@ -343,23 +344,24 @@ anchor_right = 1.0
 offset_left = -40.0
 offset_bottom = 40.0
 grow_horizontal = 0
+theme = ExtResource("15_kyxft")
 
-[node name="StatusContainer" type="VBoxContainer" parent="UI/TowerStatus"]
+[node name="StatusContainer" type="VBoxContainer" parent="UI/TowerStatus" unique_id=2097198843]
 layout_mode = 0
 offset_left = -340.0
 offset_top = 1.0
 offset_right = -120.0
 offset_bottom = 61.0
 
-[node name="ShieldContainer" type="HBoxContainer" parent="UI/TowerStatus/StatusContainer"]
+[node name="ShieldContainer" type="HBoxContainer" parent="UI/TowerStatus/StatusContainer" unique_id=1528994717]
 layout_mode = 2
 
-[node name="ShieldIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
+[node name="ShieldIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/ShieldContainer" unique_id=859650484]
 position = Vector2(-19, 18)
 scale = Vector2(2.5, 2.5)
 sprite_frames = SubResource("SpriteFrames_0wc2m")
 
-[node name="ShieldBar" type="ProgressBar" parent="UI/TowerStatus/StatusContainer/ShieldContainer"]
+[node name="ShieldBar" type="ProgressBar" parent="UI/TowerStatus/StatusContainer/ShieldContainer" unique_id=171390479]
 custom_minimum_size = Vector2(220, 28)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -367,10 +369,10 @@ size_flags_vertical = 1
 theme_override_styles/background = SubResource("StyleBoxFlat_wyr7o")
 show_percentage = false
 
-[node name="HealthContainer" type="HBoxContainer" parent="UI/TowerStatus/StatusContainer"]
+[node name="HealthContainer" type="HBoxContainer" parent="UI/TowerStatus/StatusContainer" unique_id=1388829869]
 layout_mode = 2
 
-[node name="HealthBar" type="ProgressBar" parent="UI/TowerStatus/StatusContainer/HealthContainer"]
+[node name="HealthBar" type="ProgressBar" parent="UI/TowerStatus/StatusContainer/HealthContainer" unique_id=1966931793]
 custom_minimum_size = Vector2(220, 28)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -378,41 +380,40 @@ size_flags_vertical = 1
 theme_override_styles/background = SubResource("StyleBoxFlat_hwuss")
 show_percentage = false
 
-[node name="HeartIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/HealthContainer"]
+[node name="HeartIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/StatusContainer/HealthContainer" unique_id=1443102608]
 position = Vector2(-19, 17)
 scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_tb56k")
 animation = &"heart_full"
 
-[node name="CoinContainer" type="HBoxContainer" parent="UI/TowerStatus"]
+[node name="CoinContainer" type="HBoxContainer" parent="UI/TowerStatus" unique_id=888519271]
 layout_mode = 0
 offset_left = -85.0
 offset_right = -45.0
 offset_bottom = 45.0
 
-[node name="CoinLabel" type="Label" parent="UI/TowerStatus/CoinContainer"]
+[node name="CoinLabel" type="Label" parent="UI/TowerStatus/CoinContainer" unique_id=2025634785]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "0"
 horizontal_alignment = 1
 
-[node name="CoinIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/CoinContainer"]
+[node name="CoinIcon" type="AnimatedSprite2D" parent="UI/TowerStatus/CoinContainer" unique_id=1629014561]
 position = Vector2(-15, 23)
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_ue8ih")
 frame_progress = 0.606821
 
-[node name="WaveContainer" type="HBoxContainer" parent="UI/TowerStatus"]
+[node name="WaveContainer" type="HBoxContainer" parent="UI/TowerStatus" unique_id=1062430610]
 layout_mode = 0
 offset_left = -110.0
 offset_top = 29.0
 offset_right = -63.0
 offset_bottom = 69.0
 
-[node name="WaveLabel" type="Label" parent="UI/TowerStatus/WaveContainer"]
+[node name="WaveLabel" type="Label" parent="UI/TowerStatus/WaveContainer" unique_id=2042398659]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Wave:"
 
-[node name="PauseMenu" parent="." instance=ExtResource("18_vsljy")]
-process_mode = 3
+[node name="PauseMenu" parent="." unique_id=128880731 instance=ExtResource("18_vsljy")]

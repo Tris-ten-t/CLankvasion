@@ -1,9 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://cea1sc4qofuos"]
+[gd_scene format=3 uid="uid://cea1sc4qofuos"]
 
+[ext_resource type="Theme" uid="uid://dqbb5fchcec7r" path="res://assets/GameTheme.tres" id="1_2wh52"]
 [ext_resource type="Script" uid="uid://bobiojdrbskk3" path="res://scripts/MainMenu.cs" id="1_yqorp"]
 [ext_resource type="Texture2D" uid="uid://cbii6cfpsmse8" path="res://assets/Misc/Menu BG.png" id="2_0ykhv"]
 
-[node name="Control" type="Control"]
+[node name="Control" type="Control" unique_id=1918009368]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -12,20 +13,21 @@ offset_top = -3.0
 offset_bottom = -3.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("1_2wh52")
 script = ExtResource("1_yqorp")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2022688859]
 position = Vector2(561, 328)
 zoom = Vector2(1.1, 1.1)
 
-[node name="BackgroundBase" type="TextureRect" parent="."]
+[node name="BackgroundBase" type="TextureRect" parent="." unique_id=1241968615]
 layout_mode = 0
 offset_left = 69.0
 offset_top = 11.0
 offset_right = 1066.0
 offset_bottom = 576.0
 
-[node name="AnimatedSpriteBG" type="TextureRect" parent="."]
+[node name="AnimatedSpriteBG" type="TextureRect" parent="." unique_id=854252014]
 custom_minimum_size = Vector2(3000, 2000)
 layout_mode = 0
 offset_left = 6.0
@@ -37,49 +39,49 @@ texture = ExtResource("2_0ykhv")
 expand_mode = 1
 stretch_mode = 6
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=839548784]
 layout_mode = 0
 offset_left = -406.0
 offset_top = -229.0
 offset_right = 1524.0
 offset_bottom = 873.0
 
-[node name="MainButtons" type="VBoxContainer" parent="CenterContainer"]
+[node name="MainButtons" type="VBoxContainer" parent="CenterContainer" unique_id=432354485]
 layout_mode = 2
 
-[node name="StartButton" type="Button" parent="CenterContainer/MainButtons"]
+[node name="StartButton" type="Button" parent="CenterContainer/MainButtons" unique_id=22196848]
 layout_mode = 2
 text = "Start"
 
-[node name="SettingsButton" type="Button" parent="CenterContainer/MainButtons"]
+[node name="SettingsButton" type="Button" parent="CenterContainer/MainButtons" unique_id=2069314091]
 layout_mode = 2
 text = "Settings"
 
-[node name="LeaderboardButton" type="Button" parent="CenterContainer/MainButtons"]
+[node name="LeaderboardButton" type="Button" parent="CenterContainer/MainButtons" unique_id=1479708900]
 layout_mode = 2
 text = "Leaderboard"
 
-[node name="QuitButton" type="Button" parent="CenterContainer/MainButtons"]
+[node name="QuitButton" type="Button" parent="CenterContainer/MainButtons" unique_id=1955391058]
 layout_mode = 2
 text = "Quit"
 
-[node name="SettingsPanel" type="VBoxContainer" parent="CenterContainer"]
+[node name="SettingsPanel" type="VBoxContainer" parent="CenterContainer" unique_id=98058949]
 visible = false
 layout_mode = 2
 
-[node name="VolumeLabel" type="Label" parent="CenterContainer/SettingsPanel"]
+[node name="VolumeLabel" type="Label" parent="CenterContainer/SettingsPanel" unique_id=1145395096]
 layout_mode = 2
 text = "Volume"
 
-[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsPanel"]
+[node name="VolumeSlider" type="HSlider" parent="CenterContainer/SettingsPanel" unique_id=1029423279]
 layout_mode = 2
 max_value = 1.0
 step = 0.01
 
-[node name="ResolutionLabel" type="Label" parent="CenterContainer/SettingsPanel"]
+[node name="ResolutionLabel" type="Label" parent="CenterContainer/SettingsPanel" unique_id=1167937509]
 layout_mode = 2
 
-[node name="ResolutionOption" type="OptionButton" parent="CenterContainer/SettingsPanel"]
+[node name="ResolutionOption" type="OptionButton" parent="CenterContainer/SettingsPanel" unique_id=1887063689]
 layout_mode = 2
 item_count = 3
 popup/item_0/text = "1280x720"
@@ -89,45 +91,45 @@ popup/item_1/id = 1
 popup/item_2/text = "2560x1440"
 popup/item_2/id = 2
 
-[node name="FullscreenToggle" type="CheckButton" parent="CenterContainer/SettingsPanel"]
+[node name="FullscreenToggle" type="CheckButton" parent="CenterContainer/SettingsPanel" unique_id=1582563093]
 layout_mode = 2
 text = "Fullscreen"
 
-[node name="BackButton" type="Button" parent="CenterContainer/SettingsPanel"]
+[node name="BackButton" type="Button" parent="CenterContainer/SettingsPanel" unique_id=89086611]
 layout_mode = 2
 text = "Back"
 
-[node name="LeaderboardPanel" type="Control" parent="CenterContainer"]
+[node name="LeaderboardPanel" type="Control" parent="CenterContainer" unique_id=241932288]
 layout_mode = 2
 
-[node name="TabContainer" type="HBoxContainer" parent="CenterContainer/LeaderboardPanel"]
+[node name="TabContainer" type="HBoxContainer" parent="CenterContainer/LeaderboardPanel" unique_id=59593743]
 layout_mode = 0
 offset_left = -189.0
 offset_top = -235.0
 offset_right = 185.0
 offset_bottom = -163.0
 
-[node name="Level1Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+[node name="Level1Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=719202182]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
 text = "The City"
 
-[node name="Level2Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+[node name="Level2Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=1154500844]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
 text = "The Island"
 
-[node name="Level3Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+[node name="Level3Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=2031934470]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
 text = "The Volcano"
 
-[node name="Level4Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer"]
+[node name="Level4Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=1921028194]
 layout_mode = 2
 theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
 text = "The Pizzaria"
 
-[node name="ScoresLabel" type="Label" parent="CenterContainer/LeaderboardPanel"]
+[node name="ScoresLabel" type="Label" parent="CenterContainer/LeaderboardPanel" unique_id=601948608]
 layout_mode = 0
 offset_left = -22.0
 offset_top = -149.0
@@ -135,7 +137,7 @@ offset_right = 18.0
 offset_bottom = -126.0
 theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
 
-[node name="BackButton" type="Button" parent="CenterContainer/LeaderboardPanel"]
+[node name="BackButton" type="Button" parent="CenterContainer/LeaderboardPanel" unique_id=1417624755]
 layout_mode = 0
 offset_left = -23.0
 offset_top = 100.0

@@ -1,15 +1,17 @@
-[gd_scene load_steps=2 format=3 uid="uid://co1aipibjv0hc"]
+[gd_scene format=3 uid="uid://co1aipibjv0hc"]
 
 [ext_resource type="Script" uid="uid://b74rxb4nw7yw1" path="res://scripts/LevelSelect.cs" id="1_dbyaq"]
+[ext_resource type="Theme" uid="uid://dqbb5fchcec7r" path="res://assets/GameTheme.tres" id="1_egmj1"]
 
-[node name="LevelSelect" type="Control"]
+[node name="LevelSelect" type="Control" unique_id=575961878]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+theme = ExtResource("1_egmj1")
 script = ExtResource("1_dbyaq")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1613817494]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0

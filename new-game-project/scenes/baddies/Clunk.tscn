@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://crh83etprgl4q"]
+[gd_scene format=3 uid="uid://crh83etprgl4q"]
 
 [ext_resource type="Script" uid="uid://3ar3kb7a82hp" path="res://scripts/Clunk.cs" id="1_12fln"]
 [ext_resource type="Texture2D" uid="uid://b060df37wlo3r" path="res://assets/Enemies/Death/Clunk Death Anim.png" id="2_yiq33"]
@@ -112,26 +112,44 @@ size = Vector2(56, 57)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_12fln"]
 size = Vector2(64, 87)
 
-[node name="Clunk" type="CharacterBody2D" groups=["enemies"]]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_12fln"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 98, 0)
+scale_min = 2.0
+scale_max = 4.0
+
+[node name="Clunk" type="CharacterBody2D" unique_id=1007044500 groups=["enemies"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_12fln")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1509308725]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
 animation = &"walk"
 frame = 5
 frame_progress = 1.0
 
-[node name="Collision" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1756659044]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_d8eoo")
 
-[node name="TowerDetector" type="Area2D" parent="."]
+[node name="TowerDetector" type="Area2D" parent="." unique_id=1457621785]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerDetector"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TowerDetector" unique_id=947554242]
 position = Vector2(0, -9.5)
 shape = SubResource("RectangleShape2D_12fln")
+
+[node name="DeathParticles" type="GPUParticles2D" parent="." unique_id=2117590613]
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_12fln")
 
 [connection signal="body_entered" from="TowerDetector" to="." method="_on_body_entered"]
