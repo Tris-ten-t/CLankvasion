@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://bnp6fu7n73vnk"]
+[gd_scene format=3 uid="uid://bnp6fu7n73vnk"]
 
 [ext_resource type="Script" uid="uid://h1834jniow8y" path="res://scripts/WaterTank.cs" id="1_dwx57"]
 [ext_resource type="Texture2D" uid="uid://c8wjw1qh6jdn6" path="res://assets/towers/Water Tank Anim.png" id="2_ah5e2"]
@@ -28,19 +28,22 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="WaterTank" type="Area2D"]
+[node name="WaterTank" type="Area2D" unique_id=483779542]
 collision_layer = 6
 collision_mask = 2
 script = ExtResource("1_dwx57")
+DamagePerTick = 1
+TickInterval = 2.0
+Lifetime = 10.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=276441591]
 z_index = -5
 shape = SubResource("CircleShape2D_n41r4")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1171959358]
 scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_apli8")
 animation = &"Idle"
 frame_progress = 0.875374
 
-[node name="DamageTimer" type="Timer" parent="."]
+[node name="DamageTimer" type="Timer" parent="." unique_id=649686282]

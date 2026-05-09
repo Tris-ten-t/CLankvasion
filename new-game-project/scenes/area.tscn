@@ -254,6 +254,18 @@ animations = [{
 "speed": 8.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0wc2m"]
+size = Vector2(370, 370)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6at8u"]
+size = Vector2(358, 370)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bjocu"]
+size = Vector2(370, 360)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kki7w"]
+size = Vector2(358.5, 359)
+
 [node name="Area" type="Node2D" unique_id=1747747270]
 script = ExtResource("1_5ii6m")
 LevelBackgrounds = [ExtResource("9_ueojj"), ExtResource("3_3vqv2"), ExtResource("4_vsljy"), null]
@@ -435,3 +447,33 @@ theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "blank"
 
 [node name="PauseMenu" parent="." unique_id=128880731 instance=ExtResource("18_vsljy")]
+
+[node name="InvalidZones" type="Area2D" parent="." unique_id=1315083176 groups=["invalid_zones"]]
+position = Vector2(-22, -158)
+collision_layer = 8
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InvalidZones" unique_id=843646946]
+position = Vector2(206, 344)
+shape = SubResource("RectangleShape2D_0wc2m")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="InvalidZones" unique_id=1769894304]
+position = Vector2(842, 344)
+shape = SubResource("RectangleShape2D_6at8u")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="InvalidZones" unique_id=150176867]
+position = Vector2(207, 979)
+shape = SubResource("RectangleShape2D_bjocu")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="InvalidZones" unique_id=615763597]
+position = Vector2(842.25, 978.5)
+shape = SubResource("RectangleShape2D_kki7w")
+
+[node name="PlacementIndicator" type="Node2D" parent="." unique_id=43555948]
+
+[node name="IndicatorCircle" type="ColorRect" parent="PlacementIndicator" unique_id=683325578]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0, 1, 0, 0.19607843)

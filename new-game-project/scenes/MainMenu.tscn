@@ -41,10 +41,10 @@ stretch_mode = 6
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=839548784]
 layout_mode = 0
-offset_left = -406.0
-offset_top = -229.0
-offset_right = 1524.0
-offset_bottom = 873.0
+offset_left = -408.0
+offset_top = -234.0
+offset_right = 1522.0
+offset_bottom = 868.0
 
 [node name="MainButtons" type="VBoxContainer" parent="CenterContainer" unique_id=432354485]
 layout_mode = 2
@@ -56,6 +56,10 @@ text = "Start"
 [node name="SettingsButton" type="Button" parent="CenterContainer/MainButtons" unique_id=2069314091]
 layout_mode = 2
 text = "Settings"
+
+[node name="ControlsButton" type="Button" parent="CenterContainer/MainButtons" unique_id=331840111]
+layout_mode = 2
+text = "Controls"
 
 [node name="LeaderboardButton" type="Button" parent="CenterContainer/MainButtons" unique_id=1479708900]
 layout_mode = 2
@@ -111,22 +115,22 @@ offset_bottom = -163.0
 
 [node name="Level1Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=719202182]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "The City"
 
 [node name="Level2Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=1154500844]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "The Island"
 
 [node name="Level3Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=2031934470]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "The Volcano"
 
 [node name="Level4Button" type="Button" parent="CenterContainer/LeaderboardPanel/TabContainer" unique_id=1921028194]
 layout_mode = 2
-theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 text = "The Pizzaria"
 
 [node name="ScoresLabel" type="Label" parent="CenterContainer/LeaderboardPanel" unique_id=601948608]
@@ -135,7 +139,7 @@ offset_left = -22.0
 offset_top = -149.0
 offset_right = 18.0
 offset_bottom = -126.0
-theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
 
 [node name="BackButton" type="Button" parent="CenterContainer/LeaderboardPanel" unique_id=1417624755]
 layout_mode = 0
@@ -143,5 +147,33 @@ offset_left = -23.0
 offset_top = 100.0
 offset_right = 22.0
 offset_bottom = 131.0
-theme_override_colors/font_color = Color(0, 1, 0.298039, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Back"
+
+[node name="ControlsPanel" type="Control" parent="CenterContainer" unique_id=1948681482]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/ControlsPanel" unique_id=2022274002]
+layout_mode = 0
+offset_left = -31.0
+offset_top = -176.0
+offset_right = 35.0
+offset_bottom = -153.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Controls"
+
+[node name="ControlsList" type="Label" parent="CenterContainer/ControlsPanel" unique_id=1409840199]
+layout_mode = 0
+offset_left = 86.0
+offset_top = -112.0
+offset_right = 126.0
+offset_bottom = -89.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+
+[node name="BackButton" type="Button" parent="CenterContainer/ControlsPanel" unique_id=944772989]
+layout_mode = 0
+offset_left = -23.0
+offset_top = 100.0
+offset_right = 22.0
+offset_bottom = 131.0
 text = "Back"
