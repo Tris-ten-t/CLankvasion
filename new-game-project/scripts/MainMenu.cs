@@ -3,19 +3,21 @@ using System;
 
 public partial class MainMenu : Control
 {
-	// Node references
 	private Button startButton;
 	private Button settingsButton;
 	private Button quitButton;
 	private Button leaderboardButton;
+	private Button controlsButton;
 	private VBoxContainer mainButtons;
 	private VBoxContainer settingsPanel;
 	private Control leaderboardPanel;
+	private Control controlsPanel;
 	private HSlider volumeSlider;
 	private OptionButton resolutionOption;
 	private CheckButton fullscreenToggle;
 	private Button backButton;
 	private Button leaderboardBackButton;
+	private Button controlsBackButton;
 	private TextureRect animatedSpriteBG;
 
 	private Vector2 screenCenter;
@@ -23,34 +25,35 @@ public partial class MainMenu : Control
 
 	public override void _Ready()
 	{
-		var theme = GD.Load<Theme>("res://assets/GameTheme.tres");
-if (theme != null)
-	Theme = theme;
 		startButton = GetNode<Button>("CenterContainer/MainButtons/StartButton");
 		settingsButton = GetNode<Button>("CenterContainer/MainButtons/SettingsButton");
 		quitButton = GetNode<Button>("CenterContainer/MainButtons/QuitButton");
 		leaderboardButton = GetNode<Button>("CenterContainer/MainButtons/LeaderboardButton");
+		controlsButton = GetNode<Button>("CenterContainer/MainButtons/ControlsButton");
 		mainButtons = GetNode<VBoxContainer>("CenterContainer/MainButtons");
 		settingsPanel = GetNode<VBoxContainer>("CenterContainer/SettingsPanel");
 		leaderboardPanel = GetNode<Control>("CenterContainer/LeaderboardPanel");
+		controlsPanel = GetNode<Control>("CenterContainer/ControlsPanel");
 		volumeSlider = GetNode<HSlider>("CenterContainer/SettingsPanel/VolumeSlider");
 		resolutionOption = GetNode<OptionButton>("CenterContainer/SettingsPanel/ResolutionOption");
 		fullscreenToggle = GetNode<CheckButton>("CenterContainer/SettingsPanel/FullscreenToggle");
 		backButton = GetNode<Button>("CenterContainer/SettingsPanel/BackButton");
 		leaderboardBackButton = GetNode<Button>("CenterContainer/LeaderboardPanel/BackButton");
+		controlsBackButton = GetNode<Button>("CenterContainer/ControlsPanel/BackButton");
 		animatedSpriteBG = GetNode<TextureRect>("AnimatedSpriteBG");
 
 		startButton.Pressed += OnStartPressed;
 		settingsButton.Pressed += OnSettingsPressed;
 		quitButton.Pressed += OnQuitPressed;
 		leaderboardButton.Pressed += OnLeaderboardPressed;
+		controlsButton.Pressed += OnControlsPressed;
 		backButton.Pressed += OnBackPressed;
 		leaderboardBackButton.Pressed += OnLeaderboardBackPressed;
+		controlsBackButton.Pressed += OnControlsBackPressed;
 		volumeSlider.ValueChanged += OnVolumeChanged;
 		resolutionOption.ItemSelected += OnResolutionSelected;
 		fullscreenToggle.Toggled += OnFullscreenToggled;
 
-		// Connect level tab buttons in leaderboard
 		for (int i = 1; i <= 4; i++)
 		{
 			int level = i;
@@ -83,8 +86,25 @@ if (theme != null)
 		UpdateScreenCenter();
 		ResetBackgroundPosition();
 
+		// Load theme
+		var theme = GD.Load<Theme>("res://assets/GameTheme.tres");
+		if (theme != null)
+			Theme = theme;
+
 		settingsPanel.Visible = false;
 		leaderboardPanel.Visible = false;
+		controlsPanel.Visible = false;
+
+		// Set controls list text
+		var controlsList = GetNodeOrNull<Label>("CenterContainer/ControlsPanel/ControlsList");
+		if (controlsList != null)
+		{
+			controlsList.Text =
+				" Left Click — Fire single bullet\n\n" +
+				" Right Click — Fire shotgun (Level 3+)\n\n" +
+				"Tab — Open Shop\n\n" +
+				"Escape — Pause game / Cancel placement\n\n";
+		}
 	}
 
 	public override void _Process(double delta)
@@ -117,6 +137,12 @@ if (theme != null)
 		mainButtons.Visible = false;
 		leaderboardPanel.Visible = true;
 		ShowScoresForLevel(_selectedLeaderboardLevel);
+	}
+
+	private void OnControlsPressed()
+	{
+		mainButtons.Visible = false;
+		controlsPanel.Visible = true;
 	}
 
 	private void OnLeaderboardTabPressed(int level)
@@ -176,6 +202,12 @@ if (theme != null)
 		mainButtons.Visible = true;
 	}
 
+	private void OnControlsBackPressed()
+	{
+		controlsPanel.Visible = false;
+		mainButtons.Visible = true;
+	}
+
 	private void OnVolumeChanged(double value)
 	{
 		int masterIndex = AudioServer.GetBusIndex("Master");
@@ -225,9 +257,7 @@ if (theme != null)
 	private void ResetBackgroundPosition()
 	{
 		if (animatedSpriteBG != null)
-		{
 			animatedSpriteBG.Position = new Vector2(-400, -200);
-		}
 	}
 
 	private void OnWindowSizeChanged()
