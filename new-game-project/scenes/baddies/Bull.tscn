@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://c37k7xq7odh1w"]
+[gd_scene format=3 uid="uid://c37k7xq7odh1w"]
 
 [ext_resource type="Script" uid="uid://cq63n2rardljh" path="res://scripts/Bull.cs" id="1_q4xit"]
 [ext_resource type="Texture2D" uid="uid://d11jvjy5q4jdp" path="res://assets/Enemies/Death/Bull Death Anim.png" id="2_d3f0l"]
@@ -116,16 +116,34 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d8eoo"]
 size = Vector2(56, 57)
 
-[node name="Enemy" type="CharacterBody2D" groups=["enemies"]]
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q4xit"]
+particle_flag_disable_z = true
+direction = Vector3(0, 0, 0)
+spread = 180.0
+initial_velocity_min = 100.0
+initial_velocity_max = 200.0
+gravity = Vector3(0, 98, 0)
+scale_min = 2.0
+scale_max = 4.0
+
+[node name="Enemy" type="CharacterBody2D" unique_id=902695903 groups=["enemies"]]
 collision_layer = 2
 collision_mask = 4
 script = ExtResource("1_q4xit")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="."]
+[node name="Sprite" type="AnimatedSprite2D" parent="." unique_id=1711495737]
 scale = Vector2(3, 3)
 sprite_frames = SubResource("SpriteFrames_16wof")
 animation = &"walk"
 
-[node name="Collision" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=654897383]
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_d8eoo")
+
+[node name="DeathParticles" type="GPUParticles2D" parent="." unique_id=829588529]
+emitting = false
+amount = 16
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_q4xit")

@@ -12,7 +12,22 @@ public partial class MainTower : AnimatedSprite2D
 	[Export] public float MaxShield = 100f;
 	[Export] public float MaxHealth = 100f;
 
+	// Upgrade system
+	private int _towerLevel = 1;
+	private float _baseDamage = 10f;
+	private float _baseFireRate = 0.5f;
+	private int _shieldCost = 30;
+	private const float UpgradeMultiplier = 1.35f;
+	private const float SpreadAngle = 15f;
+
+	private readonly int[] _upgradeCosts = new int[] { 0, 50, 100, 200, 400 };
+
+	public float CurrentDamage => _baseDamage * Mathf.Pow(UpgradeMultiplier, _towerLevel - 1);
+	public float CurrentFireRate => _baseFireRate / Mathf.Pow(UpgradeMultiplier, _towerLevel - 1);
+	private bool IsShotgunUnlocked => _towerLevel >= 3;
+
 	private double lastFireTime = 0.0;
+	private double lastShotgunTime = 0.0;
 	private Marker2D muzzle;
 	private Timer shootFlashTimer;
 
@@ -25,10 +40,12 @@ public partial class MainTower : AnimatedSprite2D
 	private AnimatedSprite2D heartIcon;
 	private Label coinLabel;
 	private Label waveLabel;
+	private Label levelLabel;
+	private Label fireModeLabel;
 
 	private bool gameOverTriggered = false;
 
-	// Placement System - All 4 Towers
+	// Placement System
 	private bool isPlacingMine = false;
 	private bool isPlacingWaterTank = false;
 	private bool isPlacingEmp = false;
@@ -49,10 +66,10 @@ public partial class MainTower : AnimatedSprite2D
 		}
 
 		shootFlashTimer = new Timer { OneShot = true };
-		shootFlashTimer.Timeout += () => Play(IdleAnimation);
+		shootFlashTimer.Timeout += () => Play(GetIdleAnimation());
 		AddChild(shootFlashTimer);
 
-		Play(IdleAnimation);
+		Play(GetIdleAnimation());
 
 		currentShield = MaxShield;
 		currentHealth = MaxHealth;
@@ -63,8 +80,64 @@ public partial class MainTower : AnimatedSprite2D
 		heartIcon = GetTree().CurrentScene.GetNodeOrNull<AnimatedSprite2D>("UI/TowerStatus/StatusContainer/HealthContainer/HeartIcon");
 		coinLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/CoinContainer/CoinLabel");
 		waveLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/WaveContainer/WaveLabel");
+		levelLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/LevelLabel");
+		fireModeLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/FireModeLabel");
 
 		ForceSeparateStyles();
+		UpdateUI();
+	}
+
+	private string GetIdleAnimation()
+	{
+		return _towerLevel switch
+		{
+			2 => "idle2",
+			3 => "idle3",
+			4 => "idle4",
+			5 => "idle4",
+			_ => "idle"
+		};
+	}
+
+	private string GetShootAnimation()
+	{
+		return _towerLevel switch
+		{
+			2 => "shoot2",
+			3 => "shoot3",
+			4 => "shoot4",
+			5 => "shoot4",
+			_ => "shoot"
+		};
+	}
+
+	public bool CanUpgrade() => _towerLevel < 5;
+	public int GetUpgradeCost() => _towerLevel < 5 ? _upgradeCosts[_towerLevel] : 0;
+	public int GetShieldCost() => _shieldCost;
+	public int GetTowerLevel() => _towerLevel;
+
+	public void UpgradeTower()
+	{
+		if (!CanUpgrade()) return;
+		int cost = GetUpgradeCost();
+		if (Economy.Coins < cost) return;
+
+		Economy.AddCoins(-cost);
+		_towerLevel++;
+		FireRate = CurrentFireRate;
+		Play(GetIdleAnimation());
+
+		GD.Print($"Tower upgraded to level {_towerLevel}! Damage: {CurrentDamage}, FireRate: {FireRate}");
+		UpdateUI();
+	}
+
+	public void BuyShield()
+	{
+		if (Economy.Coins < _shieldCost) return;
+		Economy.AddCoins(-_shieldCost);
+		currentShield = Mathf.Min(currentShield + 25f, MaxShield);
+		_shieldCost += 20;
+		GD.Print($"Shield purchased! Shield: {currentShield}, Next cost: {_shieldCost}");
 		UpdateUI();
 	}
 
@@ -88,29 +161,91 @@ public partial class MainTower : AnimatedSprite2D
 		LookAt(mousePos);
 		Rotation -= Mathf.Pi / 2;
 
-		if (Input.IsMouseButtonPressed(MouseButton.Left))
+		bool isPlacing = isPlacingMine || isPlacingWaterTank || isPlacingEmp || isPlacingTrashCompactor;
+
+		if (!isPlacing)
 		{
-			if (isPlacingMine)
-				PlaceMine(mousePos);
-			else if (isPlacingWaterTank)
-				PlaceWaterTank(mousePos);
-			else if (isPlacingEmp)
-				PlaceEmp(mousePos);
-			else if (isPlacingTrashCompactor)
-				PlaceTrashCompactor(mousePos);
-			else
+			// Left click - normal single bullet
+			if (Input.IsMouseButtonPressed(MouseButton.Left))
 				TryFire(mousePos);
-		}
 
-		if (Input.IsActionJustPressed("open_shop") && !isPlacingMine && !isPlacingWaterTank && !isPlacingEmp && !isPlacingTrashCompactor)
+			// Right click - shotgun spread (only if unlocked)
+			if (Input.IsMouseButtonPressed(MouseButton.Right) && IsShotgunUnlocked)
+				TryShotgunFire(mousePos);
+		}
+		else
 		{
-			OpenShopMenu();
+			if (Input.IsMouseButtonPressed(MouseButton.Left))
+			{
+				if (isPlacingMine) PlaceMine(mousePos);
+				else if (isPlacingWaterTank) PlaceWaterTank(mousePos);
+				else if (isPlacingEmp) PlaceEmp(mousePos);
+				else if (isPlacingTrashCompactor) PlaceTrashCompactor(mousePos);
+			}
 		}
 
-		if (Input.IsActionJustPressed("ui_cancel") && (isPlacingMine || isPlacingWaterTank || isPlacingEmp || isPlacingTrashCompactor))
+		if (Input.IsActionJustPressed("open_shop") && !isPlacing)
+			OpenShopMenu();
+
+		if (Input.IsActionJustPressed("ui_cancel") && isPlacing)
 			CancelPlacement();
 
 		UpdateUI();
+	}
+
+	private void TryFire(Vector2 targetPos)
+	{
+		double now = Time.GetTicksMsec() / 1000.0;
+		if (now - lastFireTime < FireRate) return;
+		lastFireTime = now;
+
+		FireBullet(targetPos, 0f);
+
+		Play(GetShootAnimation());
+		shootFlashTimer.Start(ShootFlashDuration);
+	}
+
+	private void TryShotgunFire(Vector2 targetPos)
+	{
+		// Shotgun has a slightly slower fire rate than normal
+		double now = Time.GetTicksMsec() / 1000.0;
+		if (now - lastShotgunTime < FireRate * 1.5f) return;
+		lastShotgunTime = now;
+
+		// Fire 3 bullets in a spread
+		FireBullet(targetPos, 0f);
+		FireBullet(targetPos, SpreadAngle);
+		FireBullet(targetPos, -SpreadAngle);
+
+		Play(GetShootAnimation());
+		shootFlashTimer.Start(ShootFlashDuration);
+		GD.Print("Shotgun fired!");
+	}
+
+	private void FireBullet(Vector2 targetPos, float angleOffset)
+	{
+		if (BulletScene == null) return;
+
+		var bullet = BulletScene.Instantiate<RigidBody2D>();
+		GetTree().CurrentScene.AddChild(bullet);
+		bullet.GlobalPosition = muzzle.GlobalPosition;
+
+		Vector2 direction = (targetPos - muzzle.GlobalPosition).Normalized();
+
+		// Rotate direction by offset angle
+		if (angleOffset != 0f)
+		{
+			float rad = Mathf.DegToRad(angleOffset);
+			direction = new Vector2(
+				direction.X * Mathf.Cos(rad) - direction.Y * Mathf.Sin(rad),
+				direction.X * Mathf.Sin(rad) + direction.Y * Mathf.Cos(rad)
+			);
+		}
+
+		bullet.LinearVelocity = direction * BulletSpeed;
+
+		if (bullet.HasMethod("SetDamage"))
+			bullet.Call("SetDamage", (int)CurrentDamage);
 	}
 
 	private void OpenShopMenu()
@@ -132,7 +267,6 @@ public partial class MainTower : AnimatedSprite2D
 		ResetPlacement();
 		isPlacingMine = true;
 		mineScene = GD.Load<PackedScene>("res://scenes/Towers/Mine.tscn");
-		GD.Print("Mine placement mode activated");
 	}
 
 	public void StartWaterTankPlacement()
@@ -140,7 +274,6 @@ public partial class MainTower : AnimatedSprite2D
 		ResetPlacement();
 		isPlacingWaterTank = true;
 		waterTankScene = GD.Load<PackedScene>("res://scenes/Towers/WaterTank.tscn");
-		GD.Print("Water Tank placement mode activated");
 	}
 
 	public void StartEmpPlacement()
@@ -148,7 +281,6 @@ public partial class MainTower : AnimatedSprite2D
 		ResetPlacement();
 		isPlacingEmp = true;
 		empScene = GD.Load<PackedScene>("res://scenes/Towers/Emp.tscn");
-		GD.Print("EMP placement mode activated");
 	}
 
 	public void StartTrashCompactorPlacement()
@@ -156,7 +288,6 @@ public partial class MainTower : AnimatedSprite2D
 		ResetPlacement();
 		isPlacingTrashCompactor = true;
 		trashCompactorScene = GD.Load<PackedScene>("res://scenes/Towers/TrashCompactor.tscn");
-		GD.Print("Trash Compactor placement mode activated");
 	}
 
 	private void ResetPlacement()
@@ -209,26 +340,6 @@ public partial class MainTower : AnimatedSprite2D
 		GD.Print("Placement cancelled");
 	}
 
-	private void TryFire(Vector2 targetPos)
-	{
-		double now = Time.GetTicksMsec() / 1000.0;
-		if (now - lastFireTime < FireRate) return;
-
-		lastFireTime = now;
-
-		if (BulletScene == null) return;
-
-		var bullet = BulletScene.Instantiate<RigidBody2D>();
-		GetTree().CurrentScene.AddChild(bullet);
-		bullet.GlobalPosition = muzzle.GlobalPosition;
-
-		Vector2 direction = (targetPos - muzzle.GlobalPosition).Normalized();
-		bullet.LinearVelocity = direction * BulletSpeed;
-
-		Play(ShootAnimation);
-		shootFlashTimer.Start(ShootFlashDuration);
-	}
-
 	public void TakeDamage(float damage)
 	{
 		if (currentShield > 0)
@@ -270,10 +381,17 @@ public partial class MainTower : AnimatedSprite2D
 		if (shieldBar != null) shieldBar.Value = currentShield;
 		if (healthBar != null) healthBar.Value = currentHealth;
 		if (coinLabel != null) coinLabel.Text = Economy.Coins.ToString();
+		if (waveLabel != null) waveLabel.Text = $"Wave: {GameData.Instance.CurrentWave + 1}";
+		if (levelLabel != null) levelLabel.Text = $"Tower Lvl: {_towerLevel}";
 
-		// Update wave label
-		if (waveLabel != null)
-			waveLabel.Text = $"Wave: {GameData.Instance.CurrentWave + 1}";
+		// Show fire mode in HUD
+		if (fireModeLabel != null)
+		{
+			if (IsShotgunUnlocked)
+				fireModeLabel.Text = "LMB: Single | RMB: Shotgun";
+			else
+				fireModeLabel.Text = $"Shotgun unlocks at level 3";
+		}
 
 		if (shieldBar != null)
 		{

@@ -7,6 +7,8 @@ public partial class ShopMenu : CanvasLayer
 	private Label itemCostLabel;
 	private Button buyButton;
 	private TextureRect itemIcon;
+	private Button upgradeButton;
+	private Button shieldButton;
 
 	private string selectedItem = "";
 
@@ -16,6 +18,8 @@ public partial class ShopMenu : CanvasLayer
 	private const int EmpCost = 75;
 	private const int TrashCompactorCost = 120;
 
+	private MainTower _mainTower;
+
 	public override void _Ready()
 	{
 		GD.Print("Shop Menu opened");
@@ -24,14 +28,29 @@ public partial class ShopMenu : CanvasLayer
 		GetTree().Paused = true;
 		ProcessMode = ProcessModeEnum.Always;
 
+		_mainTower = GetTree().CurrentScene.GetNodeOrNull<MainTower>("MainTower");
+
 		itemNameLabel = GetNodeOrNull<Label>("ItemDetails/ItemNameLabel");
 		itemDescriptionLabel = GetNodeOrNull<Label>("ItemDetails/ItemDescriptionLabel");
 		itemCostLabel = GetNodeOrNull<Label>("ItemDetails/ItemCostLabel");
 		buyButton = GetNodeOrNull<Button>("ItemDetails/BuyButton");
 		itemIcon = GetNodeOrNull<TextureRect>("ItemDetails/ItemIcon");
 
+		upgradeButton = GetNodeOrNull<Button>("ItemList/UpgradeButton");
+		shieldButton = GetNodeOrNull<Button>("ItemList/ShieldButton");
+
 		if (buyButton != null)
 			buyButton.Pressed += OnBuyPressed;
+
+		if (upgradeButton != null)
+			upgradeButton.Pressed += OnUpgradePressed;
+		else
+			GD.PrintErr("UpgradeButton not found!");
+
+		if (shieldButton != null)
+			shieldButton.Pressed += OnShieldPressed;
+		else
+			GD.PrintErr("ShieldButton not found!");
 
 		var closeButton = GetNodeOrNull<Button>("CloseButton");
 		if (closeButton != null)
@@ -39,20 +58,52 @@ public partial class ShopMenu : CanvasLayer
 		else
 			GD.PrintErr("CloseButton not found!");
 
-		// Update all item buttons based on current coins
 		UpdateShopButtons();
+		UpdateUpgradeButton();
+		UpdateShieldButton();
 		ClearDetails();
 	}
 
 	private void UpdateShopButtons()
 	{
 		int coins = Economy.Coins;
+		SetItemButtonAffordable("ItemList/MineButton", coins >= MineCost);
+		SetItemButtonAffordable("ItemList/WaterTankButton", coins >= WaterTankCost);
+		SetItemButtonAffordable("ItemList/EmpButton", coins >= EmpCost);
+		SetItemButtonAffordable("ItemList/TrashCompactorButton", coins >= TrashCompactorCost);
+	}
 
-		// Grey out item buttons if player can't afford them
-		SetItemButtonAffordable("MineButton", coins >= MineCost);
-		SetItemButtonAffordable("WaterTankButton", coins >= WaterTankCost);
-		SetItemButtonAffordable("EmpButton", coins >= EmpCost);
-		SetItemButtonAffordable("TrashCompactorButton", coins >= TrashCompactorCost);
+	private void UpdateUpgradeButton()
+	{
+		if (upgradeButton == null || _mainTower == null) return;
+
+		if (!_mainTower.CanUpgrade())
+		{
+			upgradeButton.Text = "Tower Max Level!";
+			upgradeButton.Disabled = true;
+			upgradeButton.Modulate = new Color(0.5f, 0.5f, 0.5f, 0.7f);
+			return;
+		}
+
+		int cost = _mainTower.GetUpgradeCost();
+		int level = _mainTower.GetTowerLevel();
+		bool canAfford = Economy.Coins >= cost;
+
+		upgradeButton.Text = $"Upgrade Tower to Lvl {level + 1} ({cost} coins)";
+		upgradeButton.Disabled = !canAfford;
+		upgradeButton.Modulate = canAfford ? new Color(1, 1, 1, 1) : new Color(0.5f, 0.5f, 0.5f, 0.7f);
+	}
+
+	private void UpdateShieldButton()
+	{
+		if (shieldButton == null || _mainTower == null) return;
+
+		int cost = _mainTower.GetShieldCost();
+		bool canAfford = Economy.Coins >= cost;
+
+		shieldButton.Text = $"Buy Shield +25 ({cost} coins)";
+		shieldButton.Disabled = !canAfford;
+		shieldButton.Modulate = canAfford ? new Color(1, 1, 1, 1) : new Color(0.5f, 0.5f, 0.5f, 0.7f);
 	}
 
 	private void SetItemButtonAffordable(string buttonName, bool canAfford)
@@ -61,7 +112,6 @@ public partial class ShopMenu : CanvasLayer
 		if (button != null)
 		{
 			button.Disabled = !canAfford;
-			// Modulate the button to visually show it's unaffordable
 			button.Modulate = canAfford ? new Color(1, 1, 1, 1) : new Color(0.5f, 0.5f, 0.5f, 0.7f);
 		}
 	}
@@ -80,7 +130,6 @@ public partial class ShopMenu : CanvasLayer
 			if (atlas != null) { itemIcon.Texture = atlas; itemIcon.Visible = true; }
 		}
 
-		// Only enable buy button if player can afford it
 		if (buyButton != null)
 			buyButton.Disabled = Economy.Coins < MineCost;
 	}
@@ -139,34 +188,49 @@ public partial class ShopMenu : CanvasLayer
 			buyButton.Disabled = Economy.Coins < TrashCompactorCost;
 	}
 
+	private void OnUpgradePressed()
+	{
+		if (_mainTower == null) return;
+		_mainTower.UpgradeTower();
+		UpdateUpgradeButton();
+		UpdateShopButtons();
+		GD.Print($"Tower upgraded to level {_mainTower.GetTowerLevel()}");
+	}
+
+	private void OnShieldPressed()
+	{
+		if (_mainTower == null) return;
+		_mainTower.BuyShield();
+		UpdateShieldButton();
+		UpdateShopButtons();
+		GD.Print("Shield purchased!");
+	}
+
 	private void OnBuyPressed()
 	{
-		var mainTower = GetTree().CurrentScene.GetNodeOrNull<MainTower>("MainTower");
-
 		if (selectedItem == "Mine" && Economy.Coins >= MineCost)
 		{
 			Economy.AddCoins(-MineCost);
 			CloseMenu();
-			if (mainTower != null) mainTower.StartMinePlacement();
+			if (_mainTower != null) _mainTower.StartMinePlacement();
 		}
 		else if (selectedItem == "WaterTank" && Economy.Coins >= WaterTankCost)
 		{
 			Economy.AddCoins(-WaterTankCost);
 			CloseMenu();
-			if (mainTower != null) mainTower.StartWaterTankPlacement();
+			if (_mainTower != null) _mainTower.StartWaterTankPlacement();
 		}
 		else if (selectedItem == "Emp" && Economy.Coins >= EmpCost)
 		{
 			Economy.AddCoins(-EmpCost);
 			CloseMenu();
-			if (mainTower != null) mainTower.StartEmpPlacement();
+			if (_mainTower != null) _mainTower.StartEmpPlacement();
 		}
 		else if (selectedItem == "TrashCompactor" && Economy.Coins >= TrashCompactorCost)
 		{
 			Economy.AddCoins(-TrashCompactorCost);
-			GD.Print("Trash Compactor purchased! Entering placement mode...");
 			CloseMenu();
-			if (mainTower != null) mainTower.StartTrashCompactorPlacement();
+			if (_mainTower != null) _mainTower.StartTrashCompactorPlacement();
 		}
 	}
 

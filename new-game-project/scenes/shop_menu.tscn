@@ -1,21 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://cpnx03n6m6wvi"]
+[gd_scene format=3 uid="uid://cpnx03n6m6wvi"]
 
 [ext_resource type="Script" uid="uid://dfl0kbe58vrkp" path="res://scripts/ShopMenu.cs" id="1_u8hot"]
 
-[node name="ShopMenu" type="CanvasLayer"]
+[node name="ShopMenu" type="CanvasLayer" unique_id=1600548763]
 script = ExtResource("1_u8hot")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="Camera2D" type="Camera2D" parent="." unique_id=636287372]
 position = Vector2(501, 497)
 zoom = Vector2(1.15, 0.65)
 
-[node name="BackgroundPanel" type="Panel" parent="."]
+[node name="BackgroundPanel" type="Panel" parent="." unique_id=831499281]
 offset_left = -2.0
 offset_top = -4.0
 offset_right = 1152.0
 offset_bottom = 648.0
 
-[node name="TitleLabel" type="Label" parent="."]
+[node name="TitleLabel" type="Label" parent="." unique_id=459853887]
 offset_left = 500.0
 offset_top = 1.0
 offset_right = 621.0
@@ -23,54 +23,62 @@ offset_bottom = 70.0
 theme_override_font_sizes/font_size = 50
 text = "Shop"
 
-[node name="ItemList" type="VBoxContainer" parent="."]
+[node name="ItemList" type="VBoxContainer" parent="." unique_id=1210735379]
 offset_left = 49.0
 offset_top = 34.0
 offset_right = 96.0
 offset_bottom = 65.0
 
-[node name="MineButton" type="Button" parent="ItemList"]
+[node name="MineButton" type="Button" parent="ItemList" unique_id=348172322]
 layout_mode = 2
 text = "Mine"
 
-[node name="WaterTankButton" type="Button" parent="ItemList"]
+[node name="WaterTankButton" type="Button" parent="ItemList" unique_id=1207368896]
 layout_mode = 2
 text = "Water Tank"
 
-[node name="EmpButton" type="Button" parent="ItemList"]
+[node name="EmpButton" type="Button" parent="ItemList" unique_id=83957402]
 layout_mode = 2
 text = "Emp"
 
-[node name="TrashCompactorButton" type="Button" parent="ItemList"]
+[node name="TrashCompactorButton" type="Button" parent="ItemList" unique_id=2100829934]
 layout_mode = 2
 text = "Trash Compactor"
 
-[node name="ItemDetails" type="VBoxContainer" parent="."]
+[node name="UpgradeButton" type="Button" parent="ItemList" unique_id=2014632270]
+layout_mode = 2
+text = "Upgrade Tower"
+
+[node name="ShieldButton" type="Button" parent="ItemList" unique_id=2028188914]
+layout_mode = 2
+text = "Restore Shield"
+
+[node name="ItemDetails" type="VBoxContainer" parent="." unique_id=49950840]
 offset_left = 413.0
 offset_top = 372.0
 offset_right = 690.0
 offset_bottom = 588.0
 
-[node name="ItemIcon" type="TextureRect" parent="ItemDetails"]
+[node name="ItemIcon" type="TextureRect" parent="ItemDetails" unique_id=2022704244]
 custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 expand_mode = 2
 stretch_mode = 5
 
-[node name="ItemNameLabel" type="Label" parent="ItemDetails"]
+[node name="ItemNameLabel" type="Label" parent="ItemDetails" unique_id=1464767059]
 layout_mode = 2
 
-[node name="ItemDescriptionLabel" type="Label" parent="ItemDetails"]
+[node name="ItemDescriptionLabel" type="Label" parent="ItemDetails" unique_id=175591312]
 layout_mode = 2
 
-[node name="ItemCostLabel" type="Label" parent="ItemDetails"]
+[node name="ItemCostLabel" type="Label" parent="ItemDetails" unique_id=875422903]
 layout_mode = 2
 
-[node name="BuyButton" type="Button" parent="ItemDetails"]
+[node name="BuyButton" type="Button" parent="ItemDetails" unique_id=2021801467]
 layout_mode = 2
 text = "Buy"
 
-[node name="CloseButton" type="Button" parent="."]
+[node name="CloseButton" type="Button" parent="." unique_id=1289585763]
 offset_left = 1074.0
 offset_top = 24.0
 offset_right = 1124.0
