@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene load_steps=58 format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="Script" uid="uid://bgtnvge7s74ca" path="res://scenes/Area.cs" id="1_5ii6m"]
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/Towers/MainTower.tscn" id="1_u55m2"]
@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://im8rhf83t1dn" path="res://assets/Misc/lights.png" id="10_j4i6t"]
 [ext_resource type="Texture2D" uid="uid://cdoy25vehl4p2" path="res://assets/Misc/shield.png" id="12_wyr7o"]
 [ext_resource type="Texture2D" uid="uid://cdypu7i6s35qt" path="res://assets/Misc/heart.png" id="13_hwuss"]
-[ext_resource type="Shader" path="res://assets/BackgroundShader.gdshader" id="14_0wc2m"]
+[ext_resource type="Shader" uid="uid://bgbm10xye5nac" path="res://assets/BackgroundShader.gdshader" id="14_0wc2m"]
 [ext_resource type="Texture2D" uid="uid://d0yx1lislshof" path="res://assets/Misc/Coin Drop Anim.png" id="14_hwuss"]
 [ext_resource type="Theme" uid="uid://cg25wra3bagh" path="res://assets/GameTheme.tres" id="15_kyxft"]
 [ext_resource type="PackedScene" uid="uid://duhoek0mg1rdu" path="res://scenes/PauseMenu.tscn" id="18_vsljy"]
@@ -25,10 +25,10 @@
 script = ExtResource("9_j4i6t")
 WaveNumber = 1
 TotalEnemies = 10
-RollerCount = 4
-ClankCount = 3
-BullCount = 2
-ClinkCount = 1
+RollerCount = 10
+ClankCount = 0
+BullCount = 0
+ClinkCount = 0
 ClunkCount = 0
 SpawnInterval = 1.2
 metadata/_custom_type_script = "uid://b1p46weu3p6ka"
@@ -36,12 +36,120 @@ metadata/_custom_type_script = "uid://b1p46weu3p6ka"
 [sub_resource type="Resource" id="Resource_5ii6m"]
 script = ExtResource("9_j4i6t")
 WaveNumber = 1
-TotalEnemies = 35
+TotalEnemies = 10
+RollerCount = 5
+ClankCount = 5
+BullCount = 0
+ClinkCount = 0
+ClunkCount = 0
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_0wc2m"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 10
+RollerCount = 0
+ClankCount = 10
+BullCount = 0
+ClinkCount = 0
+ClunkCount = 0
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_6at8u"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 10
+RollerCount = 0
+ClankCount = 5
+BullCount = 0
+ClinkCount = 5
+ClunkCount = 0
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_bjocu"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 10
+RollerCount = 0
+ClankCount = 0
+BullCount = 0
+ClinkCount = 10
+ClunkCount = 0
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_kki7w"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 10
+RollerCount = 0
+ClankCount = 0
+BullCount = 5
+ClinkCount = 5
+ClunkCount = 0
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_qmhn1"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 10
+RollerCount = 0
+ClankCount = 0
+BullCount = 10
+ClinkCount = 0
+ClunkCount = 0
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_k2mix"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 10
+RollerCount = 0
+ClankCount = 0
+BullCount = 5
+ClinkCount = 0
+ClunkCount = 5
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_tb56k"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 10
+RollerCount = 0
+ClankCount = 0
+BullCount = 0
+ClinkCount = 0
+ClunkCount = 10
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_1cm3t"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 25
 RollerCount = 5
 ClankCount = 5
 BullCount = 5
 ClinkCount = 5
-ClunkCount = 15
+ClunkCount = 5
+SpawnInterval = 1.2
+metadata/_custom_type_script = "uid://b1p46weu3p6ka"
+
+[sub_resource type="Resource" id="Resource_ptcv5"]
+script = ExtResource("9_j4i6t")
+WaveNumber = 1
+TotalEnemies = 50
+RollerCount = 10
+ClankCount = 10
+BullCount = 10
+ClinkCount = 10
+ClunkCount = 10
 SpawnInterval = 1.2
 metadata/_custom_type_script = "uid://b1p46weu3p6ka"
 
@@ -301,8 +409,7 @@ ClankScene = ExtResource("5_t8tu6")
 BullScene = ExtResource("7_abe4w")
 ClinkScene = ExtResource("6_mphia")
 ClunkScene = ExtResource("7_wx6cp")
-SpawnPoints = Array[NodePath]([NodePath("../SpawnPoints/SpawnPoint1"), NodePath("../SpawnPoints/SpawnPoint2"), NodePath("../SpawnPoints/SpawnPoint3"), NodePath("../SpawnPoints/SpawnPoint4"), NodePath("../SpawnPoints/SpawnPoint5"), NodePath("../SpawnPoints/SpawnPoint6"), NodePath("../SpawnPoints/SpawnPoint7"), NodePath("../SpawnPoints/SpawnPoint8")])
-Waves = [SubResource("Resource_hwuss"), SubResource("Resource_5ii6m")]
+Waves = [SubResource("Resource_hwuss"), SubResource("Resource_5ii6m"), SubResource("Resource_0wc2m"), SubResource("Resource_6at8u"), SubResource("Resource_bjocu"), SubResource("Resource_kki7w"), SubResource("Resource_qmhn1"), SubResource("Resource_k2mix"), SubResource("Resource_tb56k"), SubResource("Resource_1cm3t"), SubResource("Resource_ptcv5")]
 
 [node name="HealthBarTemplate" type="ProgressBar" parent="."]
 visible = false
