@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://co1aipibjv0hc"]
 
-[ext_resource type="Script" path="res://scripts/LevelSelect.cs" id="1_dbyaq"]
+[ext_resource type="Script" uid="uid://b74rxb4nw7yw1" path="res://scripts/LevelSelect.cs" id="1_dbyaq"]
 [ext_resource type="Theme" uid="uid://cg25wra3bagh" path="res://assets/GameTheme.tres" id="1_egmj1"]
 
 [node name="LevelSelect" type="Control"]

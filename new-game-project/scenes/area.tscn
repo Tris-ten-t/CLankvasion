@@ -1,4 +1,4 @@
-[gd_scene load_steps=49 format=3 uid="uid://dbsmm2170dfpw"]
+[gd_scene load_steps=50 format=3 uid="uid://dbsmm2170dfpw"]
 
 [ext_resource type="Script" uid="uid://bgtnvge7s74ca" path="res://scenes/Area.cs" id="1_5ii6m"]
 [ext_resource type="PackedScene" uid="uid://cm84pu335w870" path="res://scenes/Towers/MainTower.tscn" id="1_u55m2"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bmsu2c03wmaf0" path="res://scripts/EnemySpawner.cs" id="3_5jt5u"]
 [ext_resource type="PackedScene" uid="uid://l10cqcjw4o6l" path="res://scenes/baddies/Enemy.tscn" id="4_t8tu6"]
 [ext_resource type="Texture2D" uid="uid://c3lntx6ne5wvl" path="res://assets/Misc/Volcana backgorund.png" id="4_vsljy"]
+[ext_resource type="Texture2D" uid="uid://1kye5x0s1xa1" path="res://assets/Misc/pixil-frame-0 (14).png" id="5_6at8u"]
 [ext_resource type="PackedScene" uid="uid://bctmja5grypfx" path="res://scenes/baddies/Clank.tscn" id="5_t8tu6"]
 [ext_resource type="PackedScene" uid="uid://bs31nupjx0w0d" path="res://scenes/baddies/Clink.tscn" id="6_mphia"]
 [ext_resource type="PackedScene" uid="uid://c37k7xq7odh1w" path="res://scenes/baddies/Bull.tscn" id="7_abe4w"]
@@ -16,7 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://im8rhf83t1dn" path="res://assets/Misc/lights.png" id="10_j4i6t"]
 [ext_resource type="Texture2D" uid="uid://cdoy25vehl4p2" path="res://assets/Misc/shield.png" id="12_wyr7o"]
 [ext_resource type="Texture2D" uid="uid://cdypu7i6s35qt" path="res://assets/Misc/heart.png" id="13_hwuss"]
-[ext_resource type="Shader" path="res://assets/BackgroundShader.gdshader" id="14_0wc2m"]
+[ext_resource type="Shader" uid="uid://bgbm10xye5nac" path="res://assets/BackgroundShader.gdshader" id="14_0wc2m"]
 [ext_resource type="Texture2D" uid="uid://d0yx1lislshof" path="res://assets/Misc/Coin Drop Anim.png" id="14_hwuss"]
 [ext_resource type="Theme" uid="uid://cg25wra3bagh" path="res://assets/GameTheme.tres" id="15_kyxft"]
 [ext_resource type="PackedScene" uid="uid://duhoek0mg1rdu" path="res://scenes/PauseMenu.tscn" id="18_vsljy"]
@@ -276,7 +277,7 @@ size = Vector2(358.5, 359)
 
 [node name="Area" type="Node2D"]
 script = ExtResource("1_5ii6m")
-LevelBackgrounds = [ExtResource("9_ueojj"), ExtResource("3_3vqv2"), ExtResource("4_vsljy"), null]
+LevelBackgrounds = [ExtResource("9_ueojj"), ExtResource("3_3vqv2"), ExtResource("4_vsljy"), ExtResource("5_6at8u")]
 BackgroundPath = NodePath("Background")
 StreetlightsPath = NodePath("Streetlights")
 
