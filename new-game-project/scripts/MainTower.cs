@@ -43,13 +43,19 @@ public partial class MainTower : AnimatedSprite2D
 	private Label levelLabel;
 	private Label fireModeLabel;
 
-	private bool gameOverTriggered = false;
-
-	// Placement System
+	// Placement system
 	private bool isPlacingMine = false;
 	private bool isPlacingWaterTank = false;
 	private bool isPlacingEmp = false;
 	private bool isPlacingTrashCompactor = false;
+	private Node2D _placementIndicator;
+	private ColorRect _indicatorCircle;
+	private Area2D _invalidZones;
+	private bool _isValidPlacement = true;
+	private Timer _flashTimer;
+	private bool _wasLeftMousePressed = false;
+
+	private bool gameOverTriggered = false;
 
 	private PackedScene mineScene;
 	private PackedScene waterTankScene;
@@ -69,6 +75,10 @@ public partial class MainTower : AnimatedSprite2D
 		shootFlashTimer.Timeout += () => Play(GetIdleAnimation());
 		AddChild(shootFlashTimer);
 
+		_flashTimer = new Timer { OneShot = true };
+		_flashTimer.Timeout += OnFlashTimerTimeout;
+		AddChild(_flashTimer);
+
 		Play(GetIdleAnimation());
 
 		currentShield = MaxShield;
@@ -82,6 +92,12 @@ public partial class MainTower : AnimatedSprite2D
 		waveLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/WaveContainer/WaveLabel");
 		levelLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/LevelLabel");
 		fireModeLabel = GetTree().CurrentScene.GetNodeOrNull<Label>("UI/TowerStatus/FireModeLabel");
+
+		_placementIndicator = GetTree().CurrentScene.GetNodeOrNull<Node2D>("PlacementIndicator");
+		if (_placementIndicator != null)
+			_indicatorCircle = _placementIndicator.GetNodeOrNull<ColorRect>("IndicatorCircle");
+
+		_invalidZones = GetTree().CurrentScene.GetNodeOrNull<Area2D>("InvalidZones");
 
 		ForceSeparateStyles();
 		UpdateUI();
@@ -127,7 +143,7 @@ public partial class MainTower : AnimatedSprite2D
 		FireRate = CurrentFireRate;
 		Play(GetIdleAnimation());
 
-		GD.Print($"Tower upgraded to level {_towerLevel}! Damage: {CurrentDamage}, FireRate: {FireRate}");
+		GD.Print($"Tower upgraded to level {_towerLevel}!");
 		UpdateUI();
 	}
 
@@ -137,7 +153,6 @@ public partial class MainTower : AnimatedSprite2D
 		Economy.AddCoins(-_shieldCost);
 		currentShield = Mathf.Min(currentShield + 25f, MaxShield);
 		_shieldCost += 20;
-		GD.Print($"Shield purchased! Shield: {currentShield}, Next cost: {_shieldCost}");
 		UpdateUI();
 	}
 
@@ -155,6 +170,72 @@ public partial class MainTower : AnimatedSprite2D
 		}
 	}
 
+	private bool IsPositionValid(Vector2 position)
+{
+	if (_invalidZones == null) return true;
+
+	// Check each collision shape in the invalid zones
+	foreach (Node child in _invalidZones.GetChildren())
+	{
+		if (child is CollisionShape2D shape && shape.Shape != null)
+		{
+			// Check if position is inside this shape
+			if (shape.Shape is RectangleShape2D rect)
+			{
+				Vector2 localPos = _invalidZones.ToLocal(position);
+				Vector2 shapePos = shape.Position;
+				Vector2 extents = rect.Size / 2f;
+
+				if (localPos.X >= shapePos.X - extents.X &&
+					localPos.X <= shapePos.X + extents.X &&
+					localPos.Y >= shapePos.Y - extents.Y &&
+					localPos.Y <= shapePos.Y + extents.Y)
+				{
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+	private void UpdatePlacementIndicator(Vector2 mousePos)
+	{
+		bool isPlacing = isPlacingMine || isPlacingWaterTank || isPlacingEmp || isPlacingTrashCompactor;
+
+		if (_placementIndicator == null) return;
+
+		if (!isPlacing)
+		{
+			_placementIndicator.Visible = false;
+			return;
+		}
+
+		_placementIndicator.Visible = true;
+		_placementIndicator.GlobalPosition = mousePos;
+
+		_isValidPlacement = IsPositionValid(mousePos);
+
+		if (_indicatorCircle != null)
+			_indicatorCircle.Color = _isValidPlacement
+				? new Color(0, 1, 0, 0.5f)
+				: new Color(1, 0, 0, 0.5f);
+	}
+
+	private void FlashInvalidPlacement()
+	{
+		if (_indicatorCircle == null) return;
+		_indicatorCircle.Color = new Color(1, 0, 0, 0.9f);
+		_flashTimer.Start(0.2f);
+		GD.Print("Invalid placement location!");
+	}
+
+	private void OnFlashTimerTimeout()
+	{
+		if (_indicatorCircle != null)
+			_indicatorCircle.Color = new Color(1, 0, 0, 0.5f);
+	}
+
 	public override void _Process(double delta)
 	{
 		Vector2 mousePos = GetGlobalMousePosition();
@@ -162,25 +243,33 @@ public partial class MainTower : AnimatedSprite2D
 		Rotation -= Mathf.Pi / 2;
 
 		bool isPlacing = isPlacingMine || isPlacingWaterTank || isPlacingEmp || isPlacingTrashCompactor;
+		bool leftMouseJustPressed = Input.IsMouseButtonPressed(MouseButton.Left) && !_wasLeftMousePressed;
+
+		UpdatePlacementIndicator(mousePos);
 
 		if (!isPlacing)
 		{
-			// Left click - normal single bullet
 			if (Input.IsMouseButtonPressed(MouseButton.Left))
 				TryFire(mousePos);
 
-			// Right click - shotgun spread (only if unlocked)
 			if (Input.IsMouseButtonPressed(MouseButton.Right) && IsShotgunUnlocked)
 				TryShotgunFire(mousePos);
 		}
 		else
 		{
-			if (Input.IsMouseButtonPressed(MouseButton.Left))
+			if (leftMouseJustPressed)
 			{
-				if (isPlacingMine) PlaceMine(mousePos);
-				else if (isPlacingWaterTank) PlaceWaterTank(mousePos);
-				else if (isPlacingEmp) PlaceEmp(mousePos);
-				else if (isPlacingTrashCompactor) PlaceTrashCompactor(mousePos);
+				if (!_isValidPlacement)
+				{
+					FlashInvalidPlacement();
+				}
+				else
+				{
+					if (isPlacingMine) PlaceMine(mousePos);
+					else if (isPlacingWaterTank) PlaceWaterTank(mousePos);
+					else if (isPlacingEmp) PlaceEmp(mousePos);
+					else if (isPlacingTrashCompactor) PlaceTrashCompactor(mousePos);
+				}
 			}
 		}
 
@@ -189,6 +278,9 @@ public partial class MainTower : AnimatedSprite2D
 
 		if (Input.IsActionJustPressed("ui_cancel") && isPlacing)
 			CancelPlacement();
+
+		// Track left mouse state for next frame
+		_wasLeftMousePressed = Input.IsMouseButtonPressed(MouseButton.Left);
 
 		UpdateUI();
 	}
@@ -200,26 +292,22 @@ public partial class MainTower : AnimatedSprite2D
 		lastFireTime = now;
 
 		FireBullet(targetPos, 0f);
-
 		Play(GetShootAnimation());
 		shootFlashTimer.Start(ShootFlashDuration);
 	}
 
 	private void TryShotgunFire(Vector2 targetPos)
 	{
-		// Shotgun has a slightly slower fire rate than normal
 		double now = Time.GetTicksMsec() / 1000.0;
 		if (now - lastShotgunTime < FireRate * 1.5f) return;
 		lastShotgunTime = now;
 
-		// Fire 3 bullets in a spread
 		FireBullet(targetPos, 0f);
 		FireBullet(targetPos, SpreadAngle);
 		FireBullet(targetPos, -SpreadAngle);
 
 		Play(GetShootAnimation());
 		shootFlashTimer.Start(ShootFlashDuration);
-		GD.Print("Shotgun fired!");
 	}
 
 	private void FireBullet(Vector2 targetPos, float angleOffset)
@@ -232,7 +320,6 @@ public partial class MainTower : AnimatedSprite2D
 
 		Vector2 direction = (targetPos - muzzle.GlobalPosition).Normalized();
 
-		// Rotate direction by offset angle
 		if (angleOffset != 0f)
 		{
 			float rad = Mathf.DegToRad(angleOffset);
@@ -305,6 +392,7 @@ public partial class MainTower : AnimatedSprite2D
 		GetTree().CurrentScene.AddChild(mine);
 		mine.GlobalPosition = position;
 		isPlacingMine = false;
+		if (_placementIndicator != null) _placementIndicator.Visible = false;
 	}
 
 	private void PlaceWaterTank(Vector2 position)
@@ -314,6 +402,7 @@ public partial class MainTower : AnimatedSprite2D
 		GetTree().CurrentScene.AddChild(tank);
 		tank.GlobalPosition = position;
 		isPlacingWaterTank = false;
+		if (_placementIndicator != null) _placementIndicator.Visible = false;
 	}
 
 	private void PlaceEmp(Vector2 position)
@@ -323,6 +412,7 @@ public partial class MainTower : AnimatedSprite2D
 		GetTree().CurrentScene.AddChild(emp);
 		emp.GlobalPosition = position;
 		isPlacingEmp = false;
+		if (_placementIndicator != null) _placementIndicator.Visible = false;
 	}
 
 	private void PlaceTrashCompactor(Vector2 position)
@@ -332,11 +422,14 @@ public partial class MainTower : AnimatedSprite2D
 		GetTree().CurrentScene.AddChild(compactor);
 		compactor.GlobalPosition = position;
 		isPlacingTrashCompactor = false;
+		if (_placementIndicator != null) _placementIndicator.Visible = false;
 	}
 
 	private void CancelPlacement()
 	{
 		ResetPlacement();
+		if (_placementIndicator != null)
+			_placementIndicator.Visible = false;
 		GD.Print("Placement cancelled");
 	}
 
@@ -384,14 +477,10 @@ public partial class MainTower : AnimatedSprite2D
 		if (waveLabel != null) waveLabel.Text = $"Wave: {GameData.Instance.CurrentWave + 1}";
 		if (levelLabel != null) levelLabel.Text = $"Tower Lvl: {_towerLevel}";
 
-		// Show fire mode in HUD
 		if (fireModeLabel != null)
-		{
-			if (IsShotgunUnlocked)
-				fireModeLabel.Text = "LMB: Single | RMB: Shotgun";
-			else
-				fireModeLabel.Text = $"Shotgun unlocks at level 3";
-		}
+			fireModeLabel.Text = IsShotgunUnlocked
+				? "LMB: Single | RMB: Shotgun"
+				: "Shotgun unlocks at level 3";
 
 		if (shieldBar != null)
 		{

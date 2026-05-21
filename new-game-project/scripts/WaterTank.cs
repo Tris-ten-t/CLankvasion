@@ -2,9 +2,11 @@ using Godot;
 
 public partial class WaterTank : Area2D
 {
-	[Export] public int DamagePerTick = 8;
-	[Export] public float TickInterval = 1.0f;
+	[Export] public int DamagePerTick = 2;
+	[Export] public float TickInterval = 1.5f;
 	[Export] public float Lifetime = 25.0f;
+	[Export] public float SlowDuration = 3.0f;
+	[Export] public float SlowMultiplier = 0.5f;
 
 	private AnimatedSprite2D animatedSprite;
 	private Timer damageTimer;
@@ -12,20 +14,17 @@ public partial class WaterTank : Area2D
 
 	public override void _Ready()
 	{
-		ZIndex = -5;                    // Force it behind enemies
-
+		ZIndex = -5;
 		animatedSprite = GetNodeOrNull<AnimatedSprite2D>("AnimatedSprite2D");
 		if (animatedSprite != null && animatedSprite.SpriteFrames.HasAnimation("Idle"))
 			animatedSprite.Play("Idle");
 
-		// Damage over time timer
 		damageTimer = new Timer();
 		damageTimer.WaitTime = TickInterval;
 		damageTimer.Autostart = true;
 		damageTimer.Timeout += DealDamageTick;
 		AddChild(damageTimer);
 
-		// Lifetime timer
 		lifetimeTimer = new Timer();
 		lifetimeTimer.OneShot = true;
 		lifetimeTimer.WaitTime = Lifetime;
@@ -33,7 +32,7 @@ public partial class WaterTank : Area2D
 		AddChild(lifetimeTimer);
 		lifetimeTimer.Start();
 
-		GD.Print("[WaterTank] Deployed - Z Index = -5");
+		GD.Print("[WaterTank] Deployed");
 	}
 
 	private void DealDamageTick()
@@ -43,17 +42,21 @@ public partial class WaterTank : Area2D
 		{
 			Shape = new CircleShape2D { Radius = 110f },
 			Transform = GlobalTransform,
-			CollisionMask = 2,           // Make sure this matches your enemy layer
+			CollisionMask = 2,
 		};
 
 		var hits = space.IntersectShape(query);
-
 		foreach (var hit in hits)
 		{
 			if (hit["collider"].AsGodotObject() is CharacterBody2D enemy && enemy.IsInGroup("enemies"))
 			{
+				// Deal damage
 				if (enemy.HasMethod("TakeDamage"))
 					enemy.Call("TakeDamage", DamagePerTick);
+
+				// Apply slow
+				if (enemy is BaseEnemy baseEnemy)
+					baseEnemy.ApplySlow(SlowDuration, SlowMultiplier);
 			}
 		}
 	}

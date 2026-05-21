@@ -22,7 +22,6 @@ public abstract partial class BaseEnemy : CharacterBody2D, IDamageable
 	public abstract Vector2 HealthBarOffset { get; }
 	public abstract float HealthBarRotation { get; }
 
-	// Custom signal
 	[Signal] public delegate void EnemyDiedEventHandler(int enemyType, int coinsAwarded);
 
 	protected int _currentHealth;
@@ -30,15 +29,21 @@ public abstract partial class BaseEnemy : CharacterBody2D, IDamageable
 	protected AnimatedSprite2D _animatedSprite;
 	protected Node2D _tower;
 	protected bool _isDying = false;
+
+	// Stun
 	protected bool isStunned = false;
 	protected double stunEndTime = 0.0;
 
+	// Slow
+	private bool isSlowed = false;
+	private double slowEndTime = 0.0;
+	private float _originalSpeed;
+
 	public override void _Ready()
 	{
-		var deathParticles = GetNodeOrNull<GpuParticles2D>("DeathParticles");
-		if (deathParticles != null)
-		deathParticles.Emitting = false;
 		_currentHealth = MaxHealth;
+		_originalSpeed = Speed; // Save original speed on spawn
+
 		_animatedSprite = GetNode<AnimatedSprite2D>("Sprite");
 
 		if (_animatedSprite != null)
@@ -67,7 +72,7 @@ public abstract partial class BaseEnemy : CharacterBody2D, IDamageable
 		_tower = GetTree().GetFirstNodeInGroup("towers") as Node2D;
 
 		UpdateHealthBar();
-		GD.Print($"[{EnemyType}] Spawned");
+		GD.Print($"[{EnemyType}] Spawned - Speed: {Speed}");
 	}
 
 	public void Stun(float duration)
@@ -78,15 +83,48 @@ public abstract partial class BaseEnemy : CharacterBody2D, IDamageable
 		GD.Print($"[{Name}] Stunned for {duration} seconds");
 	}
 
-	protected bool CheckStun()
+	public void ApplySlow(float duration, float speedMultiplier = 0.5f)
 	{
-		if (Time.GetTicksMsec() / 1000.0 > stunEndTime)
+		GD.Print($"[{Name}] ApplySlow called! Current speed: {Speed}, Original: {_originalSpeed}");
+
+		if (!isSlowed)
+			_originalSpeed = Speed;
+
+		isSlowed = true;
+		slowEndTime = Time.GetTicksMsec() / 1000.0 + duration;
+		Speed = _originalSpeed * speedMultiplier;
+
+		GD.Print($"[{Name}] Speed set to: {Speed}");
+	}
+
+	protected bool CheckModifiers()
+	{
+		double now = Time.GetTicksMsec() / 1000.0;
+
+		// Handle stun
+		if (isStunned)
 		{
-			isStunned = false;
-			return false;
+			if (now > stunEndTime)
+				isStunned = false;
+			else
+			{
+				Velocity = Vector2.Zero;
+				return true;
+			}
 		}
-		Velocity = Vector2.Zero;
-		return true;
+
+		// Handle slow
+		if (isSlowed)
+		{
+			if (now > slowEndTime)
+			{
+				isSlowed = false;
+				Speed = _originalSpeed;
+				GD.Print($"[{Name}] Slow expired, speed restored to {Speed}");
+			}
+		}
+
+		return false;
 	}
 
 	protected bool CheckTowerDistance()
@@ -149,35 +187,15 @@ public abstract partial class BaseEnemy : CharacterBody2D, IDamageable
 	}
 
 	protected void CleanupAndDie()
-{
-	// Spawn death particles before freeing
-	var particles = GetNodeOrNull<GpuParticles2D>("DeathParticles");
-	if (particles != null)
 	{
-		// Detach particles so they survive after enemy is freed
-		RemoveChild(particles);
-		GetTree().CurrentScene.AddChild(particles);
-		particles.GlobalPosition = GlobalPosition;
-		particles.Emitting = true;
+		EmitSignal(SignalName.EnemyDied, (int)EnemyType, CoinValue);
+		Economy.AddCoins(CoinValue);
 
-		// Auto-clean particles after they finish
-		var timer = new Timer();
-		timer.OneShot = true;
-		timer.WaitTime = particles.Lifetime * 2;
-		timer.Timeout += () => particles.QueueFree();
-		GetTree().CurrentScene.AddChild(timer);
-		timer.Start();
+		if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
+			_healthBarInstance.QueueFree();
+
+		QueueFree();
 	}
-
-	// Emit custom signal
-	EmitSignal(SignalName.EnemyDied, (int)EnemyType, CoinValue);
-	Economy.AddCoins(CoinValue);
-
-	if (_healthBarInstance != null && IsInstanceValid(_healthBarInstance))
-		_healthBarInstance.QueueFree();
-
-	QueueFree();
-}
 
 	protected void UpdateHealthBar()
 	{

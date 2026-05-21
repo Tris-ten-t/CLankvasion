@@ -9,7 +9,7 @@ public partial class Clink : BaseEnemy
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (CheckStun()) return;
+		if (CheckModifiers()) return;
 		if (_isDying || _tower == null) { Velocity = Vector2.Zero; return; }
 
 		Vector2 direction = (_tower.GlobalPosition - GlobalPosition).Normalized();
