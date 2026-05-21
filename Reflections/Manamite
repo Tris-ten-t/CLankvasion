@@ -1,0 +1,49 @@
+**Team Member:** Bo (Manamite)  
+**Project:** Clankvasion  
+**Date:** May 2026
+
+## Overall Thoughts
+Working on Clankvasion was a great experience. Turning a simple tower defense concept into a hybrid shooter with a cyberpunk 8-bit style was challenging but very rewarding.
+
+## Sprint-by-Sprint Reflection
+
+### Sprint 1
+- **What I worked on:** Basic enemy movement and the Roller enemy.
+- **Difficulties:** Making enemies move smoothly from all directions toward the center tower.
+- **Surprises:** The multi-directional spawning actually worked well early on.
+- **Lessons Learned:** Direction calculation and normalization are very important for consistent movement.
+
+### Sprint 2
+- **What I worked on:** Enemy variety (Clank, Clink, Bull, Clunk) and health/damage systems.
+- **Difficulties:** Balancing enemy speed and health so they feel different but fair.
+- **Surprises:** How much adding simple variations in speed and health changed the gameplay feel.
+- **Lessons Learned:** Data-driven design (using resources) makes balancing much easier.
+
+### Sprint 3
+- **What I worked on:** Enemy spawning system and wave progression.
+- **Difficulties:** Preventing performance drops when many enemies were on screen.
+- **Surprises:** The game became much more intense and fun once waves were implemented.
+- **Lessons Learned:** Object pooling is essential even in a small project.
+
+### Sprint 4
+- **What I worked on:** Polish on enemy death effects, hit feedback, and final balancing.
+- **Difficulties:** Fine-tuning the difficulty curve with Bryce’s shooting mechanics.
+- **Lessons Learned:** Constant playtesting with the team is the best way to balance a game.
+
+## Major Challenges
+- Making enemies feel distinct while keeping them simple.
+- Working together with the shooting and tower systems so nothing felt useless.
+
+## Key Lessons Learned
+- Communication between team members is critical when systems overlap.
+- Small visual and audio feedback greatly improves game feel.
+- Balancing is an ongoing process until the very end.
+
+## What I Contributed
+- All enemy types and behaviors
+- Enemy spawning and wave system
+- Enemy collision and damage handling
+- Performance optimization for large enemy counts
+
+## Final Thoughts
+I’m proud of how the enemies turned out and how they work together with the player’s shooting and placed towers. This project improved my skills in Godot, enemy AI, and game balancing. I learned that good teamwork and iteration lead to much better results.
