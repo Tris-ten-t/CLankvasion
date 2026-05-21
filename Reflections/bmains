@@ -1,0 +1,60 @@
+# Bryce Reflection - Clankvasion
+
+**Team Member:** Bryce (brycey316)  
+**Project:** Clankvasion  
+**Date:** May 2026
+
+## Overall Thoughts
+Clankvasion turned out to be one of my favorite projects so far. I really enjoyed combining tower defense with a direct player-controlled shooter. Giving the player manual aiming and shooting on the Main Tower made the game feel much more active and fun compared to traditional tower defense games. The cyberpunk 8-bit aesthetic also helped create a strong identity for the game.
+
+## Sprint-by-Sprint Reflection
+
+### Sprint 1
+- **What I worked on:** Main Tower aiming and shooting system, bullet instantiation, and basic mouse input.
+- **Difficulties:** Getting the turret to rotate smoothly toward the mouse while keeping it visually appealing took a lot of tweaking. Also had issues with bullets spawning inside the tower.
+- **Surprises:** The shooting actually felt satisfying very early on, which motivated the whole team.
+- **Lessons Learned:** Player "feel" and responsiveness are more important than I initially thought. Small adjustments to rotation speed and bullet offset make a big difference.
+
+### Sprint 2
+- **What I worked on:** Main Tower upgrade system (damage, fire rate, adding extra guns, and visual upgrades), Level 5 Nuke win condition.
+- **Difficulties:** Balancing the upgrade curve so it felt rewarding but not too fast or slow. Syncing visual changes (extra guns appearing) with stats was tricky.
+- **Surprises:** The triple gun look at Level 4 looked really cool and gave strong progression feedback.
+- **Lessons Learned:** Planning upgrade paths early is crucial. I also learned how to better organize code using ScriptableObjects for tower stats.
+
+### Sprint 3
+- **What I worked on:** Enemy collision with Main Tower, currency system from kills, integration with tower placement, and polishing shooting mechanics.
+- **Difficulties:** Making sure manual shooting and placed towers worked well together without one making the other feel useless. Also had some performance issues with too many enemies.
+- **Surprises:** The hybrid gameplay (shooting + towers) created natural synergy that felt better than expected.
+- **Lessons Learned:** Playtesting with real people is the best way to find balance issues. I also got much better at using Unity Events for communication between systems.
+
+### Sprint 4 (Polish & Final)
+- **What I worked on:** Health bars, UI polish, pause menu integration, final bug fixing, and game feel improvements.
+- **Difficulties:** Fine-tuning economy and difficulty curve until the end.
+- **Surprises:** How much small audio and visual feedback (muzzle flash, hit effects) improved the overall experience.
+- **Lessons Learned:** The last 20% of the project takes as much time as the first 80%. Good commenting and clean code made working with teammates much easier.
+
+## Major Challenges
+- Balancing the economy and upgrade pacing.
+- Making manual shooting feel powerful while still encouraging players to buy and place towers.
+- Coordinating with the team on systems that overlapped (currency, enemy health, UI).
+
+## What Surprised Me
+- How engaging the game felt once the shooting was smooth. Many people who tested it said they didn’t want to stop playing.
+- How well the 8-bit cyberpunk style came together visually.
+
+## Key Lessons Learned
+- Player agency and fun should come before complex systems.
+- Communication with teammates is extremely important when systems interact.
+- Iteration and constant playtesting lead to much better results than trying to plan everything perfectly upfront.
+- I became significantly more comfortable with Unity, C# architecture, and game design balancing.
+
+## What I Contributed
+- Main Tower aiming, shooting, and upgrade system
+- Player input and controls
+- Currency and economy implementation
+- General gameplay polishing and bug fixing
+
+## Final Thoughts
+This project helped me grow a lot as a developer and game designer. I’m proud of how the core shooting loop turned out and how it makes Clankvasion feel unique. The biggest takeaway for me is that **making the player feel powerful and engaged** should be the top priority.
+
+I’m excited to take these lessons into future projects.
