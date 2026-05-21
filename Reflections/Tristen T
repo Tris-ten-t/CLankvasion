@@ -1,0 +1,43 @@
+## Overall Thoughts
+Clankvasion was a fun project that let us combine tower defense with active shooting. I focused mainly on the user interface and tower placement systems.
+
+## Sprint-by-Sprint Reflection
+
+### Sprint 1
+- **What I worked on:** Basic UI layout and currency display.
+- **Difficulties:** Getting the HUD to stay clean while showing important information.
+- **Lessons Learned:** UI should be functional before it looks good.
+
+### Sprint 2
+- **What I worked on:** Tower shop menu and upgrade menu for the Main Tower.
+- **Difficulties:** Making the menus easy to use without interfering with mouse aiming.
+- **Surprises:** The upgrade menu for the Main Tower became one of the most polished parts.
+
+### Sprint 3
+- **What I worked on:** Tower placement system (free placement on map) and visual feedback.
+- **Difficulties:** Preventing towers from being placed on top of each other or in invalid spots.
+- **Lessons Learned:** Good visual feedback (green/red placement indicators) is extremely important.
+
+### Sprint 4
+- **What I worked on:** Pause menu, settings, win/lose screens, and overall UI polish.
+- **Difficulties:** Making the pause menu look nice with the transparent overlay.
+- **Lessons Learned:** Polish and small details take more time than expected but are worth it.
+
+## Major Challenges
+- Designing UI that doesn’t block the player’s view during intense shooting moments.
+- Coordinating with Bryce on the upgrade systems.
+
+## Key Lessons Learned
+- User experience matters as much as gameplay.
+- Keeping UI code clean and modular helps when changes are requested.
+- Playtesting with fresh eyes helps catch confusing UI elements.
+
+## What I Contributed
+- All menus (shop, upgrades, pause)
+- Tower purchasing and placement system
+- Currency UI and feedback
+- Win/Lose screens and game flow
+
+## Final Thoughts
+I really enjoyed working on the UX side of the game. Seeing players easily understand and enjoy the menus and placement system was very satisfying. This project taught me a lot about Godot UI tools and the importance of good user feedback.
+
